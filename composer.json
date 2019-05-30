@@ -1,0 +1,18 @@
+{
+  "name": "weee-open/crauto",
+  "type": "project",
+  "description": "dministration panel, self-service account management for users, user registration and other bits and bobs.",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "require": {
+    "league/plates": "3.*"
+  },
+  "require-dev": {
+    "pds/skeleton": "~1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "WEEEOpen\\Crauto\\": "src/"
+    }
+  }
+}
