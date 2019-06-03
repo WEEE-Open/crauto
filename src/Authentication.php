@@ -36,7 +36,7 @@ class Authentication {
 			return false;
 		}
 
-		if(!self::idTokenExpired((int) $_SESSION['expires'])) {
+		if(CRAUTO_DEBUG_ALWAYS_REFRESH || self::idTokenExpired((int) $_SESSION['expires'])) {
 			try {
 				return self::performRefresh();
 			} catch(LogicException $e) {

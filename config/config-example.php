@@ -10,3 +10,4 @@ define('CRAUTO_OIDC_CLIENT_SECRET', 'Fd4BxUyaYYlByimKfAwv6_rDyl0a'); // This is 
 // production key and secret are obviously different.
 define('VERIFY_CERTIFICATES', true); // Set to false for development with self-signed certificates
 define('CRAUTO_URL', 'http://[::1]:8200');
+define('CRAUTO_DEBUG_ALWAYS_REFRESH', false); // Set to true to use the refresh token to get a new id token on each request
