@@ -1,7 +1,5 @@
 <?php
-/** @var $uid string */
-/** @var $name string */
 $this->layout('base', ['title' => 'Index']) ?>
 
-<h1>Crauto</h1>
-<p>Hi <?= $name ?>, id <?= $uid ?></p>
+<p>You are now logged out.</p>
+<p><a href="/">Log in</a> again?</p>
