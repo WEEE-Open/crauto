@@ -5,17 +5,20 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Foo</a>
+            <li class="nav-item">
+                <a class="nav-link" href="/personal.php">Personal</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Bar</a>
+                <a class="nav-link" href="/mfa.php">MFA</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Baz</a>
+                <a class="nav-link" href="/sessions.php">Sessions</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Logout</a>
+                <a class="nav-link" href="/accounts.php">Accounts</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout.php">Logout</a>
             </li>
         </ul>
     </div>
