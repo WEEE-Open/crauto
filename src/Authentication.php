@@ -127,9 +127,8 @@ class Authentication {
 		 * that we can do, neither in this case nor in any other situation. If we do notice, we'll yust revoke all refresh
 		 * tokens (and possibly every other token) as soon as possible.
 		 *
-		 * TODO: What happens after single sign-out on WSO2 IS? Does it revoke refresh tokens? Also, when it is restarted, does it revoke tokens?
-		 * Because "Restarting WSO2 IS" may be a really quick (and dirty) solution to immediately log everyone out and revoke all tokens,
-		 * if some refresh tokens get compromised...
+		 * WSO2 IS doesn't delete tokens when it's restarted.
+		 * SAML2 single sign-out doesn't invalidate anything from OIDC sessions (so it's not a real single sign-out).
 		 */
 		if(!isset($_SESSION['refresh_token'])) {
 			throw new LogicException('No refresh token available');
