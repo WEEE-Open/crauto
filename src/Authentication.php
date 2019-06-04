@@ -78,9 +78,9 @@ class Authentication {
 		}
 
 		$oidc = self::getOidc();
-		$at = $_SESSION['access_token'];
+		$token = $_SESSION['id_token'];
 		session_destroy();
-		$oidc->signOut($at, CRAUTO_URL . '/logout.php');
+		$oidc->signOut($token, CRAUTO_URL . '/logout.php');
 		exit();
 	}
 
@@ -165,9 +165,9 @@ class Authentication {
 				throw new AuthenticationException('Fake implicit flow failed', 0, $e);
 			} finally {
 				unset($_SESSION['openid_connect_nonce']);
+				unset($_SESSION['openid_connect_state']);
 				unset($_REQUEST['access_token']);
 				unset($_REQUEST['id_token']);
-				unset($_SESSION['openid_connect_state']);
 				unset($_REQUEST['state']);
 			}
 
@@ -204,12 +204,12 @@ class Authentication {
 		$cn = $oidc->requestUserInfo('name');
 		$exp = $oidc->getVerifiedClaims('exp');
 		$refresh_token = $oidc->getRefreshToken();
-		$access_token = $oidc->getAccessToken();
+		$id_token = $oidc->getIdToken();
 
 		$_SESSION['uid'] = $uid;
 		$_SESSION['cn'] = $cn;
 		$_SESSION['expires'] = $exp;
 		$_SESSION['refresh_token'] = $refresh_token;
-		$_SESSION['access_token'] = $access_token;
+		$_SESSION['id_token'] = $id_token;
 	}
 }
