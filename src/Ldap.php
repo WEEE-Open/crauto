@@ -50,11 +50,11 @@ class Ldap {
 		$things = [];
 		foreach($result as $k => $v) {
 			if(!is_int($k) && $k !== 'count') {
+				$attr = strtolower($k); // Should be already done, but repeat it anyway
 				if($v['count'] === 1) {
-					$things[$k] = $v[0];
+					$things[$attr] = $v[0];
 				} else {
-					$things[$k] = array_diff_key($v, ['count']);
-					unset($things[$k]['count']);
+					$things[$attr] = array_diff_key($v, ['count']);
 				}
 			}
 		}
