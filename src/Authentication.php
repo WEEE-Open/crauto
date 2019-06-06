@@ -7,6 +7,8 @@ use Jumbojett\OpenIDConnectClient;
 use Jumbojett\OpenIDConnectClientException;
 use LogicException;
 
+require_once '../config/config.php';
+
 class Authentication {
 	// This is a class just to exploit the autoloading functionality
 
