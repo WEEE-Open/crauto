@@ -25,9 +25,9 @@ class Ldap {
 		}
 	}
 
-	public function getInfo(string $uid): ?array {
+	public function getInfo(string $uid, ?array $attributes = null): ?array {
 		$uid = ldap_escape($uid, '', LDAP_ESCAPE_FILTER);
-		$sr = ldap_search($this->ds, $this->usersDn, "(uid=$uid)"); // TODO: attributes
+		$sr = ldap_search($this->ds, $this->usersDn, "(uid=$uid)", $attributes); // TODO: attributes
 		if(!$sr) {
 			throw new LdapException('Cannot search for uid');
 		}
@@ -49,7 +49,8 @@ class Ldap {
 	protected static function simplify(array $result): array {
 		$things = [];
 		foreach($result as $k => $v) {
-			if(!is_int($k) && $k !== 'count') {
+			// dn seems to be always null!?
+			if(!is_int($k) && $k !== 'count' && $k !== 'dn') {
 				$attr = strtolower($k); // Should be already done, but repeat it anyway
 				if($v['count'] === 1) {
 					$things[$attr] = $v[0];
