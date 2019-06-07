@@ -7,6 +7,7 @@ class Ldap {
 	protected $ds;
 	protected $groupsDn;
 	protected $usersDn;
+	protected static $multivalued = ['memberof'];
 
 	public function __construct(string $url, string $bindDn, string $password, string $usersDn, string $groupsDn, bool $startTls = true) {
 		$this->groupsDn = $groupsDn;
@@ -40,10 +41,15 @@ class Ldap {
 			throw new LdapException("$uid is not unique in $this->usersDn, $count results found");
 		}
 
-		return self::simplify(ldap_get_entries($this->ds, $sr)[0]);
-//		$id = ldap_first_entry($this->ds, $sr);
-//		$dn = ldap_get_dn($this->ds, $id);
-//		ldap_free_result($sr);
+		//		$id = ldap_first_entry($this->ds, $sr);
+		//		$dn = ldap_get_dn($this->ds, $id);
+		$user = ldap_get_entries($this->ds, $sr)[0];
+		ldap_free_result($sr);
+		$user = self::simplify($user);
+		if($attributes !== null) {
+			$user = self::fillAndSortAttributes($user, $attributes);
+		}
+		return $user;
 	}
 
 	protected static function simplify(array $result): array {
@@ -52,7 +58,7 @@ class Ldap {
 			// dn seems to be always null!?
 			if(!is_int($k) && $k !== 'count' && $k !== 'dn') {
 				$attr = strtolower($k); // Should be already done, but repeat it anyway
-				if($v['count'] === 1) {
+				if($v['count'] === 1 && !isset(self::$multivalued[$k])) {
 					$things[$attr] = $v[0];
 				} else {
 					$things[$attr] = array_diff_key($v, ['count']);
@@ -60,5 +66,17 @@ class Ldap {
 			}
 		}
 		return $things;
+	}
+
+	protected static function fillAndSortAttributes(array $result, array $attributes): array {
+		$sorted = [];
+		foreach($attributes as $attribute) {
+			if(array_key_exists($attribute, $result)) {
+				$sorted[$attribute] = $result[$attribute];
+			} else {
+				$sorted[$attribute] = null;
+			}
+		}
+		return $sorted;
 	}
 }

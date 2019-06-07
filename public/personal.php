@@ -13,8 +13,10 @@ $allowedAttributes = [
 	'cn' => 'Full name',
 	'mail' => 'Email'
 ];
+$editableAttributes = ['mail', 'cn'];
 $attributes = $ldap->getInfo($_SESSION['uid'], array_keys($allowedAttributes));
 
+// Additional safeguard, possibly useless
 $attributes = array_intersect_key($attributes, $allowedAttributes);
 
 $templates = new Plates('..' . DIRECTORY_SEPARATOR . 'templates');
@@ -22,5 +24,6 @@ echo $templates->render('user', [
 	'uid' => $_SESSION['uid'],
 	'name' => $_SESSION['cn'],
 	'attributes' => $attributes,
-	'attributeNames' => $allowedAttributes
+	'attributeNames' => $allowedAttributes,
+	'editableAttributes' => $editableAttributes,
 ]);
