@@ -7,7 +7,6 @@ use League\Plates\Engine as Plates;
 require '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 Authentication::requireLogin();
 
-$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN, CRAUTO_LDAP_GROUPS_DN, false);
 $allowedAttributes = [
 	'uid' => 'Username',
 	'cn' => 'Full name',
@@ -27,10 +26,16 @@ $allowedAttributes = [
 	//'description' => 'Notes'
 ];
 $editableAttributes = ['mail', 'schacpersonaluniquecode', 'degreecourse', 'telegramid', 'telegramnickname'];
+$editableAttributes = array_combine($editableAttributes, $editableAttributes);
+
+if(isset($_POST)) {
+	$edited = array_intersect_key($_POST, $editableAttributes);
+}
+
+
+$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN, CRAUTO_LDAP_GROUPS_DN, false);
 $attributes = $ldap->getInfo($_SESSION['uid'], array_keys($allowedAttributes));
 
-// Additional safeguard, possibly useless
-$attributes = array_intersect_key($attributes, $allowedAttributes);
 
 $groups = [];
 foreach($attributes['memberof'] as $dn) {

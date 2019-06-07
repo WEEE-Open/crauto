@@ -5,25 +5,52 @@
 /** @var $attributeNames string[] */
 /** @var $editableAttributes string[] */
 $this->layout('base', ['title' => 'Index']);
-$editableAttributes = array_combine($editableAttributes, $editableAttributes);
 $editable = function(string $attr) use ($editableAttributes): string {
 	return isset($editableAttributes[$attr]) ? '' : 'readonly';
+};
+$type = function(string $attr): string {
+	switch($attr) {
+		case 'mail':
+			return 'email';
+		case 'telegramid':
+		case 'schacpersonaluniquecode':
+			return 'number';
+		case 'mobile':
+			return 'tel';
+		case 'safetytestdate':
+			return 'date';
+		default:
+			return 'text';
+	}
+};
+$validation = function(string $attr): string {
+	switch($attr) {
+		case 'telegramid':
+		case 'schacpersonaluniquecode':
+			return 'min="1"';
+		case 'uid':
+			return 'pattern="^[a-zA-Z][a-zA-Z0-9-_\.]*$"';
+		case 'schacPlaceOfBirth':
+			return 'pattern="\w+(\s\(\w+\))?,\s*\w+"';
+		default:
+			return '';
+	}
 }
 ?>
 
 <h1>Personal profile</h1>
 
-<form>
+<form method="POST" target="/personal.php">
 	<?php foreach($attributes as $attr => $values): ?>
 	<?php if(is_array($values)): ?>
 		<div class="form-group">
 			<label for="profile-<?= $attr ?>"><?= $attributeNames[$attr] ?></label>
-			<textarea class="form-control" id="profile-<?= $attr ?>" rows="<?= count($values) + 1 ?>"<?= $editable($attr) ?>><?= implode("\r\n", array_map([$this, 'e'], $values)) . "\r\n" ?></textarea>
+			<textarea class="form-control" id="profile-<?= $attr ?>" name="<?= $attr ?>" rows="<?= count($values) + 1 ?>"<?= $editable($attr) ?><?= $validation($attr) ?>><?= implode("\r\n", array_map([$this, 'e'], $values)) . "\r\n" ?></textarea>
 		</div>
 	<?php else: ?>
 		<div class="form-group">
 			<label for="profile-<?= $attr ?>"><?= $attributeNames[$attr] ?></label>
-			<input type="text" class="form-control" id="profile-<?= $attr ?>" value="<?= $values === null ? '' : $this->e($values) ?>"<?= $editable($attr) ?>>
+			<input type="<?= $type($attr) ?>" class="form-control" id="profile-<?= $attr ?>" name="<?= $attr ?>" value="<?= $values === null ? '' : $this->e($values) ?>"<?= $editable($attr) ?><?= $validation($attr) ?>>
 		</div>
 	<?php endif; ?>
 	<?php endforeach; ?>
