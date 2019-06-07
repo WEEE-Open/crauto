@@ -3,11 +3,13 @@
 
 namespace WEEEOpen\Crauto;
 
+use InvalidArgumentException;
+
 class Ldap {
 	protected $ds;
 	protected $groupsDn;
 	protected $usersDn;
-	protected static $multivalued = ['memberof'];
+	protected static $multivalued = ['memberof' => true, 'sshPublicKey' => true];
 
 	public function __construct(string $url, string $bindDn, string $password, string $usersDn, string $groupsDn, bool $startTls = true) {
 		$this->groupsDn = $groupsDn;
@@ -61,7 +63,7 @@ class Ldap {
 				if($v['count'] === 1 && !isset(self::$multivalued[$k])) {
 					$things[$attr] = $v[0];
 				} else {
-					$things[$attr] = array_diff_key($v, ['count']);
+					$things[$attr] = array_diff_key($v, ['count' => true]);
 				}
 			}
 		}
@@ -78,5 +80,13 @@ class Ldap {
 			}
 		}
 		return $sorted;
+	}
+
+	public static function groupDnToName(string $dn): string {
+		$pieces = ldap_explode_dn($dn, 1);
+		if($pieces['count'] === 4 && strtolower($pieces[1]) === 'groups') {
+			return $pieces[0];
+		}
+		throw new InvalidArgumentException("$dn is not a group DN");
 	}
 }

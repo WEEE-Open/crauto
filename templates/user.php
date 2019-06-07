@@ -18,7 +18,7 @@ $editable = function(string $attr) use ($editableAttributes): string {
 	<?php if(is_array($values)): ?>
 		<div class="form-group">
 			<label for="profile-<?= $attr ?>"><?= $attributeNames[$attr] ?></label>
-			<textarea class="form-control" id="profile-<?= $attr ?>" rows="<?= count($values) + 1 ?>"<?= $editable($attr) ?>><?= implode("\r\n", array_map([$this, 'e'], $values)) ?></textarea>
+			<textarea class="form-control" id="profile-<?= $attr ?>" rows="<?= count($values) + 1 ?>"<?= $editable($attr) ?>><?= implode("\r\n", array_map([$this, 'e'], $values)) . "\r\n" ?></textarea>
 		</div>
 	<?php else: ?>
 		<div class="form-group">

@@ -11,13 +11,32 @@ $ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRA
 $allowedAttributes = [
 	'uid' => 'Username',
 	'cn' => 'Full name',
-	'mail' => 'Email'
+	'givenname' => 'Name',
+	'sn' => 'Surname',
+	'memberof' => 'Groups',
+	'mail' => 'Email',
+	'schacpersonaluniquecode' => 'Student ID',
+	'degreecourse' => 'Degree course',
+	'schacdateofbirth' => 'Date of birth',
+	'schacplaceofbirth' => 'Place of birth',
+	'mobile' => 'Cellphone',
+	'safetytestdate' => 'Date of the test on safety',
+	'telegramid' => 'Telegram ID',
+	'telegramnickname' => 'Telegram nickname',
+	'sshpublickey' => 'SSH public keys',
+	//'description' => 'Notes'
 ];
-$editableAttributes = ['mail', 'cn'];
+$editableAttributes = ['mail', 'schacpersonaluniquecode', 'degreecourse', 'telegramid', 'telegramnickname'];
 $attributes = $ldap->getInfo($_SESSION['uid'], array_keys($allowedAttributes));
 
 // Additional safeguard, possibly useless
 $attributes = array_intersect_key($attributes, $allowedAttributes);
+
+$groups = [];
+foreach($attributes['memberof'] as $dn) {
+	$groups[] = Ldap::groupDnToName($dn);
+}
+$attributes['memberof'] = $groups;
 
 $templates = new Plates('..' . DIRECTORY_SEPARATOR . 'templates');
 echo $templates->render('user', [
