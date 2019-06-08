@@ -56,6 +56,7 @@ try {
 }
 
 $template = Template::create();
+$template->addData(['currentSection' => 'personal'], 'navbar');
 echo $template->render('user', [
 	'uid' => $_SESSION['uid'],
 	'name' => $_SESSION['cn'],

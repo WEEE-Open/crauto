@@ -1,5 +1,6 @@
 <?php /* @var $isAdmin bool */ ?>
 <?php /* @var $authenticated bool */ ?>
+<?php $currentSection = $currentSection ?? null ?>
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
 	<div class="container">
 	    <a class="navbar-brand" href="/">
@@ -12,17 +13,17 @@
 	        <ul class="navbar-nav">
 		        <?php if($authenticated ?? true): ?>
 		            <li class="nav-item">
-		                <a class="nav-link" href="/personal.php">Personal</a>
+		                <a class="nav-link <?= $currentSection === 'personal' ? 'active' : '' ?>" href="/personal.php">Personal</a>
 		            </li>
 		            <li class="nav-item">
-		                <a class="nav-link" href="/authentication.php">Authentication</a>
+		                <a class="nav-link <?= $currentSection === 'authentication' ? 'active' : '' ?>" href="/authentication.php">Authentication</a>
 		            </li>
 		            <li class="nav-item">
-		                <a class="nav-link" href="/sessions.php">Sessions</a>
+		                <a class="nav-link <?= $currentSection === 'sessions' ? 'active' : '' ?>" href="/sessions.php">Sessions</a>
 		            </li>
 			        <?php if($isAdmin): ?>
 		            <li class="nav-item">
-		                <a class="nav-link" href="/accounts.php">Accounts</a>
+		                <a class="nav-link  <?= $currentSection === 'accounts' ? 'active' : '' ?>" href="/accounts.php">Accounts</a>
 		            </li>
 			        <?php endif ?>
 		            <li class="nav-item">
