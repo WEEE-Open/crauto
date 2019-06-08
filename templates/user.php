@@ -1,6 +1,7 @@
 <?php
 /** @var $uid string */
 /** @var $name string */
+/** @var $error string|null */
 /** @var $attributes array */
 /** @var $attributeNames string[] */
 /** @var $editableAttributes string[] */
@@ -39,6 +40,12 @@ $validation = function(string $attr): string {
 ?>
 
 <h1>Personal profile</h1>
+
+<?php if($error !== null): ?>
+<div class="alert alert-danger" role="alert">
+Error: <?= $error ?>
+</div>
+<?php endif ?>
 
 <form method="POST" target="/personal.php">
 	<?php foreach($attributes as $attr => $values): ?>

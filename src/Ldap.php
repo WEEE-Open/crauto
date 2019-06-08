@@ -38,10 +38,69 @@ class Ldap {
 		return $user;
 	}
 
-	public function updateUser(string $uid, array $replace) {
+	/**
+	 * @param string $uid UID to search
+	 * @param array|null $attributes Attributes to include in search result ("null" for all)
+	 *
+	 * @return resource|null $sr from ldap_search or none if no users are found
+	 * @throws LdapException if cannot search or more than one user is found
+	 */
+	private function searchByUid(string $uid, ?array $attributes = null) {
+		$uid = ldap_escape($uid, '', LDAP_ESCAPE_FILTER);
+		$sr = ldap_search($this->ds, $this->usersDn, "(uid=$uid)", $attributes);
+		if(!$sr) {
+			throw new LdapException('Cannot search for uid');
+		}
+		$count = ldap_count_entries($this->ds, $sr);
+		if($count === 0) {
+			return null;
+		} else if($count > 1) {
+			throw new LdapException("$uid is not unique in $this->usersDn, $count results found");
+		}
+
+		return $sr;
+	}
+
+	public function updateUser(string $uid, array $replace, array $previous) {
 		$sr = $this->searchByUid($uid, ['dn']);
 		$theOnlyResult = ldap_first_entry($this->ds, $sr);
 		$dn = ldap_get_dn($this->ds, $theOnlyResult);
+
+		$modlist = [];
+		foreach($replace as $attr => $values) {
+			if($values === '' || $values === []) {
+				if(!self::isEmpty($attr, $previous)) {
+					// Actually delete (had a value, now has none)
+					$modlist[] = [
+						"attrib"  => $attr,
+						"modtype" => LDAP_MODIFY_BATCH_REMOVE_ALL
+					];
+				}
+			} else {
+				if(!is_array($values)) {
+					$values = [$values];
+				}
+				if(!self::isEmpty($attr, $previous)) {
+					// Attribute already exists: replace
+					$modlist[] = [
+						"attrib"  => $attr,
+						"modtype" => LDAP_MODIFY_BATCH_REPLACE,
+						"values"  => $values
+					];
+				} else {
+					// Does not exist: add
+					$modlist[] = [
+						"attrib"  => $attr,
+						"modtype" => LDAP_MODIFY_BATCH_ADD,
+						"values"  => $values
+					];
+				}
+			}
+		}
+		$result = ldap_modify_batch($this->ds, $dn, $modlist);
+		if($result === false) {
+			throw new LdapException('Modification failed (' . ldap_error($this->ds) . ')');
+		}
 	}
 
 	protected static function simplify(array $result): array {
@@ -80,26 +139,7 @@ class Ldap {
 		throw new InvalidArgumentException("$dn is not a group DN");
 	}
 
-	/**
-	 * @param string $uid UID to search
-	 * @param array|null $attributes Attributes to include in search result ("null" for all)
-	 *
-	 * @return resource|null $sr from ldap_search or none if no users are found
-	 * @throws LdapException if cannot search or more than one user is found
-	 */
-	private function searchByUid(string $uid, ?array $attributes = null) {
-		$uid = ldap_escape($uid, '', LDAP_ESCAPE_FILTER);
-		$sr = ldap_search($this->ds, $this->usersDn, "(uid=$uid)", $attributes);
-		if(!$sr) {
-			throw new LdapException('Cannot search for uid');
-		}
-		$count = ldap_count_entries($this->ds, $sr);
-		if($count === 0) {
-			return null;
-		} else if($count > 1) {
-			throw new LdapException("$uid is not unique in $this->usersDn, $count results found");
-		}
-
-		return $sr;
+	private static function isEmpty(string $attr, array $attributes) {
+		return $attributes[$attr] === null || (is_array($attributes[$attr]) && count($attributes[$attr]) === 0);
 	}
 }
