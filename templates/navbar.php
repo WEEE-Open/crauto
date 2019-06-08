@@ -2,7 +2,9 @@
 <?php /* @var $authenticated bool */ ?>
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
 	<div class="container">
-	    <a class="navbar-brand" href="/">Crauto</a>
+	    <a class="navbar-brand" href="/">
+		    <img src="weee.png" height="26" class="d-inline-block align-middle" alt="WEEE Open">
+	    </a>
 	    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 	        <span class="navbar-toggler-icon"></span>
 	    </button>

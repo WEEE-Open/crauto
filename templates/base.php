@@ -9,7 +9,8 @@
     <title><?= $this->e($title) ?> - Crauto</title>
 	<style>
 		.navbar {
-			border-bottom: 0.5em solid #00983a;
+			border-bottom: 0.5rem solid #00983a;
+			margin-bottom: 0.5rem;
 		}
 	</style>
 </head>
