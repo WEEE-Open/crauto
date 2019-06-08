@@ -9,7 +9,7 @@ class Ldap {
 	protected $ds;
 	protected $groupsDn;
 	protected $usersDn;
-	protected static $multivalued = ['memberof' => true, 'sshPublicKey' => true];
+	protected static $multivalued = ['memberof' => true, 'sshpublickey' => true];
 
 	public function __construct(string $url, string $bindDn, string $password, string $usersDn, string $groupsDn, bool $startTls = true) {
 		$this->groupsDn = $groupsDn;
@@ -28,30 +28,20 @@ class Ldap {
 		}
 	}
 
-	public function getInfo(string $uid, ?array $attributes = null): ?array {
-		$uid = ldap_escape($uid, '', LDAP_ESCAPE_FILTER);
-		$sr = ldap_search($this->ds, $this->usersDn, "(uid=$uid)", $attributes); // TODO: attributes
-		if(!$sr) {
-			throw new LdapException('Cannot search for uid');
-		}
-		$count = ldap_count_entries($this->ds, $sr);
-		if($count === 0) {
-			ldap_free_result($sr);
-			return null;
-		} else if($count > 1) {
-			ldap_free_result($sr);
-			throw new LdapException("$uid is not unique in $this->usersDn, $count results found");
-		}
-
-		//		$id = ldap_first_entry($this->ds, $sr);
-		//		$dn = ldap_get_dn($this->ds, $id);
+	public function getUser(string $uid, ?array $attributes = null): ?array {
+		$sr = $this->searchByUid($uid, $attributes);
 		$user = ldap_get_entries($this->ds, $sr)[0];
-		ldap_free_result($sr);
 		$user = self::simplify($user);
 		if($attributes !== null) {
 			$user = self::fillAndSortAttributes($user, $attributes);
 		}
 		return $user;
+	}
+
+	public function updateUser(string $uid, array $replace) {
+		$sr = $this->searchByUid($uid, ['dn']);
+		$theOnlyResult = ldap_first_entry($this->ds, $sr);
+		$dn = ldap_get_dn($this->ds, $theOnlyResult);
 	}
 
 	protected static function simplify(array $result): array {
@@ -88,5 +78,28 @@ class Ldap {
 			return $pieces[0];
 		}
 		throw new InvalidArgumentException("$dn is not a group DN");
+	}
+
+	/**
+	 * @param string $uid UID to search
+	 * @param array|null $attributes Attributes to include in search result ("null" for all)
+	 *
+	 * @return resource|null $sr from ldap_search or none if no users are found
+	 * @throws LdapException if cannot search or more than one user is found
+	 */
+	private function searchByUid(string $uid, ?array $attributes = null) {
+		$uid = ldap_escape($uid, '', LDAP_ESCAPE_FILTER);
+		$sr = ldap_search($this->ds, $this->usersDn, "(uid=$uid)", $attributes);
+		if(!$sr) {
+			throw new LdapException('Cannot search for uid');
+		}
+		$count = ldap_count_entries($this->ds, $sr);
+		if($count === 0) {
+			return null;
+		} else if($count > 1) {
+			throw new LdapException("$uid is not unique in $this->usersDn, $count results found");
+		}
+
+		return $sr;
 	}
 }

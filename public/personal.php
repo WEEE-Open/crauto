@@ -28,14 +28,14 @@ $allowedAttributes = [
 $editableAttributes = ['mail', 'schacpersonaluniquecode', 'degreecourse', 'telegramid', 'telegramnickname'];
 $editableAttributes = array_combine($editableAttributes, $editableAttributes);
 
+$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN, CRAUTO_LDAP_GROUPS_DN, false);
+
 if(isset($_POST)) {
 	$edited = array_intersect_key($_POST, $editableAttributes);
+	$ldap->updateUser($_SESSION['uid'], $edited);
 }
 
-
-$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN, CRAUTO_LDAP_GROUPS_DN, false);
-$attributes = $ldap->getInfo($_SESSION['uid'], array_keys($allowedAttributes));
-
+$attributes = $ldap->getUser($_SESSION['uid'], array_keys($allowedAttributes));
 
 $groups = [];
 foreach($attributes['memberof'] as $dn) {
