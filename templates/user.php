@@ -52,12 +52,12 @@ Error: <?= $error ?>
 	<?php if(is_array($values)): ?>
 		<div class="form-group">
 			<label for="profile-<?= $attr ?>"><?= $attributeNames[$attr] ?></label>
-			<textarea class="form-control" id="profile-<?= $attr ?>" name="<?= $attr ?>" rows="<?= count($values) + 1 ?>"<?= $editable($attr) ?><?= $validation($attr) ?>><?= implode("\r\n", array_map([$this, 'e'], $values)) . "\r\n" ?></textarea>
+			<textarea class="form-control" id="profile-<?= $attr ?>" name="<?= $attr ?>" rows="<?= count($values) + 1 ?>" <?= $editable($attr) ?> <?= $validation($attr) ?>><?= implode("\r\n", array_map([$this, 'e'], $values)) . "\r\n" ?></textarea>
 		</div>
 	<?php else: ?>
 		<div class="form-group">
 			<label for="profile-<?= $attr ?>"><?= $attributeNames[$attr] ?></label>
-			<input type="<?= $type($attr) ?>" class="form-control" id="profile-<?= $attr ?>" name="<?= $attr ?>" value="<?= $values === null ? '' : $this->e($values) ?>"<?= $editable($attr) ?><?= $validation($attr) ?>>
+			<input type="<?= $type($attr) ?>" class="form-control" id="profile-<?= $attr ?>" name="<?= $attr ?>" value="<?= $values === null ? '' : $this->e($values) ?>" <?= $editable($attr) ?> <?= $validation($attr) ?>>
 		</div>
 	<?php endif; ?>
 	<?php endforeach; ?>
