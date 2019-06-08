@@ -55,8 +55,8 @@ try {
 	$error = $e->getMessage();
 }
 
-$templates = new Plates('..' . DIRECTORY_SEPARATOR . 'templates');
-echo $templates->render('user', [
+$template = Template::create();
+echo $template->render('user', [
 	'uid' => $_SESSION['uid'],
 	'name' => $_SESSION['cn'],
 	'error' => $error,

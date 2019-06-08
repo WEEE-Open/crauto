@@ -182,7 +182,7 @@ class Authentication {
 	}
 
 	private static function returnToPreviousPage() {
-		// TODO: urlencode? Escape? Do something?
+		// Comes from $_SERVER['REQUEST_URI'] which is already url encoded
 		$location = $_SESSION['redirect_after_login'] ?? '/';
 		http_response_code(303);
 		header("Location: $location");
@@ -193,7 +193,7 @@ class Authentication {
 		require_once '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php';
 
 		$oidc = new OpenIDConnectClient(CRAUTO_OIDC_ISSUER, CRAUTO_OIDC_CLIENT_KEY, CRAUTO_OIDC_CLIENT_SECRET);
-		// TODO: $oidc->addScope(['openid', 'profile']);
+		$oidc->addScope(['openid', 'profile']);
 		$oidc->setVerifyHost(false);
 		$oidc->setVerifyPeer(false);
 
@@ -203,14 +203,31 @@ class Authentication {
 	private static function setAttributes(OpenIDConnectClient $oidc) {
 		$uid = $oidc->requestUserInfo('sub');
 		$cn = $oidc->requestUserInfo('name');
+		$groups = $oidc->requestUserInfo('groups');
 		$exp = $oidc->getVerifiedClaims('exp');
 		$refresh_token = $oidc->getRefreshToken();
 		$id_token = $oidc->getIdToken();
 
 		$_SESSION['uid'] = $uid;
 		$_SESSION['cn'] = $cn;
+		$_SESSION['groups'] = $groups;
 		$_SESSION['expires'] = $exp;
 		$_SESSION['refresh_token'] = $refresh_token;
 		$_SESSION['id_token'] = $id_token;
+	}
+
+	/**
+	 * Split claimed groups into an array
+	 *
+	 * @param string $groups String returned by the OIDC library, e.g. "internal/everyone,HR,admin"
+	 *
+	 * @return string[] Groups
+	 */
+	public static function splitGroups(?string $groups): array {
+		if($groups === null) {
+			return [];
+		}
+		$groups = explode(',', $groups);
+		return array_combine($groups, $groups); // a hashmap
 	}
 }
