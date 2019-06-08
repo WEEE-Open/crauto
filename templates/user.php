@@ -19,6 +19,7 @@ $type = function(string $attr): string {
 		case 'mobile':
 			return 'tel';
 		case 'safetytestdate':
+		case 'schacdateofbirth':
 			return 'date';
 		default:
 			return 'text';
