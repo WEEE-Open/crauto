@@ -2,8 +2,8 @@
 
 namespace WEEEOpen\Crauto;
 
+use DateTime;
 use InvalidArgumentException;
-use League\Plates\Engine as Plates;
 
 require '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 Authentication::requireLogin();
@@ -38,6 +38,8 @@ try {
 
 	if(isset($_POST) && !empty($_POST)) {
 		$edited = array_intersect_key($_POST, $editableAttributes);
+		$edited = Validation::normalize($edited);
+		Validation::validate($edited);
 		$ldap->updateUser($_SESSION['uid'], $edited, $attributes);
 		http_response_code(303);
 		header("Location: /personal.php");
@@ -48,10 +50,14 @@ try {
 	foreach($attributes['memberof'] as $dn) {
 		$groups[] = Ldap::groupDnToName($dn);
 	}
+	$attributes['safetytestdate'] = isset($attributes['safetytestdate']) ? Validation::dateSchacToHtml($attributes['safetytestdate']) : null;
+	$attributes['schacdateofbirth'] = isset($attributes['schacdateofbirth']) ? Validation::dateSchacToHtml($attributes['schacdateofbirth']) : null;
 	$attributes['memberof'] = $groups;
 } catch(LdapException $e) {
 	$error = $e->getMessage();
 } catch(InvalidArgumentException $e) {
+	$error = $e->getMessage();
+} catch(ValidationException $e) {
 	$error = $e->getMessage();
 }
 
