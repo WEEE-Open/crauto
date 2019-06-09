@@ -37,21 +37,13 @@ try {
 
 	if(isset($_POST) && !empty($_POST)) {
 		$edited = array_intersect_key($_POST, $editableAttributes);
-		$edited = Validation::normalize($edited);
+		$edited = Validation::normalize($ldap, $edited);
 		Validation::validate($edited);
 		$ldap->updateUser($_SESSION['uid'], $edited, $attributes);
 		http_response_code(303);
 		header("Location: /personal.php");
 		exit(0);
 	}
-
-	$groups = [];
-	foreach($attributes['memberof'] as $dn) {
-		$groups[] = Ldap::groupDnToName($dn);
-	}
-	$attributes['safetytestdate'] = isset($attributes['safetytestdate']) ? Validation::dateSchacToHtml($attributes['safetytestdate']) : null;
-	$attributes['schacdateofbirth'] = isset($attributes['schacdateofbirth']) ? Validation::dateSchacToHtml($attributes['schacdateofbirth']) : null;
-	$attributes['memberof'] = $groups;
 } catch(LdapException $e) {
 	$error = $e->getMessage();
 } catch(InvalidArgumentException $e) {
@@ -59,6 +51,14 @@ try {
 } catch(ValidationException $e) {
 	$error = $e->getMessage();
 }
+
+$groups = [];
+foreach($attributes['memberof'] as $dn) {
+	$groups[] = Ldap::groupDnToName($dn);
+}
+$attributes['memberof'] = $groups;
+$attributes['safetytestdate'] = isset($attributes['safetytestdate']) ? Validation::dateSchacToHtml($attributes['safetytestdate']) : null;
+$attributes['schacdateofbirth'] = isset($attributes['schacdateofbirth']) ? Validation::dateSchacToHtml($attributes['schacdateofbirth']) : null;
 
 $template = Template::create();
 $template->addData(['currentSection' => 'personal'], 'navbar');

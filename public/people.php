@@ -59,21 +59,13 @@ if(isset($_GET['uid'])) {
 
 		if(isset($_POST) && !empty($_POST)) {
 			$edited = array_intersect_key($_POST, $editableAttributes);
-			$edited = Validation::normalize($edited);
+			$edited = Validation::normalize($ldap, $edited);
 			Validation::validate($edited);
 			$ldap->updateUser($targetUid, $edited, $attributes);
 			http_response_code(303);
 			header("Location: " . $_SERVER['REQUEST_URI']);
 			exit;
 		}
-
-		$groups = [];
-		foreach($attributes['memberof'] as $dn) {
-			$groups[] = Ldap::groupDnToName($dn);
-		}
-		$attributes['safetytestdate'] = isset($attributes['safetytestdate']) ? Validation::dateSchacToHtml($attributes['safetytestdate']) : null;
-		$attributes['schacdateofbirth'] = isset($attributes['schacdateofbirth']) ? Validation::dateSchacToHtml($attributes['schacdateofbirth']) : null;
-		$attributes['memberof'] = $groups;
 	} catch(LdapException $e) {
 		$error = $e->getMessage();
 	} catch(InvalidArgumentException $e) {
@@ -81,6 +73,14 @@ if(isset($_GET['uid'])) {
 	} catch(ValidationException $e) {
 		$error = $e->getMessage();
 	}
+
+	$groups = [];
+	foreach($attributes['memberof'] as $dn) {
+		$groups[] = Ldap::groupDnToName($dn);
+	}
+	$attributes['memberof'] = $groups;
+	$attributes['safetytestdate'] = isset($attributes['safetytestdate']) ? Validation::dateSchacToHtml($attributes['safetytestdate']) : '';
+	$attributes['schacdateofbirth'] = isset($attributes['schacdateofbirth']) ? Validation::dateSchacToHtml($attributes['schacdateofbirth']) : '';
 
 	$template = Template::create();
 	$template->addData(['currentSection' => 'people'], 'navbar');

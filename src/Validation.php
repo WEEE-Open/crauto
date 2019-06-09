@@ -9,7 +9,7 @@ But at least it's getting autoloaded and is tidier than a giant functions.php. *
 use DateTime;
 
 class Validation {
-	public static function normalize(array $inputs): array {
+	public static function normalize(Ldap $ldap, array $inputs): array {
 		foreach($inputs as $k => $v) {
 			$inputs[$k] = trim($v);
 		}
@@ -36,6 +36,19 @@ class Validation {
 		}
 		if(self::hasValue('mobile', $inputs)) {
 			$inputs['mobile'] = self::mobile($inputs['mobile']);
+		}
+		if(self::hasValue('memberof', $inputs)) {
+			try {
+				$groupNames = explode("\r\n", $inputs['memberof']);
+				$groupNames = array_filter($groupNames, function($name) { return $name !== ''; });
+				$inputs['memberof'] = $ldap->groupNamesToDn($groupNames);
+			} catch(LdapException $e) {
+				if($e->getCode() === 1) {
+					throw new ValidationException($e->getMessage(), 0, $e);
+				} else {
+					throw $e;
+				}
+			}
 		}
 
 		// Arrays are passed by value and copy-on-write, $inputs is now a copy of the array outside this function

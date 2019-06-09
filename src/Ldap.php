@@ -185,6 +185,42 @@ class Ldap {
 		throw new InvalidArgumentException("$dn is not a group DN");
 	}
 
+	public function groupNamesToDn(array $names): array {
+		if(count($names) <= 0) {
+			return [];
+		}
+		$escaped = [];
+		$results = [];
+		foreach($names as $name) {
+			$escaped[] = 'cn=' . ldap_escape($name, '', LDAP_ESCAPE_FILTER);
+			$results[strtolower($name)] = null;
+		}
+		$filter = '(|(' . implode(')(', $escaped) . '))';
+		$sr = ldap_search($this->ds, $this->groupsDn, $filter, ['dn']);
+		if(!$sr) {
+			throw new LdapException('Cannot search groups');
+		}
+
+		$entry = ldap_first_entry($this->ds, $sr);
+		do {
+			$dn = ldap_get_dn($this->ds, $entry);
+			$groupCn = strtolower(ldap_explode_dn($dn, 1)[0]);
+			$results[$groupCn] = $dn;
+		} while ($entry = ldap_next_entry($this->ds, $entry));
+
+		foreach($results as $name => $dn) {
+			if($dn === null) {
+				throw new LdapException('Cannot find group ' . $name, 1);
+			}
+		}
+
+		if(count($results) !== count($names)) {
+			throw new LdapException('Groups mismatch, converted names ' . implode(', ', $names) . ' to DNs ' . implode(' ', $results), 1);
+		}
+
+		return array_values($results);
+	}
+
 	private static function isEmpty(string $attr, array $attributes) {
 		return $attributes[$attr] === null || (is_array($attributes[$attr]) && count($attributes[$attr]) === 0);
 	}
