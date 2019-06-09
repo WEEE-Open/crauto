@@ -23,7 +23,7 @@
 		            </li>
 			        <?php if($isAdmin): ?>
 		            <li class="nav-item">
-		                <a class="nav-link  <?= $currentSection === 'accounts' ? 'active' : '' ?>" href="/accounts.php">Accounts</a>
+		                <a class="nav-link  <?= $currentSection === 'people' ? 'active' : '' ?>" href="/people.php">Accounts</a>
 		            </li>
 			        <?php endif ?>
 		            <li class="nav-item">

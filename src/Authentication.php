@@ -230,4 +230,10 @@ class Authentication {
 		$groups = explode(',', $groups);
 		return array_combine($groups, $groups); // a hashmap
 	}
+
+	public static function isAdmin() {
+		$groups = Authentication::splitGroups($_SESSION['groups']);
+
+		return isset($groups['HR']);
+	}
 }

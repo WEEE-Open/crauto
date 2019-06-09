@@ -38,6 +38,52 @@ class Ldap {
 		return $user;
 	}
 
+	public function getUsers(array $attributes) {
+		if(version_compare(PHP_VERSION, '7.3', '>=')) {
+			// From PHP 7.3 onward, the serverctrls parameter is available. This is the only reasonable way to have the results sorted.
+			// Well, if there's more than one page which is actually not supported, but let's use it anyway.
+			/** @noinspection PhpUndefinedConstantInspection */
+			$serverctrls = [
+				[
+					'oid' => LDAP_CONTROL_SORTREQUEST,
+					// Should be true, should be supported out of the box on 389DS...
+					// not even the examples in the manual managed to actually make it sort results, they're still "random".
+					// Maybe some day in the future it will magically start to work and we can switch this to true, but that
+					// day has yet to come.
+					'iscritical' => false,
+					'value' => [
+						[
+							'attr' => 'uid',
+							'oid' => '2.5.13.3', // caseIgnoreOrderingMatch
+						]
+					]
+				],
+			];
+			/** @noinspection PhpMethodParametersCountMismatchInspection */
+			$sr = ldap_search($this->ds, $this->usersDn, '(uid=*)', $attributes, null, null, null, null, $serverctrls);
+		} else {
+			$sr = ldap_search($this->ds, $this->usersDn, '(uid=*)', $attributes);
+		}
+		if(!$sr) {
+			throw new LdapException('Cannot search users');
+		}
+
+		$count = ldap_count_entries($this->ds, $sr);
+		if($count === 0) {
+			return [];
+		}
+
+		$entries = ldap_get_entries($this->ds, $sr);
+		$simpler = [];
+		foreach($entries as $k => $entry) {
+			if($k !== 'count') {
+				$simpler[] = self::simplify($entry);
+			}
+		}
+		usort($simpler, function(array $a, array $b): int { return strcmp($a['uid'], $b['uid']); });
+		return $simpler;
+	}
+
 	/**
 	 * @param string $uid UID to search
 	 * @param array|null $attributes Attributes to include in search result ("null" for all)

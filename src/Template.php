@@ -11,13 +11,8 @@ class Template {
 		$engine = new Plates('..' . DIRECTORY_SEPARATOR . 'templates');
 		$engine->addData([
 			'authenticated' => $loggedIn,
-			'isAdmin' => $loggedIn && self::isAdmin(),
+			'isAdmin' => $loggedIn && Authentication::isAdmin(),
 		], 'navbar');
 		return $engine;
-	}
-
-	private static function isAdmin() {
-		$groups = Authentication::splitGroups($_SESSION['groups']);
-		return isset($groups['HR']);
 	}
 }

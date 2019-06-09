@@ -12,6 +12,22 @@
 			border-bottom: 0.5rem solid #00983a;
 			margin-bottom: 0.5rem;
 		}
+
+		a {
+			color: #00983a;
+		}
+
+		a:visited {
+			color: #00692b;
+		}
+
+		a:hover {
+			color: #00cc4e;
+		}
+
+		a:active {
+			color: #33ff81;
+		}
 	</style>
 </head>
 <body>
