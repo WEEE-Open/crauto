@@ -210,7 +210,7 @@ class Ldap {
 
 		foreach($results as $name => $dn) {
 			if($dn === null) {
-				throw new LdapException('Cannot find group ' . $name, 1);
+				throw new LdapException("Cannot find group '$name'", 1);
 			}
 		}
 

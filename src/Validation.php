@@ -43,6 +43,7 @@ class Validation {
 		'telegramnickname',
 		'sshpublickey',
 		'description',
+		'nsaccountlock',
 	];
 	const editableAttributesUser = [
 		'mail',
@@ -66,6 +67,7 @@ class Validation {
 		'telegramid',
 		'telegramnickname',
 		'description',
+		'nsaccountlock',
 	];
 
 	public static function normalize(Ldap $ldap, array $inputs): array {
@@ -96,6 +98,10 @@ class Validation {
 		if(self::hasValue('mobile', $inputs)) {
 			$inputs['mobile'] = self::mobile($inputs['mobile']);
 		}
+		if(self::hasValue('sshpublickey', $inputs)) {
+			$inputs['sshpublickey'] = explode("\r\n", $inputs['sshpublickey']);
+			$inputs['sshpublickey'] = array_filter($inputs['sshpublickey'], function($name) { return $name !== ''; });
+		}
 		if(self::hasValue('memberof', $inputs)) {
 			try {
 				$groupNames = explode("\r\n", $inputs['memberof']);
@@ -121,8 +127,11 @@ class Validation {
 				if($strlen > 10000) {
 					throw new ValidationException("Notes too long: $strlen characters, limit is 10000");
 				}
-			}
-			if($strlen > 500) {
+			} elseif($attr === 'sshpublickey') {
+				if($strlen > 10000) {
+					throw new ValidationException("SSH public keys too long: $strlen characters, limit is 10000");
+				}
+			} elseif($strlen > 500) {
 				throw new ValidationException("$attr too long: $strlen characters, limit is 500");
 			}
 		}

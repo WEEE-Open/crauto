@@ -1,11 +1,15 @@
 <?php
 /** @var $error string|null */
 /** @var $attributes array */
+/** @var $allowedAttributes string[] */
 /** @var $editableAttributes string[] */
 /** @var $title string */
 $this->layout('base');
 $editable = function(string $attr) use ($editableAttributes): string {
 	return isset($editableAttributes[$attr]) ? '' : 'readonly';
+};
+$disabled = function(string $attr) use ($editableAttributes): string {
+	return isset($editableAttributes[$attr]) ? '' : 'disabled';
 };
 $attributeNames = [
 	'uid' => 'Username',
@@ -23,7 +27,8 @@ $attributeNames = [
 	'telegramid' => 'Telegram ID',
 	'telegramnickname' => 'Telegram nickname',
 	'sshpublickey' => 'SSH public keys',
-	'description' => 'Notes'
+	'description' => 'Notes',
+	'nsaccountlock' => 'Account locked',
 ]
 ?>
 
@@ -31,7 +36,7 @@ $attributeNames = [
 
 <?php if($error !== null): ?>
 <div class="alert alert-danger" role="alert">
-Error: <?= $error ?>
+Error: <?= $this->e($error) ?>
 </div>
 <?php endif ?>
 
@@ -111,7 +116,11 @@ Error: <?= $error ?>
 			<input type="date" class="form-control" id="profile-safetytestdate" name="safetytestdate" value="<?= $this->e($attributes['safetytestdate'] ?? '') ?>" <?= $editable('safetytestdate') ?>>
 		</div>
 	</div>
-	<?php if(isset($attributes['description'])): ?>
+	<div class="form-group">
+		<label for="profile-sshpublickey"><?= $attributeNames['sshpublickey'] ?></label>
+		<textarea class="form-control" id="profile-sshpublickey" name="sshpublickey" rows="<?= count($attributes['sshpublickey']) + 1 ?>" <?= $editable('sshpublickey') ?> maxlength="10000"><?= implode("\r\n", array_map([$this, 'e'], $attributes['sshpublickey'])) ?></textarea>
+	</div>
+	<?php if(in_array('description', $allowedAttributes)): ?>
 	<div class="form-group">
 		<label for="profile-description"><?= $attributeNames['description'] ?></label>
 		<textarea class="form-control" id="profile-description" name="description" rows="<?= floor(strlen($attributes['description']) / 100 + 3) ?>" <?= $editable('description') ?> maxlength="10000"><?= $this->e($attributes['description'] ?? '') ?></textarea>
