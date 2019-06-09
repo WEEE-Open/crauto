@@ -2,7 +2,6 @@
 
 namespace WEEEOpen\Crauto;
 
-use DateTime;
 use InvalidArgumentException;
 
 require '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
@@ -64,8 +63,6 @@ try {
 $template = Template::create();
 $template->addData(['currentSection' => 'personal'], 'navbar');
 echo $template->render('user', [
-	'uid' => $_SESSION['uid'],
-	'name' => $_SESSION['cn'],
 	'error' => $error,
 	'attributes' => $attributes,
 	'attributeNames' => $allowedAttributes,
