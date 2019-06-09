@@ -42,7 +42,7 @@ try {
 		$ldap->updateUser($_SESSION['uid'], $edited, $attributes);
 		http_response_code(303);
 		header("Location: /personal.php");
-		exit(0);
+		exit;
 	}
 } catch(LdapException $e) {
 	$error = $e->getMessage();
@@ -62,6 +62,7 @@ $attributes['schacdateofbirth'] = isset($attributes['schacdateofbirth']) ? Valid
 
 $template = Template::create();
 $template->addData(['currentSection' => 'personal'], 'navbar');
+$template->addData(['title' => "Personal profile"]);
 echo $template->render('user', [
 	'error' => $error,
 	'attributes' => $attributes,
