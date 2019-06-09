@@ -114,6 +114,9 @@ class Ldap {
 
 		$modlist = [];
 		foreach($replace as $attr => $values) {
+			if($attr === 'memberof') {
+				continue;
+			}
 			if($values === '' || $values === []) {
 				if(!self::isEmpty($attr, $previous)) {
 					// Actually delete (had a value, now has none)
@@ -140,6 +143,26 @@ class Ldap {
 						"modtype" => LDAP_MODIFY_BATCH_ADD,
 						"values"  => $values
 					];
+				}
+			}
+		}
+		if(array_key_exists('memberof', $replace)) {
+			$previousMembership = $previous['memberof'] ?? [];
+			$removedGroups = array_diff($previousMembership, $replace['memberof']);
+			$addedGroups = array_diff($replace['memberof'], $previousMembership);
+			$entry = [
+				'member' => $dn,
+			];
+			foreach($addedGroups as $group) {
+				$result = ldap_mod_add($this->ds, $group, $entry);
+				if(!$result) {
+					throw new LdapException("Cannot add $dn to $group");
+				}
+			}
+			foreach($removedGroups as $group) {
+				$result = ldap_mod_del($this->ds, $group, $entry);
+				if(!$result) {
+					throw new LdapException("Cannot remove $dn from $group");
 				}
 			}
 		}
