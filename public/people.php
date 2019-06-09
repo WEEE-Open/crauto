@@ -63,7 +63,7 @@ if(isset($_GET['uid'])) {
 		'editableAttributes' => $editableAttributes,
 	]);
 } else {
-	$users = $ldap->getUsers(['uid', 'cn']);
+	$users = $ldap->getUsers(['uid', 'cn', 'nsaccountlock']);
 
 	$template = Template::create();
 	$template->addData(['currentSection' => 'people'], 'navbar');

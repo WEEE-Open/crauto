@@ -28,6 +28,15 @@
 		a:active {
 			color: #33ff81;
 		}
+
+		tr.locked {
+			background: #d6d8db;
+			color: #666;
+		}
+
+		tr.locked a {
+			color: #333;
+		}
 	</style>
 </head>
 <body>

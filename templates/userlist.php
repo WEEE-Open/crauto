@@ -5,13 +5,13 @@ $this->layout('base', ['title' => 'People']);
 ?>
 <h1>People</h1>
 
-<?php if($error !== null): ?>
+<?php if(isset($error)): ?>
 	<div class="alert alert-danger" role="alert">
 		Error: <?=$error?>
 	</div>
 <?php endif ?>
 
-<table class="table table-striped">
+<table class="table">
 	<caption>List of people</caption>
 	<thead class="thead-dark">
 	<tr>
@@ -21,8 +21,8 @@ $this->layout('base', ['title' => 'People']);
 	</thead>
 	<tbody>
 	<?php foreach($users as $user): ?>
-		<tr>
-			<td><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
+		<tr <?= isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true' ? 'class="locked"' : '' ?>>
+			<td><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a><?= isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true' ? ' (locked)' : '' ?></td>
 			<td><?= $this->e($user['cn']) ?></td>
 		</tr>
 	<?php endforeach ?>
