@@ -63,8 +63,16 @@ if(isset($_GET['uid'])) {
 		'editableAttributes' => $editableAttributes,
 	]);
 } else {
-	$users = $ldap->getUsers(['uid', 'cn', 'nsaccountlock']);
-
+	$users = $ldap->getUsers(['uid', 'cn', 'memberof', 'nsaccountlock']);
+	foreach($users as &$user) {
+		if(isset($user['memberof'])) {
+			$groups = [];
+			foreach($user['memberof'] as $dn) {
+				$groups[] = Ldap::groupDnToName($dn);
+			}
+			$user['memberof'] = $groups;
+		}
+	}
 	$template = Template::create();
 	$template->addData(['currentSection' => 'people'], 'navbar');
 	echo $template->render('userlist', [

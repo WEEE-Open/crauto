@@ -146,7 +146,7 @@ class Ldap {
 				}
 			}
 		}
-		if(array_key_exists('memberof', $replace)) {
+		if(isset($replace['memberof'])) {
 			$previousMembership = $previous['memberof'] ?? [];
 			$removedGroups = array_diff($previousMembership, $replace['memberof']);
 			$addedGroups = array_diff($replace['memberof'], $previousMembership);
@@ -191,7 +191,7 @@ class Ldap {
 	protected static function fillAndSortAttributes(array $result, array $attributes): array {
 		$sorted = [];
 		foreach($attributes as $attribute) {
-			if(array_key_exists($attribute, $result)) {
+			if(isset($result[$attribute])) {
 				$sorted[$attribute] = $result[$attribute];
 			} else {
 				$sorted[$attribute] = null;
