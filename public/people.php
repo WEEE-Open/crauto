@@ -56,6 +56,7 @@ if(isset($_GET['uid'])) {
 	echo $template->render('usereditor', [
 		'error' => $error,
 		'attributes' => $attributes,
+		'allowedAttributes' => $allowedAttributes,
 		'editableAttributes' => $editableAttributes,
 	]);
 } else {

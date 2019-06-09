@@ -7,11 +7,10 @@ use InvalidArgumentException;
 require '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 Authentication::requireLogin();
 
+$allowedAttributes = Validation::allowedAttributesUser;
 if(Authentication::isAdmin()) {
-	$allowedAttributes = Validation::allowedAttributesAdmin;
 	$editableAttributes = array_combine(Validation::editableAttributesAdmin, Validation::editableAttributesAdmin);
 } else {
-	$allowedAttributes = Validation::allowedAttributesUser;
 	$editableAttributes = array_combine(Validation::editableAttributesUser, Validation::editableAttributesUser);
 }
 
@@ -53,6 +52,6 @@ $template->addData(['title' => "Personal profile"]);
 echo $template->render('usereditor', [
 	'error' => $error,
 	'attributes' => $attributes,
-	'attributeNames' => $allowedAttributes,
+	'allowedAttributes' => $allowedAttributes,
 	'editableAttributes' => $editableAttributes,
 ]);
