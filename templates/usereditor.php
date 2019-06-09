@@ -1,13 +1,30 @@
 <?php
 /** @var $error string|null */
 /** @var $attributes array */
-/** @var $attributeNames string[] */
 /** @var $editableAttributes string[] */
 /** @var $title string */
 $this->layout('base');
 $editable = function(string $attr) use ($editableAttributes): string {
 	return isset($editableAttributes[$attr]) ? '' : 'readonly';
 };
+$attributeNames = [
+	'uid' => 'Username',
+	'cn' => 'Full name',
+	'givenname' => 'Name',
+	'sn' => 'Surname',
+	'memberof' => 'Groups',
+	'mail' => 'Email',
+	'schacpersonaluniquecode' => 'Student ID',
+	'degreecourse' => 'Degree course',
+	'schacdateofbirth' => 'Date of birth',
+	'schacplaceofbirth' => 'Place of birth',
+	'mobile' => 'Cellphone',
+	'safetytestdate' => 'Date of the test on safety',
+	'telegramid' => 'Telegram ID',
+	'telegramnickname' => 'Telegram nickname',
+	'sshpublickey' => 'SSH public keys',
+	'description' => 'Notes'
+]
 ?>
 
 <h1><?= $title ?></h1>

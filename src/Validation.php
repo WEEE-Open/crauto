@@ -9,6 +9,65 @@ But at least it's getting autoloaded and is tidier than a giant functions.php. *
 use DateTime;
 
 class Validation {
+	const allowedAttributesUser = [
+		'uid',
+		'cn',
+		'givenname',
+		'sn',
+		'memberof',
+		'mail',
+		'schacpersonaluniquecode',
+		'degreecourse',
+		'schacdateofbirth',
+		'schacplaceofbirth',
+		'mobile',
+		'safetytestdate',
+		'telegramid',
+		'telegramnickname',
+		'sshpublickey',
+	];
+	const allowedAttributesAdmin = [
+		'uid',
+		'cn',
+		'givenname',
+		'sn',
+		'memberof',
+		'mail',
+		'schacpersonaluniquecode',
+		'degreecourse',
+		'schacdateofbirth',
+		'schacplaceofbirth',
+		'mobile',
+		'safetytestdate',
+		'telegramid',
+		'telegramnickname',
+		'sshpublickey',
+		'description',
+	];
+	const editableAttributesUser = [
+		'mail',
+		'schacpersonaluniquecode',
+		'degreecourse',
+		'telegramid',
+		'telegramnickname',
+	];
+	const editableAttributesAdmin = [
+		'cn',
+		'givenname',
+		'sn',
+		'memberof',
+		'mail',
+		'schacpersonaluniquecode',
+		'degreecourse',
+		'schacdateofbirth',
+		'schacplaceofbirth',
+		'mobile',
+		'safetytestdate',
+		'telegramid',
+		'telegramnickname',
+		'description',
+	];
+
 	public static function normalize(Ldap $ldap, array $inputs): array {
 		foreach($inputs as $k => $v) {
 			$inputs[$k] = trim($v);

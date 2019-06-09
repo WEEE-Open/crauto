@@ -221,7 +221,7 @@ class Authentication {
 	 *
 	 * @param string $groups String returned by the OIDC library, e.g. "internal/everyone,HR,admin"
 	 *
-	 * @return string[] Groups
+	 * @return string[] Groups, key and value are both the group name
 	 */
 	public static function splitGroups(?string $groups): array {
 		if($groups === null) {
@@ -231,6 +231,11 @@ class Authentication {
 		return array_combine($groups, $groups); // a hashmap
 	}
 
+	/**
+	 * Check whether a user is an "admin" or not (part of HR group or not)
+	 *
+	 * @return bool
+	 */
 	public static function isAdmin() {
 		$groups = Authentication::splitGroups($_SESSION['groups']);
 

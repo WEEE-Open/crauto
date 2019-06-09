@@ -15,47 +15,15 @@ if(!Authentication::isAdmin()) {
 $ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
 	CRAUTO_LDAP_GROUPS_DN, false);
 if(isset($_GET['uid'])) {
+	$allowedAttributes = Validation::allowedAttributesAdmin;
+	$editableAttributes = array_combine(Validation::editableAttributesAdmin, Validation::editableAttributesAdmin);
+
 	$targetUid = $_GET['uid'];
-	$allowedAttributes = [
-		'uid' => 'Username',
-		'cn' => 'Full name',
-		'givenname' => 'Name',
-		'sn' => 'Surname',
-		'memberof' => 'Groups',
-		'mail' => 'Email',
-		'schacpersonaluniquecode' => 'Student ID',
-		'degreecourse' => 'Degree course',
-		'schacdateofbirth' => 'Date of birth',
-		'schacplaceofbirth' => 'Place of birth',
-		'mobile' => 'Cellphone',
-		'safetytestdate' => 'Date of the test on safety',
-		'telegramid' => 'Telegram ID',
-		'telegramnickname' => 'Telegram nickname',
-		'sshpublickey' => 'SSH public keys',
-		'description' => 'Notes',
-	];
-	$editableAttributes = [
-		'cn',
-		'givenname',
-		'sn',
-		'memberof',
-		'mail',
-		'schacpersonaluniquecode',
-		'degreecourse',
-		'schacdateofbirth',
-		'schacplaceofbirth',
-		'mobile',
-		'safetytestdate',
-		'telegramid',
-		'telegramnickname',
-		'description',
-	];
-	$editableAttributes = array_combine($editableAttributes, $editableAttributes);
 
 	$attributes = [];
 	$error = null;
 	try {
-		$attributes = $ldap->getUser($targetUid, array_keys($allowedAttributes));
+		$attributes = $ldap->getUser($targetUid, $allowedAttributes);
 
 		if(isset($_POST) && !empty($_POST)) {
 			$edited = array_intersect_key($_POST, $editableAttributes);
@@ -88,7 +56,6 @@ if(isset($_GET['uid'])) {
 	echo $template->render('usereditor', [
 		'error' => $error,
 		'attributes' => $attributes,
-		'attributeNames' => $allowedAttributes,
 		'editableAttributes' => $editableAttributes,
 	]);
 } else {
