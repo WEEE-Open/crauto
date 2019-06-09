@@ -77,6 +77,9 @@ class Validation {
 		if(self::hasValue('telegramid', $inputs)) {
 			$inputs['telegramid'] = (string) ((int) $inputs['telegramid']);
 		}
+		if(self::hasValue('nsaccountlock', $inputs)) {
+			$inputs['nsaccountlock'] = boolval($inputs['nsaccountlock']) ? 'true' : '';
+		}
 		if(self::hasValue('schacpersonaluniquecode', $inputs)) {
 			$id = $inputs['schacpersonaluniquecode'];
 			$letter = substr($id, 0, 1);
@@ -167,6 +170,11 @@ class Validation {
 		if(self::hasValue('schacplaceofbirth', $inputs)) {
 			if(preg_match('#^\w[\w\s]*(\([A-Za-z][A-Za-z]\))?, \w[\w\s]*$#', $inputs['schacplaceofbirth']) !== 1) {
 				throw new ValidationException('Place of birth does not match regex');
+			}
+		}
+		if(self::hasValue('nsaccountlock', $inputs)) {
+			if($inputs['nsaccountlock'] !== 'true') {
+				throw new ValidationException('nsAccountLock can only be true or be removed');
 			}
 		}
 		if(self::hasValue('uid', $inputs)) {

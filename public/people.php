@@ -27,6 +27,9 @@ if(isset($_GET['uid'])) {
 
 		if(isset($_POST) && !empty($_POST)) {
 			$edited = array_intersect_key($_POST, $editableAttributes);
+			if(isset($editableAttributes['nsaccountlock']) && !isset($edited['nsaccountlock'])) {
+				$edited['nsaccountlock'] = '';
+			}
 			$edited = Validation::normalize($ldap, $edited);
 			Validation::validate($edited);
 			$ldap->updateUser($targetUid, $edited, $attributes);

@@ -34,6 +34,12 @@ $attributeNames = [
 
 <h1><?= $title ?></h1>
 
+<?php if($attributes['nsaccountlock'] === 'true'): ?>
+	<div class="alert alert-warning" role="alert">
+		🔒&nbsp;This account is locked
+	</div>
+<?php endif ?>
+
 <?php if($error !== null): ?>
 <div class="alert alert-danger" role="alert">
 Error: <?= $this->e($error) ?>
@@ -125,6 +131,14 @@ Error: <?= $this->e($error) ?>
 		<label for="profile-description"><?= $attributeNames['description'] ?></label>
 		<textarea class="form-control" id="profile-description" name="description" rows="<?= floor(strlen($attributes['description']) / 100 + 3) ?>" <?= $editable('description') ?> maxlength="10000"><?= $this->e($attributes['description'] ?? '') ?></textarea>
 	</div>
+	<?php endif ?>
+	<?php if(in_array('nsaccountlock', $allowedAttributes)): ?>
+		<div class="form-group">
+			<div class="form-check">
+				<input class="form-check-input" type="checkbox" value="true" id="profile-description" <?= $attributes['nsaccountlock'] === 'true' ? 'checked' : '' ?> name="nsaccountlock" <?= $disabled('nsaccountlock') ?>>
+				<label for="profile-description"><?= $attributeNames['nsaccountlock'] ?></label>
+			</div>
+		</div>
 	<?php endif ?>
 	<div class="form-group">
 		<button type="submit" class="btn btn-primary">Save</button>
