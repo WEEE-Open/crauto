@@ -63,7 +63,7 @@ $attributes['schacdateofbirth'] = isset($attributes['schacdateofbirth']) ? Valid
 $template = Template::create();
 $template->addData(['currentSection' => 'personal'], 'navbar');
 $template->addData(['title' => "Personal profile"]);
-echo $template->render('user', [
+echo $template->render('usereditor', [
 	'error' => $error,
 	'attributes' => $attributes,
 	'attributeNames' => $allowedAttributes,

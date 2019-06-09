@@ -85,7 +85,7 @@ if(isset($_GET['uid'])) {
 	$template = Template::create();
 	$template->addData(['currentSection' => 'people'], 'navbar');
 	$template->addData(['title' => "Edit $targetUid"]);
-	echo $template->render('user', [
+	echo $template->render('usereditor', [
 		'error' => $error,
 		'attributes' => $attributes,
 		'attributeNames' => $allowedAttributes,
