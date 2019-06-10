@@ -26,15 +26,8 @@ if(isset($_GET['uid'])) {
 		$attributes = $ldap->getUser($targetUid, $allowedAttributes);
 
 		if(isset($_POST) && !empty($_POST)) {
-			$edited = array_intersect_key($_POST, $editableAttributes);
-			if(isset($editableAttributes['nsaccountlock']) && !isset($edited['nsaccountlock'])) {
-				$edited['nsaccountlock'] = '';
-			}
-			$edited = Validation::normalize($ldap, $edited);
-			Validation::validate($edited);
-			$ldap->updateUser($targetUid, $edited, $attributes);
-			http_response_code(303);
-			header("Location: " . $_SERVER['REQUEST_URI']);
+			// $_SERVER['REQUEST_URI'] is already url encoded
+			Validation::handlePost($editableAttributes, $ldap, $targetUid, $attributes, $_SERVER['REQUEST_URI']);
 			exit;
 		}
 	} catch(LdapException $e) {

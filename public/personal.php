@@ -22,12 +22,7 @@ try {
 	$attributes = $ldap->getUser($_SESSION['uid'], $allowedAttributes);
 
 	if(isset($_POST) && !empty($_POST)) {
-		$edited = array_intersect_key($_POST, $editableAttributes);
-		$edited = Validation::normalize($ldap, $edited);
-		Validation::validate($edited);
-		$ldap->updateUser($_SESSION['uid'], $edited, $attributes);
-		http_response_code(303);
-		header("Location: /personal.php");
+		Validation::handlePost($editableAttributes, $ldap, $_SESSION['uid'], $attributes, 'personal.php');
 		exit;
 	}
 } catch(LdapException $e) {

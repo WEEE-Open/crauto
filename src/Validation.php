@@ -217,4 +217,25 @@ class Validation {
 	private static function hasValue(string $attr, array $attrs): bool {
 		return isset($attrs[$attr]) && $attrs[$attr] !== '' && $attrs[$attr] !== null;
 	}
+
+	/**
+	 * Handle POST of data from an edit user form
+	 *
+	 * @param array $editableAttributes
+	 * @param Ldap $ldap
+	 * @param string $uid UID to update
+	 * @param array|null $previous attributes
+	 * @param string $location Redirect location
+	 */
+	public static function handlePost(array $editableAttributes, Ldap $ldap, string $uid, ?array $previous, string $location): void {
+		$edited = array_intersect_key($_POST, $editableAttributes);
+		if(isset($editableAttributes['nsaccountlock']) && !isset($edited['nsaccountlock'])) {
+			$edited['nsaccountlock'] = '';
+		}
+		$edited = Validation::normalize($ldap, $edited);
+		Validation::validate($edited);
+		$ldap->updateUser($uid, $edited, $previous);
+		http_response_code(303);
+		header("Location: $location");
+	}
 }
