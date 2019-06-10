@@ -22,5 +22,5 @@ $this->layout('base');
 	</div>
 <?php endif ?>
 
-<?= $this->fetch('userform', ['attributes' => $attributes, 'editableAttributes' => $editableAttributes, 'target' => $target]) ?>
+<?= $this->fetch('userform', ['attributes' => $attributes, 'editableAttributes' => $editableAttributes, 'allowedAttributes' => $allowedAttributes, 'target' => $target]) ?>
 <?= $this->fetch('authenticationform', ['requireOldPassword' => $adminRequireOldPassword, 'target' => $target]) ?>

@@ -3,6 +3,7 @@
 /** @var $target string */
 /** @var $attributes array */
 /** @var $editableAttributes string[] */
+/** @var $allowedAttributes string[] */
 $title = 'Personal profile';
 $this->layout('base', ['title' => $title]);
 ?>
@@ -21,4 +22,4 @@ $this->layout('base', ['title' => $title]);
 	</div>
 <?php endif ?>
 
-<?= $this->fetch('userform', ['attributes' => $attributes, 'editableAttributes' => $editableAttributes, 'target' => $target]) ?>
+<?= $this->fetch('userform', ['attributes' => $attributes, 'editableAttributes' => $editableAttributes, 'allowedAttributes' => $allowedAttributes, 'target' => $target]) ?>

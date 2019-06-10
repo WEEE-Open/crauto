@@ -2,6 +2,7 @@
 /** @var $target string */
 /** @var $attributes array */
 /** @var $editableAttributes string[] */
+/** @var $allowedAttributes string[] */
 ?>
 <?php
 $editable = function(string $attr) use ($editableAttributes): string {
