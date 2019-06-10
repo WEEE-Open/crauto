@@ -1,11 +1,10 @@
 <?php
-/** @var $title string */
 /** @var $error string|null */
-/** @var $adminRequireOldPassword bool */
 /** @var $target string */
 /** @var $attributes array */
 /** @var $editableAttributes string[] */
-$this->layout('base');
+$title = 'Personal profile';
+$this->layout('base', ['title' => $title]);
 ?>
 
 <h1><?= $title ?></h1>
@@ -23,4 +22,3 @@ $this->layout('base');
 <?php endif ?>
 
 <?= $this->fetch('userform', ['attributes' => $attributes, 'editableAttributes' => $editableAttributes, 'target' => $target]) ?>
-<?= $this->fetch('authenticationform', ['requireOldPassword' => $adminRequireOldPassword, 'target' => $target]) ?>

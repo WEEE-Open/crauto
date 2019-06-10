@@ -24,13 +24,28 @@ if(isset($_GET['uid'])) {
 		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
 			CRAUTO_LDAP_GROUPS_DN, false);
 		$attributes = $ldap->getUser($targetUid, $allowedAttributes);
+		$targetUid = $attributes['uid'] ?? $targetUid; // Canonicalize uid, or use the supplied one
+
+		// Cannot change its own password without entering the old password. Can change any other password without knowning
+		// the old one, but at least it's a thin veil of protection (would allow to bypass the authentication.php
+		// password change otherwise)
+		// The strtolower stuff is an additional safeguard but the the uid canonicalization above should make it kind of
+		// useless...
+		$requireOldPasswordForChange = strtolower($_SESSION['uid']) === strtolower($attributes['uid']);
 
 		if(isset($_POST) && !empty($_POST)) {
-			Validation::handleUserEditPost($editableAttributes, $ldap, $targetUid, $attributes);
-			http_response_code(303);
-			// $_SERVER['REQUEST_URI'] is already url encoded
-			header("Location: ${_SERVER['REQUEST_URI']}");
-			exit;
+			if(isset($_POST['password1'])) {
+				Validation::handlePasswordChangePost($ldap, $targetUid, $_POST, $requireOldPasswordForChange);
+				http_response_code(303);
+				header("Location: ${_SERVER['REQUEST_URI']}");
+				exit;
+			} else {
+				Validation::handleUserEditPost($editableAttributes, $ldap, $targetUid, $attributes);
+				http_response_code(303);
+				// $_SERVER['REQUEST_URI'] is already url encoded
+				header("Location: ${_SERVER['REQUEST_URI']}");
+				exit;
+			}
 		}
 	} catch(LdapException $e) {
 		$error = $e->getMessage();
@@ -56,6 +71,8 @@ if(isset($_GET['uid'])) {
 		'attributes' => $attributes,
 		'allowedAttributes' => $allowedAttributes,
 		'editableAttributes' => $editableAttributes,
+		'adminRequireOldPassword' => $requireOldPasswordForChange ?? true,
+		'target' => $_SERVER['REQUEST_URI'], // $_SERVER['REQUEST_URI'] is already url encoded
 	]);
 } else {
 	$users = [];
