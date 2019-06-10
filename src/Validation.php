@@ -118,6 +118,12 @@ class Validation {
 				}
 			}
 		}
+		if(array_key_exists('sshpublickey', $inputs) && !is_array($inputs['sshpublickey'])) {
+			$inputs['sshpublickey'] = [];
+		}
+		if(array_key_exists('memberof', $inputs) && !is_array($inputs['memberof'])) {
+			$inputs['memberof'] = [];
+		}
 
 		// Arrays are passed by value and copy-on-write, $inputs is now a copy of the array outside this function
 		return $inputs;
@@ -125,6 +131,9 @@ class Validation {
 
 	protected static function validate(array $inputs) {
 		foreach($inputs as $attr => $input) {
+			if(is_array($input)) {
+				continue;
+			}
 			$strlen = mb_strlen($input);
 			if($attr === 'description') {
 				if($strlen > 10000) {

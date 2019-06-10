@@ -25,7 +25,7 @@ $this->layout('base', ['title' => 'People']);
 		<tr <?= isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true' ? 'class="locked"' : '' ?>>
 			<td><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a><?= isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true' ? ' (locked)' : '' ?></td>
 			<td><?= $this->e($user['cn']) ?></td>
-			<td><?= implode(', ', $user['memberof'] ?? '') ?></td>
+			<td><?= implode(', ', $user['memberof']) ?></td>
 		</tr>
 	<?php endforeach ?>
 	</tbody>

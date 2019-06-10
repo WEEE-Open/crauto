@@ -11,7 +11,7 @@ class Ldap {
 	protected $usersDn;
 	protected $url;
 	protected $starttls;
-	protected static $multivalued = ['memberof' => true, 'sshpublickey' => true];
+	public static $multivalued = ['memberof' => true, 'sshpublickey' => true];
 
 	public function __construct(string $url, string $bindDn, string $password, string $usersDn, string $groupsDn, bool $startTls = true) {
 		$this->url = $url;
@@ -87,7 +87,9 @@ class Ldap {
 		$simpler = [];
 		foreach($entries as $k => $entry) {
 			if($k !== 'count') {
-				$simpler[] = self::simplify($entry);
+				$user = self::simplify($entry);
+				$user = self::fillAndSortAttributes($user, $attributes);
+				$simpler[] = $user;
 			}
 		}
 		usort($simpler, function(array $a, array $b): int { return strcmp($a['uid'], $b['uid']); });
@@ -162,6 +164,7 @@ class Ldap {
 			}
 		}
 		if(isset($replace['memberof'])) {
+			$replace['memberof'] = $replace['memberof'] ?? [];
 			$previousMembership = $previous['memberof'] ?? [];
 			$removedGroups = array_diff($previousMembership, $replace['memberof']);
 			$addedGroups = array_diff($replace['memberof'], $previousMembership);
@@ -209,7 +212,11 @@ class Ldap {
 			if(isset($result[$attribute])) {
 				$sorted[$attribute] = $result[$attribute];
 			} else {
-				$sorted[$attribute] = null;
+				if(isset(self::$multivalued[$attribute])) {
+					$sorted[$attribute] = [];
+				} else {
+					$sorted[$attribute] = null;
+				}
 			}
 		}
 		return $sorted;

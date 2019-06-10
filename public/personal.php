@@ -10,6 +10,8 @@ Authentication::requireLogin();
 $allowedAttributes = Validation::allowedAttributesUser;
 if(Authentication::isAdmin()) {
 	$editableAttributes = array_combine(Validation::editableAttributesAdmin, Validation::editableAttributesAdmin);
+	// Some attributes are editable, but only on the "people" page, not on the personal page, where they aren't even shown...
+	$editableAttributes = array_intersect($editableAttributes, $allowedAttributes);
 } else {
 	$editableAttributes = array_combine(Validation::editableAttributesUser, Validation::editableAttributesUser);
 }
