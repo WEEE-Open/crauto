@@ -70,7 +70,7 @@ class Validation {
 		'nsaccountlock',
 	];
 
-	public static function normalize(Ldap $ldap, array $inputs): array {
+	protected static function normalize(Ldap $ldap, array $inputs): array {
 		foreach($inputs as $k => $v) {
 			$inputs[$k] = trim($v);
 		}
@@ -123,7 +123,7 @@ class Validation {
 		return $inputs;
 	}
 
-	public static function validate(array $inputs) {
+	protected static function validate(array $inputs) {
 		foreach($inputs as $attr => $input) {
 			$strlen = mb_strlen($input);
 			if($attr === 'description') {
@@ -196,6 +196,13 @@ class Validation {
 			}
 			if(!ctype_digit($num)) {
 				throw new ValidationException('Cellphone number should contain only digits and optionally a +, sorry if you have a number with an extension or some weird symbols in it');
+			}
+		}
+		if(self::hasValue('memberof', $inputs)) {
+			foreach($inputs['memberof'] as $groupDn) {
+				if(strtolower(ldap_explode_dn($groupDn, 1)[0]) === 'wso2_admin') {
+					throw new ValidationException('You wish you could join that group. You can\'t. Sorry about that.');
+				}
 			}
 		}
 	}
