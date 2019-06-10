@@ -82,8 +82,8 @@ class Authentication {
 		$oidc = self::getOidc();
 		$token = $_SESSION['id_token'];
 		session_destroy();
-		$oidc->signOut($token, CRAUTO_URL . '/logout.php');
-		exit();
+		$oidc->signOut($token, CRAUTO_URL . '/logout_done.php');
+		exit;
 	}
 
 	/**
