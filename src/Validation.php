@@ -225,9 +225,8 @@ class Validation {
 	 * @param Ldap $ldap
 	 * @param string $uid UID to update
 	 * @param array|null $previous attributes
-	 * @param string $location Redirect location
 	 */
-	public static function handlePost(array $editableAttributes, Ldap $ldap, string $uid, ?array $previous, string $location): void {
+	public static function handleUserEditPost(array $editableAttributes, Ldap $ldap, string $uid, ?array $previous): void {
 		$edited = array_intersect_key($_POST, $editableAttributes);
 		if(isset($editableAttributes['nsaccountlock']) && !isset($edited['nsaccountlock'])) {
 			$edited['nsaccountlock'] = '';
@@ -235,7 +234,43 @@ class Validation {
 		$edited = Validation::normalize($ldap, $edited);
 		Validation::validate($edited);
 		$ldap->updateUser($uid, $edited, $previous);
-		http_response_code(303);
-		header("Location: $location");
+	}
+
+	/**
+	 * Handle POST of data from an edit user form
+	 *
+	 * @param Ldap $ldap
+	 * @param string $uid UID to update
+	 * @param array $form form values
+	 * @param bool $requireOldPassword
+	 */
+	public static function handlePasswordChangePost(Ldap $ldap, string $uid, array $form, bool $requireOldPassword = true): void {
+		$required = ['password1', 'password2'];
+		if($requireOldPassword) {
+			$required[] = 'oldpassword';
+		}
+		$form = array_intersect_key($form, array_combine($required, $required));
+		if(count($form) < count($required)) {
+			throw new ValidationException('Provide all the required passwords');
+		}
+		if($form['password1'] !== $form['password2']) {
+			throw new ValidationException('Password does not match confirmation password');
+		}
+
+		$dn = $ldap->getUserDn($uid);
+
+		if($requireOldPassword) {
+			try {
+				// If this doesn't throw any exception, we're good to go
+				new Ldap($ldap->getUrl(), $dn, $form['oldpassword'], '', '', $ldap->getStarttls());
+			} catch(LdapException $e) {
+				if($requireOldPassword && $e->getMessage() === 'Bind with LDAP server failed') {
+					throw new LdapException('Current password is incorrect (' . $e->getMessage() . ')');
+				}
+				throw $e;
+			}
+		}
+
+		$ldap->updatePassword($dn, $form['password1']);
 	}
 }

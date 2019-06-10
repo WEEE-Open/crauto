@@ -26,8 +26,10 @@ if(isset($_GET['uid'])) {
 		$attributes = $ldap->getUser($targetUid, $allowedAttributes);
 
 		if(isset($_POST) && !empty($_POST)) {
+			Validation::handleUserEditPost($editableAttributes, $ldap, $targetUid, $attributes);
+			http_response_code(303);
 			// $_SERVER['REQUEST_URI'] is already url encoded
-			Validation::handlePost($editableAttributes, $ldap, $targetUid, $attributes, $_SERVER['REQUEST_URI']);
+			header("Location: ${_SERVER['REQUEST_URI']}");
 			exit;
 		}
 	} catch(LdapException $e) {

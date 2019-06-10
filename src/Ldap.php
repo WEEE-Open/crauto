@@ -9,9 +9,13 @@ class Ldap {
 	protected $ds;
 	protected $groupsDn;
 	protected $usersDn;
+	protected $url;
+	protected $starttls;
 	protected static $multivalued = ['memberof' => true, 'sshpublickey' => true];
 
 	public function __construct(string $url, string $bindDn, string $password, string $usersDn, string $groupsDn, bool $startTls = true) {
+		$this->url = $url;
+		$this->starttls = $startTls;
 		$this->groupsDn = $groupsDn;
 		$this->usersDn = $usersDn;
 		$this->ds = ldap_connect($url);
@@ -36,6 +40,12 @@ class Ldap {
 			$user = self::fillAndSortAttributes($user, $attributes);
 		}
 		return $user;
+	}
+
+	public function getUserDn(string $uid): string {
+		$sr = $this->searchByUid($uid, ['dn']);
+		$theOnlyResult = ldap_first_entry($this->ds, $sr);
+		return ldap_get_dn($this->ds, $theOnlyResult);
 	}
 
 	public function getUsers(array $attributes) {
@@ -107,10 +117,15 @@ class Ldap {
 		return $sr;
 	}
 
+	public function updatePassword(string $dn, string $password) {
+		$result = ldap_mod_replace($this->ds, $dn, ['userPassword' => $password]);
+		if(!$result) {
+			throw new LdapException('Cannot update password: ' . ldap_error($this->ds));
+		}
+	}
+
 	public function updateUser(string $uid, array $replace, array $previous) {
-		$sr = $this->searchByUid($uid, ['dn']);
-		$theOnlyResult = ldap_first_entry($this->ds, $sr);
-		$dn = ldap_get_dn($this->ds, $theOnlyResult);
+		$dn = $this->getUserDn($uid);
 
 		$modlist = [];
 		foreach($replace as $attr => $values) {
@@ -246,5 +261,13 @@ class Ldap {
 
 	private static function isEmpty(string $attr, array $attributes) {
 		return $attributes[$attr] === null || (is_array($attributes[$attr]) && count($attributes[$attr]) === 0);
+	}
+
+	public function getUrl(): string {
+		return $this->url;
+	}
+
+	public function getStarttls(): bool {
+		return $this->starttls;
 	}
 }
