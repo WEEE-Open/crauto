@@ -12,8 +12,6 @@ if(!Authentication::isAdmin()) {
 	exit;
 }
 
-$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
-	CRAUTO_LDAP_GROUPS_DN, false);
 if(isset($_GET['uid'])) {
 	$allowedAttributes = Validation::allowedAttributesAdmin;
 	$editableAttributes = array_combine(Validation::editableAttributesAdmin, Validation::editableAttributesAdmin);
@@ -23,6 +21,8 @@ if(isset($_GET['uid'])) {
 	$attributes = [];
 	$error = null;
 	try {
+		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
+			CRAUTO_LDAP_GROUPS_DN, false);
 		$attributes = $ldap->getUser($targetUid, $allowedAttributes);
 
 		if(isset($_POST) && !empty($_POST)) {
@@ -63,20 +63,31 @@ if(isset($_GET['uid'])) {
 		'editableAttributes' => $editableAttributes,
 	]);
 } else {
-	$users = $ldap->getUsers(['uid', 'cn', 'memberof', 'nsaccountlock']);
-	foreach($users as &$user) {
-		if(isset($user['memberof'])) {
-			$groups = [];
-			foreach($user['memberof'] as $dn) {
-				$groups[] = Ldap::groupDnToName($dn);
+	$users = [];
+	$error = null;
+	try {
+		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
+			CRAUTO_LDAP_GROUPS_DN, false);
+		$users = $ldap->getUsers(['uid', 'cn', 'memberof', 'nsaccountlock']);
+
+		foreach($users as &$user) {
+			if(isset($user['memberof'])) {
+				$groups = [];
+				foreach($user['memberof'] as $dn) {
+					$groups[] = Ldap::groupDnToName($dn);
+				}
+				$user['memberof'] = $groups;
 			}
-			$user['memberof'] = $groups;
 		}
+	} catch(LdapException $e) {
+		$error = $e->getMessage();
 	}
+
 	$template = Template::create();
 	$template->addData(['currentSection' => 'people'], 'navbar');
 	echo $template->render('userlist', [
 		'users' => $users,
+		'error' => $error,
 	]);
 }
 

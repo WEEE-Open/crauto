@@ -7,7 +7,7 @@ $this->layout('base', ['title' => 'People']);
 
 <?php if(isset($error)): ?>
 	<div class="alert alert-danger" role="alert">
-		Error: <?=$error?>
+		Error: <?= $this->e($error) ?>
 	</div>
 <?php endif ?>
 
