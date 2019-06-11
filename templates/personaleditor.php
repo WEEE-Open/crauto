@@ -16,3 +16,7 @@ $this->layout('base', ['title' => $title]);
 <?php endif ?>
 
 <?= $this->fetch('userform', ['attributes' => $attributes, 'editableAttributes' => $editableAttributes, 'allowedAttributes' => $allowedAttributes, 'target' => 'personal.php']) ?>
+
+<p>
+	<a class="btn btn-secondary" href="/personal.php?download" role="button">Download this data</a> and admire our GDPR compliance!
+</p>

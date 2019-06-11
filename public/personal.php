@@ -23,6 +23,15 @@ try {
 		CRAUTO_LDAP_GROUPS_DN, false);
 	$attributes = $ldap->getUser($_SESSION['uid'], $allowedAttributes);
 
+	if(isset($_GET['download'])) {
+		header('Content-Type: application/json');
+		header('Content-Transfer-Encoding: Binary');
+		header('Content-Description: File Transfer');
+		header("Content-Disposition: attachment; filename=${_SESSION['uid']}.json");
+		echo json_encode($attributes, JSON_PRETTY_PRINT);
+		exit;
+	}
+
 	if(isset($_POST) && !empty($_POST)) {
 		Validation::handleUserEditPost($editableAttributes, $ldap, $_SESSION['uid'], $attributes);
 		http_response_code(303);

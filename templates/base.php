@@ -5,7 +5,6 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="bootstrap.min.css">
     <title><?= $this->e($title) ?> - Crauto</title>
 	<style>
 		.navbar {
@@ -17,7 +16,7 @@
 			color: #00983a;
 		}
 
-		a:visited {
+		a:visited:not(.btn) {
 			color: #00692b;
 		}
 
@@ -38,6 +37,7 @@
 			color: #333;
 		}
 	</style>
+	<link rel="stylesheet" href="bootstrap.min.css">
 </head>
 <body>
 <?= $this->fetch('navbar') ?>
