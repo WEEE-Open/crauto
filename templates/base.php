@@ -12,19 +12,19 @@
 			margin-bottom: 0.5rem;
 		}
 
-		a {
+		a:not(.btn), a:link:not(.btn) {
 			color: #00983a;
 		}
 
-		a:visited:not(.btn) {
+		a:visited:not(.btn), a:link:visited:not(.btn) {
 			color: #00692b;
 		}
 
-		a:hover {
+		a:hover:not(.btn), a:link:hover:not(.btn) {
 			color: #00cc4e;
 		}
 
-		a:active {
+		a:active:not(.btn), a:link:active:not(.btn) {
 			color: #33ff81;
 		}
 
