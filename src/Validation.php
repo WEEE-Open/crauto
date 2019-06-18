@@ -73,6 +73,9 @@ class Validation {
 	protected static function normalize(Ldap $ldap, array $inputs): array {
 		foreach($inputs as $k => $v) {
 			$inputs[$k] = trim($v);
+			if($v === '') {
+				$inputs[$k] = null;
+			}
 		}
 		if(self::hasValue('telegramid', $inputs)) {
 			$inputs['telegramid'] = (string) ((int) $inputs['telegramid']);

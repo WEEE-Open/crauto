@@ -134,30 +134,32 @@ class Ldap {
 			if($attr === 'memberof') {
 				continue;
 			}
-			if($values === '' || $values === []) {
-				if(!self::isEmpty($attr, $previous)) {
+			// Something changed
+			if(!self::attrEquals($previous[$attr], $values)) {
+				// Values needs to be an array for modlist
+				if($values === null) {
+					$values = [];
+				} elseif(!is_array($values)) {
+					$values = [$values];
+				}
+				if(count($values) > 0 && self::isEmpty($attr, $previous)) {
+					// Does not exist: add
+					$modlist[] = [
+						"attrib"  => $attr,
+						"modtype" => LDAP_MODIFY_BATCH_ADD,
+						"values"  => $values
+					];
+				} elseif(count($values) <= 0) {
 					// Actually delete (had a value, now has none)
 					$modlist[] = [
 						"attrib"  => $attr,
 						"modtype" => LDAP_MODIFY_BATCH_REMOVE_ALL
 					];
-				}
-			} else {
-				if(!is_array($values)) {
-					$values = [$values];
-				}
-				if(!self::isEmpty($attr, $previous)) {
+				} else {
 					// Attribute already exists: replace
 					$modlist[] = [
 						"attrib"  => $attr,
 						"modtype" => LDAP_MODIFY_BATCH_REPLACE,
-						"values"  => $values
-					];
-				} else {
-					// Does not exist: add
-					$modlist[] = [
-						"attrib"  => $attr,
-						"modtype" => LDAP_MODIFY_BATCH_ADD,
 						"values"  => $values
 					];
 				}
@@ -184,9 +186,11 @@ class Ldap {
 				}
 			}
 		}
-		$result = ldap_modify_batch($this->ds, $dn, $modlist);
-		if($result === false) {
-			throw new LdapException('Modification failed (' . ldap_error($this->ds) . ')');
+		if(!empty($modlist)) {
+			$result = ldap_modify_batch($this->ds, $dn, $modlist);
+			if($result === false) {
+				throw new LdapException('Modification failed (' . ldap_error($this->ds) . ')');
+			}
 		}
 	}
 
@@ -264,6 +268,26 @@ class Ldap {
 		}
 
 		return array_values($results);
+	}
+
+	private static function attrEquals($a, $b): bool {
+		if(is_array($a) && is_array($b)) {
+			return self::arrayEquals($a, $b);
+		}
+		return $a === $b;
+	}
+
+	private static function arrayEquals(array $a, array $b): bool {
+		if(count($a) !== count($b)) {
+			return false;
+		}
+		if(!empty(array_diff($a, $b))) {
+			return false;
+		}
+		if(!empty(array_diff($b, $a))) {
+			return false;
+		}
+		return true;
 	}
 
 	private static function isEmpty(string $attr, array $attributes) {
