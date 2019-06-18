@@ -69,6 +69,21 @@ class Validation {
 		'description',
 		'nsaccountlock',
 	];
+	const allowedAttributesRegister = [
+		'uid',
+		'userpassword',
+		'telegramid',
+		'telegramnickname',
+		'cn',
+		'givenname',
+		'sn',
+		'mail',
+		'mobile',
+		'degreecourse',
+		'schacpersonaluniquecode',
+		'schacdateofbirth',
+		'schacplaceofbirth',
+	];
 
 	protected static function normalize(Ldap $ldap, array $inputs): array {
 		foreach($inputs as $k => $v) {
@@ -180,7 +195,7 @@ class Validation {
 			}
 		}
 		if(self::hasValue('schacplaceofbirth', $inputs)) {
-			if(preg_match('#^\w[\w\s]*(\([A-Za-z][A-Za-z]\))?, \w[\w\s]*$#', $inputs['schacplaceofbirth']) !== 1) {
+			if(preg_match('#^\w[\w\s]*(\([A-Za-z][A-Za-z]\))?, \w[\w\s]*$#u', $inputs['schacplaceofbirth']) !== 1) {
 				throw new ValidationException('Place of birth does not match regex');
 			}
 		}
@@ -253,6 +268,95 @@ class Validation {
 		$edited = Validation::normalize($ldap, $edited);
 		Validation::validate($edited);
 		$ldap->updateUser($uid, $edited, $previous);
+	}
+
+	/**
+	 * Handle POST of data from a registration form
+	 *
+	 * @param array $attributes Attributes from POST request
+	 * @param array $allowedAttributes
+	 * @param Ldap $ldap
+	 * @param string[] $degreeCourses
+	 * @param string[] $countries
+	 * @param string[] $province
+	 */
+	public static function handleUserRegisterPost(array $attributes, array $allowedAttributes, Ldap $ldap, array $degreeCourses, array $countries, array $province): void {
+		// Check degree course according to the list
+		if(!self::hasValue('degreecourse', $attributes)) {
+			throw new ValidationException('Select a degree course');
+		}
+		if(!isset($degreeCourses[$attributes['degreecourse']])) {
+			throw new ValidationException('Invalid degree course, select one from the list');
+		}
+		// Key and value are the same, no need to get the value
+
+		// Get country
+		if(!self::hasValue('register-birth-country', $attributes)) {
+			throw new ValidationException('Select a country of birth');
+		}
+		if(!isset($countries[$attributes['register-birth-country']])) {
+			throw new ValidationException('Invalid country of birth, select one from the list');
+		}
+		$birthCountry = $countries[$attributes['register-birth-country']];
+		unset($attributes['register-birth-country']);
+
+		// Get city
+		if(!self::hasValue('register-birth-city', $attributes)) {
+			throw new ValidationException('Select a city of birth');
+		}
+		if(mb_strlen($attributes['register-birth-city'] > 400)) {
+			// An extremely long city name in a very long state could be more than 500 characters and fail validation,
+			// but I doubt that someone will *ever* encounter this problem without knowing.
+			throw new ValidationException('Invalid city of birth, name too long');
+		}
+		if(preg_match('#^\w[\w\s]*$#u', $attributes['register-birth-city']) !== 1) {
+			throw new ValidationException('Invalid city of birth, does not match regex');
+		}
+		$birthCity = $attributes['register-birth-city'];
+		unset($attributes['register-birth-city']);
+
+		// Get province if needed
+		if($birthCountry === 'Italy') {
+			if(!self::hasValue('register-birth-province', $attributes)) {
+				throw new ValidationException('Select a province of birth');
+			}
+			if(!isset($province[$attributes['register-birth-province']])) {
+				throw new ValidationException('Invalid province of birth, select one from the list');
+			}
+			// Get just the province code (array key)
+			$birthProvince = $attributes['register-birth-province'];
+		} else {
+			$birthProvince = null;
+		}
+		unset($attributes['register-birth-province']);
+
+		// Now build the birth place string
+		if($birthProvince === null) {
+			$attributes['schacplaceofbirth'] = "$birthCity, $birthCountry";
+		} else {
+			$attributes['schacplaceofbirth'] = "$birthCity ($birthProvince), $birthCountry";
+		}
+
+		if(!isset($attributes['givenname']) || !isset($attributes['sn'])) {
+			// This is checked again later, but oh well...
+			throw new ValidationException('Name and surname are mandatory');
+		}
+		// This may become longer than 500 characters and fail validation later. Well... too bad.
+		$attributes['cn'] = $attributes['givenname'] . ' ' . $attributes['sn'];
+
+		if(!self::hasValue('password1', $attributes) || !self::hasValue('password2', $attributes)) {
+			throw new ValidationException('Missing password or password confirmation');
+		}
+		if($attributes['password1'] !== $attributes['password2']) {
+			throw new ValidationException('Password and password confirmation do not match');
+		}
+		$password = $attributes['userpassword'] = $attributes['password1'];
+		$edited = array_intersect_key($attributes, $allowedAttributes);
+		Validation::normalize($ldap, $attributes); // This will trim the password. This needs to be undone...
+		$attributes['userpassword'] = $password; // ...done. Or undone, as you prefer.
+		Validation::validate($attributes);
+
+		// TODO: save everything to database
 	}
 
 	/**
