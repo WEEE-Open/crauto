@@ -441,22 +441,29 @@ $province = [
 $error = null;
 unset($_SESSION['register_done']);
 
+$template = Template::create();
+$template->addData(['authenticated' => $loggedin, 'isAdmin' => $loggedin && Authentication::isAdmin()], 'navbar');
+
 try {
 	$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
 		CRAUTO_LDAP_GROUPS_DN, false);
-
-	if(isset($_POST) && !empty($_POST)) {
-		// TODO: check invite code
-
-		Validation::handleUserRegisterPost($_POST, Validation::allowedAttributesRegister, $ldap, $degreeCourses, $countries, $province);
-		http_response_code(303);
-		$_SESSION['register_done'] = true;
-		header('Location: register_done.php');
-		exit;
-	}
 	if(isset($_GET['invite'])) {
 		// TODO: do something with these
 		$defaultAttributes = $ldap->getInvitedUser($_GET['invite']);
+
+		if(isset($_POST) && !empty($_POST)) {
+			// TODO: check invite code
+
+			Validation::handleUserRegisterPost($_POST, Validation::allowedAttributesRegister, $ldap, $degreeCourses, $countries, $province);
+			http_response_code(303);
+			$_SESSION['register_done'] = true;
+			header('Location: register_done.php');
+			exit;
+		}
+	} else {
+		$template = Template::create();
+		echo $template->render('403', ['error' => 'Missing invite code']);
+		exit;
 	}
 } catch(LdapException $e) {
 	$error = $e->getMessage();
@@ -464,6 +471,4 @@ try {
 	$error = $e->getMessage();
 }
 
-$template = Template::create();
-$template->addData(['authenticated' => $loggedin, 'isAdmin' => $loggedin && Authentication::isAdmin()], 'navbar');
 echo $template->render('registerform', ['error' => $error, 'degreeCourses' => $degreeCourses, 'countries' => $countries, 'province' => $province]);

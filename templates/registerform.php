@@ -48,7 +48,7 @@ $telegramNote = $telegramNote ?? true;
 		<?php if($telegramNote): ?>
 			<div class="col-12">
 				<small id="bot-help" class="form-text text-muted">
-					Give the link to this page to the <a href="https://telegram.me/weeelab_bot" target="_blank">bot</a> to fill the next two fields above automatically.
+					Give the link to this page to the <a href="https://telegram.me/weeelab_bot" target="_blank">bot</a> to fill the next two fields automatically.
 				</small>
 			</div>
 		<?php endif ?>
