@@ -10,7 +10,7 @@ use LogicException;
 require_once '../config/config.php';
 
 class Authentication {
-	// This is a class just to exploit the autoloading functionality
+	private static $loggedIn = null;
 
 	/**
 	 * Users are required to log in to access this page. If they are not, execution stops and user is redirected to
@@ -30,6 +30,14 @@ class Authentication {
 	 * @return bool True if logged in, false if some action is needed to log in
 	 */
 	public static function isLoggedIn(): bool {
+		if(self::$loggedIn === null) {
+			self::$loggedIn = self::isLoggedInInternal();
+		}
+
+		return self::$loggedIn;
+	}
+
+	private static function isLoggedInInternal(): bool {
 		if(session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
