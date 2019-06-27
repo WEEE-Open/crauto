@@ -5,20 +5,6 @@
 /** @var $countries string[] */
 /** @var $province string[] */
 $this->layout('base', ['title' => 'Register']);
-$attributeNames = [
-	'uid' => 'Username',
-	'givenname' => 'Name',
-	'sn' => 'Surname',
-	//'cn'
-	'mail' => 'Email',
-	'schacpersonaluniquecode' => 'Student ID',
-	'degreecourse' => 'Degree course',
-	'schacdateofbirth' => 'Date of birth',
-	//'schacplaceofbirth'
-	'mobile' => 'Cellphone',
-	'telegramid' => 'Telegram ID',
-	'telegramnickname' => 'Telegram nickname',
-];
 $telegramNote = $telegramNote ?? true;
 ?>
 
@@ -32,7 +18,7 @@ $telegramNote = $telegramNote ?? true;
 
 <form method="POST" target="">
 	<div class="form-group row">
-		<label for="profile-uid" class="col-sm-2 col-form-label"><?= $attributeNames['uid'] ?></label>
+		<label for="profile-uid" class="col-sm-2 col-form-label">Username</label>
 		<div class="col-md-10">
 			<input type="text" class="form-control" id="profile-uid" name="uid" value="<?= $this->e($attributes['uid'] ?? '') ?>" pattern="^[a-zA-Z][a-zA-Z0-9-_\.]*$" maxlength="50"  aria-describedby="uid-help" required>
 			<small id="uid-help" class="form-text text-muted">
@@ -73,7 +59,7 @@ $telegramNote = $telegramNote ?? true;
 			<input type="number" class="form-control" id="profile-telegramid" name="telegramid" value="<?= $this->e($attributes['telegramid'] ?? '') ?>" min="0" maxlength="500" aria-describedby="bot-help">
 		</div>
 		<div class="col-sm-6">
-			<label for="profile-telegramnickname"><?= $attributeNames['telegramnickname'] ?></label>
+			<label for="profile-telegramnickname">Telegram nickname</label>
 			<div class="input-group mb-3">
 				<div class="input-group-prepend">
 					<span class="input-group-text" id="telegramnickname-addon">@</span>

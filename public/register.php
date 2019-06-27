@@ -446,11 +446,17 @@ try {
 		CRAUTO_LDAP_GROUPS_DN, false);
 
 	if(isset($_POST) && !empty($_POST)) {
+		// TODO: check invite code
+
 		Validation::handleUserRegisterPost($_POST, Validation::allowedAttributesRegister, $ldap, $degreeCourses, $countries, $province);
 		http_response_code(303);
 		$_SESSION['register_done'] = true;
 		header('Location: register_done.php');
 		exit;
+	}
+	if(isset($_GET['invite'])) {
+		// TODO: do something with these
+		$defaultAttributes = $ldap->getInvitedUser($_GET['invite']);
 	}
 } catch(LdapException $e) {
 	$error = $e->getMessage();

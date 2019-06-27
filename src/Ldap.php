@@ -9,6 +9,7 @@ class Ldap {
 	protected $ds;
 	protected $groupsDn;
 	protected $usersDn;
+	protected $invitesDn = 'ou=Invites,dc=sso,dc=local'; // TODO: move to a constant
 	protected $url;
 	protected $starttls;
 	public static $multivalued = ['memberof' => true, 'sshpublickey' => true];
@@ -32,6 +33,17 @@ class Ldap {
 		}
 	}
 
+	private static function usernameify(string $string): string {
+		if(extension_loaded('iconv')) {
+			$string = preg_replace("/[^\p{L}]/u", '', $string);
+			/** @noinspection PhpComposerExtensionStubsInspection */
+			$string = iconv('utf-8', 'us-ascii//TRANSLIT', $string);
+		} else {
+			$string = preg_replace("/[^A-Za-z]/", '', $string);
+		}
+		return strtolower($string);
+	}
+
 	public function getUser(string $uid, ?array $attributes = null): ?array {
 		$sr = $this->searchByUid($uid, $attributes);
 		$user = ldap_get_entries($this->ds, $sr)[0];
@@ -40,6 +52,26 @@ class Ldap {
 			$user = self::fillAndSortAttributes($user, $attributes);
 		}
 		return $user;
+	}
+
+	public function getInvitedUser(string $inviteCode): ?array {
+		$inviteCode = ldap_escape($inviteCode, '', LDAP_ESCAPE_FILTER);
+		$sr = ldap_search($this->ds, $this->invitesDn, "(inviteCode=$inviteCode)", ['givenname', 'sn', 'telegramid', 'telegramnickname', 'mail', 'schacpersonaluniquecode', 'degreecourse']);
+		if(!$sr) {
+			throw new LdapException('Cannot search for invite code');
+		}
+		$count = ldap_count_entries($this->ds, $sr);
+		if($count === 0) {
+			return null;
+		} else if($count > 1) {
+			throw new LdapException("Duplicate invite code, $count results found");
+		}
+		$attr = ldap_get_entries($this->ds, $sr)[0];
+		$attr = self::simplify($attr);
+		if(isset($attr['givenname']) && isset($attr['sn'])) {
+			$attr['uid'] = self::usernameify($attr['givenname']) . '.' . self::usernameify($attr['sn']);
+		}
+		return $attr;
 	}
 
 	public function getUserDn(string $uid): string {
