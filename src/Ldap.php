@@ -55,7 +55,7 @@ class Ldap {
 
 	public function getInvitedUser(string $inviteCode, 	string $invitesDn): ?array {
 		$inviteCode = ldap_escape($inviteCode, '', LDAP_ESCAPE_FILTER);
-		$sr = ldap_search($this->ds, $invitesDn, "(inviteCode=$inviteCode)", ['givenname', 'sn', 'telegramid', 'telegramnickname', 'mail', 'schacpersonaluniquecode', 'degreecourse']);
+		$sr = ldap_search($this->ds, $invitesDn, "(inviteCode=$inviteCode)", ['givenname', 'sn', 'mail', 'schacpersonaluniquecode', 'degreecourse', 'telegramid', 'telegramnickname']);
 		if(!$sr) {
 			throw new LdapException('Cannot search for invite code');
 		}
