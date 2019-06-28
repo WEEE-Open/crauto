@@ -9,7 +9,6 @@ class Ldap {
 	protected $ds;
 	protected $groupsDn;
 	protected $usersDn;
-	protected $invitesDn = 'ou=Invites,dc=sso,dc=local'; // TODO: move to a constant
 	protected $url;
 	protected $starttls;
 	public static $multivalued = ['memberof' => true, 'sshpublickey' => true];
@@ -54,9 +53,9 @@ class Ldap {
 		return $user;
 	}
 
-	public function getInvitedUser(string $inviteCode): ?array {
+	public function getInvitedUser(string $inviteCode, 	string $invitesDn): ?array {
 		$inviteCode = ldap_escape($inviteCode, '', LDAP_ESCAPE_FILTER);
-		$sr = ldap_search($this->ds, $this->invitesDn, "(inviteCode=$inviteCode)", ['givenname', 'sn', 'telegramid', 'telegramnickname', 'mail', 'schacpersonaluniquecode', 'degreecourse']);
+		$sr = ldap_search($this->ds, $invitesDn, "(inviteCode=$inviteCode)", ['givenname', 'sn', 'telegramid', 'telegramnickname', 'mail', 'schacpersonaluniquecode', 'degreecourse']);
 		if(!$sr) {
 			throw new LdapException('Cannot search for invite code');
 		}

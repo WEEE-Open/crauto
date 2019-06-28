@@ -439,6 +439,7 @@ $province = [
 ];
 
 $error = null;
+$defaultAttributes = null;
 unset($_SESSION['register_done']);
 
 $template = Template::create();
@@ -448,16 +449,10 @@ try {
 	$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
 		CRAUTO_LDAP_GROUPS_DN, false);
 	if(isset($_GET['invite'])) {
-		// TODO: do something with these
-		$defaultAttributes = $ldap->getInvitedUser($_GET['invite']);
-
-		if(isset($_POST) && !empty($_POST)) {
-			// TODO: check invite code
-
-			Validation::handleUserRegisterPost($_POST, Validation::allowedAttributesRegister, $ldap, $degreeCourses, $countries, $province);
-			http_response_code(303);
-			$_SESSION['register_done'] = true;
-			header('Location: register_done.php');
+		$defaultAttributes = $ldap->getInvitedUser($_GET['invite'], CRAUTO_LDAP_INVITES_DN);
+		if($defaultAttributes === null) {
+			$template = Template::create();
+			echo $template->render('403', ['error' => 'Invalid invite code']);
 			exit;
 		}
 	} else {
@@ -467,8 +462,29 @@ try {
 	}
 } catch(LdapException $e) {
 	$error = $e->getMessage();
+	echo $template->render('500', ['error' => $error]);
+	exit;
+} catch(ValidationException $e) {
+	$error = $e->getMessage();
+	echo $template->render('500', ['error' => $error]);
+	exit;
+}
+
+// isset($_GET['invite']) && is_array($defaultAttributes), or execution already stopped with an "exit;" above here
+try {
+	if(isset($_POST) && !empty($_POST)) {
+		// TODO: check invite code
+
+		Validation::handleUserRegisterPost($_POST, Validation::allowedAttributesRegister, $ldap, $degreeCourses, $countries, $province);
+		http_response_code(303);
+		$_SESSION['register_done'] = true;
+		header('Location: register_done.php');
+		exit;
+	}
+} catch(LdapException $e) {
+	$error = $e->getMessage();
 } catch(ValidationException $e) {
 	$error = $e->getMessage();
 }
 
-echo $template->render('registerform', ['error' => $error, 'degreeCourses' => $degreeCourses, 'countries' => $countries, 'province' => $province]);
+echo $template->render('registerform', ['error' => $error, 'degreeCourses' => $degreeCourses, 'countries' => $countries, 'province' => $province, 'defaults' => $defaultAttributes]);

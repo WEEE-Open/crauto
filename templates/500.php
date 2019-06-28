@@ -2,14 +2,12 @@
 /** @var $uid string */
 /** @var $name string */
 /** @var $error ?string */
-http_response_code(403);
-$this->layout('base', ['title' => 'Forbidden']) ?>
+http_response_code(505);
+$this->layout('base', ['title' => 'Internal Server Error']) ?>
 
-<h1>403 - Forbidden</h1>
-<p>You are not authorized to access this page</p>
+<h1>500 - Internal Server Error</h1>
 <?php if(isset($error) && $error !== null): ?>
 	<div class="alert alert-danger" role="alert">
 		<?= $this->e($error) ?>
 	</div>
 <?php endif ?>
-
