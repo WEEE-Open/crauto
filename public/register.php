@@ -440,7 +440,6 @@ $province = [
 
 $error = null;
 $defaultAttributes = null;
-// unset($_SESSION['register_done']);
 var_dump($_POST);
 
 $template = Template::create();
