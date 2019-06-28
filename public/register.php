@@ -450,6 +450,11 @@ try {
 		CRAUTO_LDAP_GROUPS_DN, false);
 	if(isset($_GET['invite'])) {
 		$defaultAttributes = $ldap->getInvitedUser($_GET['invite'], CRAUTO_LDAP_INVITES_DN);
+		if(isset($defaultAttributes['degreecourse'])) {
+			if(!isset($degreeCourses[$defaultAttributes['degreecourse']])) {
+				unset($defaultAttributes['degreecourse']);
+			}
+		}
 		if($defaultAttributes === null) {
 			$template = Template::create();
 			echo $template->render('403', ['error' => 'Invalid invite code']);
@@ -470,11 +475,9 @@ try {
 	exit;
 }
 
-// isset($_GET['invite']) && is_array($defaultAttributes), or execution already stopped with an "exit;" above here
+// Invite code is valid and $defaultAttributes is available, if getting here
 try {
 	if(isset($_POST) && !empty($_POST)) {
-		// TODO: check invite code
-
 		Validation::handleUserRegisterPost($_POST, Validation::allowedAttributesRegister, $ldap, $degreeCourses, $countries, $province);
 		http_response_code(303);
 		$_SESSION['register_done'] = true;
@@ -487,4 +490,4 @@ try {
 	$error = $e->getMessage();
 }
 
-echo $template->render('registerform', ['error' => $error, 'degreeCourses' => $degreeCourses, 'countries' => $countries, 'province' => $province, 'defaults' => $defaultAttributes]);
+echo $template->render('registerform', ['error' => $error, 'degreeCourses' => $degreeCourses, 'countries' => $countries, 'province' => $province, 'attributes' => $defaultAttributes]);

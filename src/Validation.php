@@ -337,7 +337,7 @@ class Validation {
 			$attributes['schacplaceofbirth'] = "$birthCity ($birthProvince), $birthCountry";
 		}
 
-		if(!isset($attributes['givenname']) || !isset($attributes['sn'])) {
+		if(!self::hasValue('givenname', $attributes) || !self::hasValue('sn', $attributes)) {
 			// This is checked again later, but oh well...
 			throw new ValidationException('Name and surname are mandatory');
 		}

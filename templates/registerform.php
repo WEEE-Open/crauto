@@ -5,7 +5,6 @@
 /** @var $countries string[] */
 /** @var $province string[] */
 $this->layout('base', ['title' => 'Register']);
-$telegramNote = $telegramNote ?? true;
 ?>
 
 <h1>Register</h1>
@@ -45,21 +44,21 @@ $telegramNote = $telegramNote ?? true;
 		</div>
 	</div>
 	<div class="form-row form-group">
-		<?php if($telegramNote): ?>
+		<?php if(!isset($attributes['telegramid'])): ?>
 			<div class="col-12">
 				<small id="bot-help" class="form-text text-muted">
-					Give the link to this page to the <a href="https://telegram.me/weeelab_bot" target="_blank">bot</a> to fill the next two fields automatically.
+					Give the link to this page to the <a href="https://telegram.me/weeelab_bot" target="_blank">bot</a> and reload the page to fill the next two fields automatically.
 				</small>
 			</div>
 		<?php endif ?>
 	</div>
 	<div class="form-row form-group">
 		<div class="col-sm-6">
-			<label for="profile-telegramid">Telegram ID</label>
+			<label for="profile-telegramid">Telegram ID (optional)</label>
 			<input type="number" class="form-control" id="profile-telegramid" name="telegramid" value="<?= $this->e($attributes['telegramid'] ?? '') ?>" min="0" maxlength="500" aria-describedby="bot-help">
 		</div>
 		<div class="col-sm-6">
-			<label for="profile-telegramnickname">Telegram nickname</label>
+			<label for="profile-telegramnickname">Telegram nickname (optional)</label>
 			<div class="input-group mb-3">
 				<div class="input-group-prepend">
 					<span class="input-group-text" id="telegramnickname-addon">@</span>
@@ -86,39 +85,39 @@ $telegramNote = $telegramNote ?? true;
 	</div>
 	<div class="form-row">
 		<div class="form-group col-sm-6">
-			<label for="profile-mail">Email address</label>
+			<label for="profile-mail">Email address (optional)</label>
 			<input type="email" class="form-control" id="profile-mail" name="mail" value="<?= $this->e($attributes['mail'] ?? '') ?>" maxlength="500">
 		</div>
 		<div class="form-group col-sm-6">
 			<label for="profile-mobile">Cellphone</label>
-			<input type="tel" class="form-control" id="profile-mobile" name="mobile" value="<?= $this->e($attributes['mobile'] ?? '') ?>" maxlength="500">
+			<input type="tel" class="form-control" id="profile-mobile" name="mobile" value="<?= $this->e($attributes['mobile'] ?? '') ?>" maxlength="500" required>
 		</div>
 	</div>
 	<div class="form-row">
 		<div class="form-group col-sm-6">
 			<label for="profile-degreecourse">Degree course</label>
-			<select class="form-control" id="profile-degreecourse" name="degreecourse">
-				<option value="" disabled hidden selected></option>
+			<select class="form-control" id="profile-degreecourse" name="degreecourse" required>
+				<option value="" disabled hidden <?= isset($attributes['degreecourse']) ? '' : 'selected'  ?>></option>
 				<?php foreach($degreeCourses as $course): ?>
-					<option value="<?= $this->e($course) ?>"><?= $this->e($course) ?></option>
+					<option value="<?= $this->e($course) ?>" <?= $attributes['degreecourse'] === $course ? 'selected' : '' ; ?>><?= $this->e($course) ?></option>
 				<?php endforeach ?>
 			</select>
 		</div>
 		<div class="form-group col-sm-6">
 			<label for="profile-schacpersonaluniquecode">Student ID (matricola)</label>
-			<input type="text" class="form-control" id="profile-schacpersonaluniquecode" name="schacpersonaluniquecode" value="<?= $this->e($attributes['schacpersonaluniquecode'] ?? '') ?>" pattern="(s|d|S|D)?\d+" maxlength="500">
+			<input type="text" class="form-control" id="profile-schacpersonaluniquecode" name="schacpersonaluniquecode" value="<?= $this->e($attributes['schacpersonaluniquecode'] ?? '') ?>" pattern="(s|d|S|D)?\d+" maxlength="500" required>
 		</div>
 	</div>
 	<div class="form-row">
 		<div class="form-group col-sm-6">
 			<label for="profile-schacdateofbirth">Date of birth</label>
-			<input type="date" class="form-control" id="profile-schacdateofbirth" name="schacdateofbirth" value="<?= $this->e($attributes['schacdateofbirth'] ?? '') ?>" maxlength="500">
+			<input type="date" class="form-control" id="profile-schacdateofbirth" name="schacdateofbirth" value="<?= $this->e($attributes['schacdateofbirth'] ?? '') ?>" maxlength="500" required>
 		</div>
 	</div>
 	<div class="form-row">
 		<div class="form-group col-sm-4">
 			<label for="register-birth-country">Country of birth</label>
-			<select class="form-control" id="register-birth-country" name="register-birth-country">
+			<select class="form-control" id="register-birth-country" name="register-birth-country" required>
 				<option value="" disabled hidden selected></option>
 				<?php foreach($countries as $code => $country): ?>
 					<option value="<?= $this->e($code) ?>"><?= $this->e($country) ?></option>
@@ -127,11 +126,11 @@ $telegramNote = $telegramNote ?? true;
 		</div>
 		<div class="form-group col-sm-8" id="register-birth-city-group">
 			<label for="register-birth-city">City</label>
-			<input type="text" class="form-control" id="register-birth-city" name="register-birth-city" pattern="\w[\w\s]*" maxlength="400">
+			<input type="text" class="form-control" id="register-birth-city" name="register-birth-city" pattern="\w[\w\s]*" maxlength="400" required>
 		</div>
 		<div class="form-group col-sm-3" id="register-birth-province-group" style="display: none;">
 			<label for="register-birth-province">Province</label>
-			<select class="form-control" id="register-birth-province" name="register-birth-province" data-value="">
+			<select class="form-control" id="register-birth-province" name="register-birth-province" data-value="" required>
 				<option value="" disabled hidden selected></option>
 				<?php foreach($province as $code => $provincia): ?>
 					<option value="<?= $this->e($code) ?>"><?= $this->e($provincia) ?></option>
