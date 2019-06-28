@@ -440,7 +440,8 @@ $province = [
 
 $error = null;
 $defaultAttributes = null;
-unset($_SESSION['register_done']);
+// unset($_SESSION['register_done']);
+var_dump($_POST);
 
 $template = Template::create();
 $template->addData(['authenticated' => $loggedin, 'isAdmin' => $loggedin && Authentication::isAdmin()], 'navbar');
@@ -450,11 +451,6 @@ try {
 		CRAUTO_LDAP_GROUPS_DN, false);
 	if(isset($_GET['invite'])) {
 		$defaultAttributes = $ldap->getInvitedUser($_GET['invite'], CRAUTO_LDAP_INVITES_DN);
-		if(isset($defaultAttributes['degreecourse'])) {
-			if(!isset($degreeCourses[$defaultAttributes['degreecourse']])) {
-				unset($defaultAttributes['degreecourse']);
-			}
-		}
 		if($defaultAttributes === null) {
 			$template = Template::create();
 			echo $template->render('403', ['error' => 'Invalid invite code']);
@@ -479,6 +475,7 @@ try {
 try {
 	if(isset($_POST) && !empty($_POST)) {
 		Validation::handleUserRegisterPost($_POST, Validation::allowedAttributesRegister, $ldap, $degreeCourses, $countries, $province);
+		$ldap->deleteInvite(CRAUTO_LDAP_INVITES_DN, $_GET['invite']);
 		http_response_code(303);
 		$_SESSION['register_done'] = true;
 		header('Location: register_done.php');
@@ -488,6 +485,13 @@ try {
 	$error = $e->getMessage();
 } catch(ValidationException $e) {
 	$error = $e->getMessage();
+}
+
+
+if(isset($defaultAttributes['degreecourse'])) {
+	if(!isset($degreeCourses[$defaultAttributes['degreecourse']])) {
+		unset($defaultAttributes['degreecourse']);
+	}
 }
 
 echo $template->render('registerform', ['error' => $error, 'degreeCourses' => $degreeCourses, 'countries' => $countries, 'province' => $province, 'attributes' => $defaultAttributes]);

@@ -352,7 +352,7 @@ class Validation {
 		}
 		$password = $attributes['userpassword'] = $attributes['password1'];
 
-		$edited = array_intersect_key($attributes, $allowedAttributes);
+		$edited = array_intersect_key($attributes, array_combine($allowedAttributes, $allowedAttributes));
 		unset($attributes);
 
 		$edited = Validation::normalize($ldap, $edited); // This will trim the password. This needs to be undone...
@@ -395,7 +395,10 @@ class Validation {
 		// Ok, now validate the structure of fields where that's possible
 		Validation::validate($edited);
 
-		// TODO: save everything to database
+		// Oh, one more thing...
+		$edited['nsAccountLock'] = 'true';
+
+		$ldap->addUser($edited);
 	}
 
 	/**

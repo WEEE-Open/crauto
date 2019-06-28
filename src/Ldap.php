@@ -45,6 +45,9 @@ class Ldap {
 
 	public function getUser(string $uid, ?array $attributes = null): ?array {
 		$sr = $this->searchByUid($uid, $attributes);
+		if($sr === null) {
+			return null;
+		}
 		$user = ldap_get_entries($this->ds, $sr)[0];
 		$user = self::simplify($user);
 		if($attributes !== null) {
@@ -54,16 +57,9 @@ class Ldap {
 	}
 
 	public function getInvitedUser(string $inviteCode, 	string $invitesDn): ?array {
-		$inviteCode = ldap_escape($inviteCode, '', LDAP_ESCAPE_FILTER);
-		$sr = ldap_search($this->ds, $invitesDn, "(inviteCode=$inviteCode)", ['givenname', 'sn', 'mail', 'schacpersonaluniquecode', 'degreecourse', 'telegramid', 'telegramnickname']);
-		if(!$sr) {
-			throw new LdapException('Cannot search for invite code');
-		}
-		$count = ldap_count_entries($this->ds, $sr);
-		if($count === 0) {
+		$sr = $this->searchByInvite($inviteCode, $invitesDn, ['givenname', 'sn', 'mail', 'schacpersonaluniquecode', 'degreecourse', 'telegramid', 'telegramnickname']);
+		if($sr === null) {
 			return null;
-		} else if($count > 1) {
-			throw new LdapException("Duplicate invite code, $count results found");
 		}
 		$attr = ldap_get_entries($this->ds, $sr)[0];
 		$attr = self::simplify($attr);
@@ -74,7 +70,10 @@ class Ldap {
 	}
 
 	public function getUserDn(string $uid): string {
-		$sr = $this->searchByUid($uid, ['dn']);
+		$sr = $this->searchByUid($uid, ['entrydn']);
+		if($sr === null) {
+			throw new LdapException('Cannot find DN for user');
+		}
 		$theOnlyResult = ldap_first_entry($this->ds, $sr);
 		return ldap_get_dn($this->ds, $theOnlyResult);
 	}
@@ -145,6 +144,22 @@ class Ldap {
 			return null;
 		} else if($count > 1) {
 			throw new LdapException("$uid is not unique in $this->usersDn, $count results found");
+		}
+
+		return $sr;
+	}
+
+	private function searchByInvite(string $inviteCode, string $invitesDn, ?array $attributes = null) {
+		$inviteCode = ldap_escape($inviteCode, '', LDAP_ESCAPE_FILTER);
+		$sr = ldap_search($this->ds, $invitesDn, "(inviteCode=$inviteCode)", $attributes);
+		if(!$sr) {
+			throw new LdapException('Cannot search for invite code');
+		}
+		$count = ldap_count_entries($this->ds, $sr);
+		if($count === 0) {
+			return null;
+		} else if($count > 1) {
+			throw new LdapException("Duplicate invite code, $count results found");
 		}
 
 		return $sr;
@@ -221,6 +236,33 @@ class Ldap {
 			$result = ldap_modify_batch($this->ds, $dn, $modlist);
 			if($result === false) {
 				throw new LdapException('Modification failed (' . ldap_error($this->ds) . ')');
+			}
+		}
+	}
+
+	public function addUser(array $edited) {
+		$edited['objectClass'] = [
+			'schacLinkageIdentifiers',
+			'schacPersonalCharacteristics',
+			'telegramAccount',
+			'weeeOpenPerson',
+		];
+		$dn = 'uid=' . ldap_escape($edited['uid'], '', LDAP_ESCAPE_FILTER) . ',' . $this->usersDn;
+		$result = ldap_add($this->ds, $dn, $edited);
+		if($result === false) {
+			throw new LdapException('User add failed (' . ldap_error($this->ds) . ')');
+		}
+	}
+
+	public function deleteInvite(string $invitesDn, string $inviteCode) {
+		$sr = $this->searchByInvite($inviteCode, $invitesDn, ['entrydn']);
+		if($sr !== null) {
+			$theOnlyResult = ldap_first_entry($this->ds, $sr);
+			$dn = ldap_get_dn($this->ds, $theOnlyResult);
+			ldap_delete($this->ds, $dn);
+			// TODO: check result, if DN does not exist then it is deleted
+			if(!$dn) {
+				throw new LdapException('Cannot delete invite');
 			}
 		}
 	}

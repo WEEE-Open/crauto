@@ -15,7 +15,7 @@ $this->layout('base', ['title' => 'Register']);
 	</div>
 <?php endif ?>
 
-<form method="POST" target="">
+<form method="POST" action="<?= $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>">
 	<div class="form-group row">
 		<label for="profile-uid" class="col-sm-2 col-form-label">Username</label>
 		<div class="col-md-10">
@@ -130,7 +130,7 @@ $this->layout('base', ['title' => 'Register']);
 		</div>
 		<div class="form-group col-sm-3" id="register-birth-province-group" style="display: none;">
 			<label for="register-birth-province">Province</label>
-			<select class="form-control" id="register-birth-province" name="register-birth-province" data-value="" required>
+			<select class="form-control" id="register-birth-province" name="register-birth-province" data-value="">
 				<option value="" disabled hidden selected></option>
 				<?php foreach($province as $code => $provincia): ?>
 					<option value="<?= $this->e($code) ?>"><?= $this->e($provincia) ?></option>
@@ -139,7 +139,7 @@ $this->layout('base', ['title' => 'Register']);
 		</div>
 	</div>
 	<div class="form-group">
-		<button type="submit" class="btn btn-primary">Save</button>
+		<input type="submit" class="btn btn-primary" value="Save">
 	</div>
 	<script>
 		let birthCountry = document.getElementById('register-birth-country');
@@ -156,6 +156,7 @@ $this->layout('base', ['title' => 'Register']);
 				birthProvinceGroup.style.display = '';
 				birthProvince.value = birthProvince.dataset.value;
 				birthProvince.dataset.value = '';
+				birthProvince.required = true;
 			} else {
 				birthCityGroup.classList.remove('col-sm-5');
 				birthCityGroup.classList.add('col-sm-8');
@@ -165,6 +166,7 @@ $this->layout('base', ['title' => 'Register']);
 					birthProvince.dataset.value = birthProvince.value;
 					birthProvince.value = '';
 				}
+				birthProvince.required = false;
 			}
 		});
 	</script>
