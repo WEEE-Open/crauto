@@ -352,9 +352,10 @@ class Validation {
 		}
 		$password = $attributes['userpassword'] = $attributes['password1'];
 		$edited = array_intersect_key($attributes, $allowedAttributes);
-		Validation::normalize($ldap, $attributes); // This will trim the password. This needs to be undone...
-		$attributes['userpassword'] = $password; // ...done. Or undone, as you prefer.
-		Validation::validate($attributes);
+		unset($attributes);
+		$edited = Validation::normalize($ldap, $edited); // This will trim the password. This needs to be undone...
+		$edited['userpassword'] = $password; // ...done. Or undone, as you prefer.
+		Validation::validate($edited);
 
 		// TODO: save everything to database
 	}
