@@ -433,7 +433,7 @@ $province = [
 	'VB' => 'Verbano-Cusio-Ossola (VB)',
 	'VC' => 'Vercelli (VC)',
 	'VR' => 'Verona (VR)',
-	'VV' => 'Vibo (Valentia (VV)',
+	'VV' => 'Vibo Valentia (VV)',
 	'VI' => 'Vicenza (VI)',
 	'VT' => 'Viterbo (VT)',
 ];

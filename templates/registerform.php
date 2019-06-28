@@ -125,11 +125,11 @@ $telegramNote = $telegramNote ?? true;
 				<?php endforeach ?>
 			</select>
 		</div>
-		<div class="form-group col-sm-5" id="register-birth-city-group">
+		<div class="form-group col-sm-8" id="register-birth-city-group">
 			<label for="register-birth-city">City</label>
 			<input type="text" class="form-control" id="register-birth-city" name="register-birth-city" pattern="\w[\w\s]*" maxlength="400">
 		</div>
-		<div class="form-group col-sm-3" id="register-birth-province-group">
+		<div class="form-group col-sm-3" id="register-birth-province-group" style="display: none;">
 			<label for="register-birth-province">Province</label>
 			<select class="form-control" id="register-birth-province" name="register-birth-province" data-value="">
 				<option value="" disabled hidden selected></option>
@@ -151,17 +151,17 @@ $telegramNote = $telegramNote ?? true;
 			console.log(birthProvince.value);
 			console.log(birthProvince.dataset.value);
 			if(birthCountry.value === 'IT') {
+				birthCityGroup.classList.remove('col-sm-8');
 				birthCityGroup.classList.add('col-sm-5');
 				birthProvinceGroup.classList.add('col-sm-3');
-				birthCityGroup.classList.remove('col-sm-8');
-				birthProvince.style.display = '';
+				birthProvinceGroup.style.display = '';
 				birthProvince.value = birthProvince.dataset.value;
 				birthProvince.dataset.value = '';
 			} else {
 				birthCityGroup.classList.remove('col-sm-5');
-				birthProvinceGroup.classList.remove('col-sm-3');
 				birthCityGroup.classList.add('col-sm-8');
-				birthProvince.style.display = 'none';
+				birthProvinceGroup.classList.remove('col-sm-3');
+				birthProvinceGroup.style.display = 'none';
 				if(birthProvince.value !== '') {
 					birthProvince.dataset.value = birthProvince.value;
 					birthProvince.value = '';
