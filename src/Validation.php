@@ -351,10 +351,48 @@ class Validation {
 			throw new ValidationException('Password and password confirmation do not match');
 		}
 		$password = $attributes['userpassword'] = $attributes['password1'];
+
 		$edited = array_intersect_key($attributes, $allowedAttributes);
 		unset($attributes);
+
 		$edited = Validation::normalize($ldap, $edited); // This will trim the password. This needs to be undone...
 		$edited['userpassword'] = $password; // ...done. Or undone, as you prefer.
+
+		// Trimming may have eliminated some fields, let's see...
+
+		if(!self::hasValue('uid', $edited)) {
+			throw new ValidationException('Username is mandatory');
+		}
+
+		// Password already validated
+
+		if(!self::hasValue('givenname', $edited)) {
+			throw new ValidationException('Name is mandatory');
+		}
+
+		if(!self::hasValue('sn', $edited)) {
+			throw new ValidationException('Surname is mandatory');
+		}
+
+		if(!self::hasValue('mobile', $edited)) {
+			throw new ValidationException('Cellphone is mandatory');
+		}
+
+		if(!self::hasValue('degreecourse', $edited)) {
+			throw new ValidationException('Degree course is mandatory');
+		}
+
+		if(!self::hasValue('schacpersonaluniquecode', $edited)) {
+			throw new ValidationException('Student ID is mandatory');
+		}
+
+		if(!self::hasValue('schacdateofbirth', $edited)) {
+			throw new ValidationException('Date of birth is mandatory');
+		}
+
+		// Place of birth already validated
+
+		// Ok, now validate the structure of fields where that's possible
 		Validation::validate($edited);
 
 		// TODO: save everything to database
