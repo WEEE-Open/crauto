@@ -247,7 +247,7 @@ class Ldap {
 			'telegramAccount',
 			'weeeOpenPerson',
 		];
-		$dn = 'uid=' . ldap_escape($edited['uid'], '', LDAP_ESCAPE_FILTER) . ',' . $this->usersDn;
+		$dn = 'uid=' . ldap_escape($edited['uid'], '', LDAP_ESCAPE_DN) . ',' . $this->usersDn;
 		$result = ldap_add($this->ds, $dn, $edited);
 		if($result === false) {
 			throw new LdapException('User add failed (' . ldap_error($this->ds) . ')');
