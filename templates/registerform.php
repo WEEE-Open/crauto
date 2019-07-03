@@ -15,6 +15,12 @@ $this->layout('base', ['title' => 'Register']);
 	</div>
 <?php endif ?>
 
+<?php if(!isset($attributes['telegramid'])): ?>
+	<div class="alert alert-warning" role="alert">
+		Give the link to this page to the <a href="https://telegram.me/weeelab_bot" target="_blank">bot</a> and reload the page to fill the Telegram ID field automatically.
+	</div>
+<?php endif ?>
+
 <form method="POST" action="<?= $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>">
 	<div class="form-group row">
 		<label for="profile-uid" class="col-sm-2 col-form-label">Username</label>
@@ -44,18 +50,9 @@ $this->layout('base', ['title' => 'Register']);
 		</div>
 	</div>
 	<div class="form-row form-group">
-		<?php if(!isset($attributes['telegramid'])): ?>
-			<div class="col-12">
-				<small id="bot-help" class="form-text text-muted">
-					Give the link to this page to the <a href="https://telegram.me/weeelab_bot" target="_blank">bot</a> and reload the page to fill the next two fields automatically.
-				</small>
-			</div>
-		<?php endif ?>
-	</div>
-	<div class="form-row form-group">
 		<div class="col-sm-6">
 			<label for="profile-telegramid">Telegram ID (optional)</label>
-			<input type="number" class="form-control" id="profile-telegramid" name="telegramid" value="<?= $this->e($attributes['telegramid'] ?? '') ?>" min="0" maxlength="500" aria-describedby="bot-help">
+			<input type="number" class="form-control" id="profile-telegramid" name="telegramid" value="<?= $this->e($attributes['telegramid'] ?? '') ?>" min="0" maxlength="500">
 		</div>
 		<div class="col-sm-6">
 			<label for="profile-telegramnickname">Telegram nickname (optional)</label>
