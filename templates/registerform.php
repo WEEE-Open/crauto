@@ -135,6 +135,7 @@ $this->layout('base', ['title' => 'Register']);
 			</select>
 		</div>
 	</div>
+	<!-- TODO: add "accept tos" checkbox -->
 	<div class="form-group">
 		<input type="submit" class="btn btn-primary" value="Save">
 	</div>
