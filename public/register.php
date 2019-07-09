@@ -440,7 +440,6 @@ $province = [
 
 $error = null;
 $defaultAttributes = null;
-var_dump($_POST);
 
 $template = Template::create();
 $template->addData(['authenticated' => $loggedin, 'isAdmin' => $loggedin && Authentication::isAdmin()], 'navbar');

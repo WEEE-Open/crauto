@@ -32,7 +32,7 @@ $this->layout('base', ['title' => 'Register']);
 		</div>
 	</div>
 	<div class="form-group row">
-		<label for="auth-password1" class="col-sm-2 col-form-label">New password</label>
+		<label for="auth-password1" class="col-sm-2 col-form-label">Password</label>
 		<div class="col-md-10">
 			<input type="password" class="form-control" id="auth-password1" name="password1" aria-describedby="password1-help" minlength="16" required>
 			<small id="password1-help" class="form-text text-muted">
