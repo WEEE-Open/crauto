@@ -212,14 +212,17 @@ class Authentication {
 	}
 
 	private static function setAttributes(OpenIDConnectClient $oidc) {
-		$uid = $oidc->requestUserInfo('sub');
-		$cn = $oidc->requestUserInfo('name');
+		$uid = $oidc->getVerifiedClaims('preferred_username');
+		$id = $oidc->getVerifiedClaims('sub');
+		$cn = $oidc->getVerifiedClaims('name');
+		// WSO2 IS works as-is, for Keycloak go to clients > crauto > mappers > add builtin > groups
 		$groups = $oidc->requestUserInfo('groups');
 		$exp = $oidc->getVerifiedClaims('exp');
 		$refresh_token = $oidc->getRefreshToken();
 		$id_token = $oidc->getIdToken();
 
 		$_SESSION['uid'] = $uid;
+		$_SESSION['id'] = $id;
 		$_SESSION['cn'] = $cn;
 		$_SESSION['groups'] = $groups;
 		$_SESSION['expires'] = $exp;

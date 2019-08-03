@@ -9,5 +9,6 @@ $template = Template::create();
 $template->addData(['currentSection' => 'index'], 'navbar');
 echo $template->render('index', [
 	'uid' => $_SESSION['uid'],
+	'id' => $_SESSION['id'],
 	'name' => $_SESSION['cn']
 ]);
