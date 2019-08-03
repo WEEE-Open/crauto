@@ -251,8 +251,11 @@ class Authentication {
 	 * @return bool
 	 */
 	public static function isAdmin() {
-		$groups = Authentication::splitGroups($_SESSION['groups']);
-
-		return isset($groups['HR']);
+		// For WSO2 IS:
+		//$groups = Authentication::splitGroups($_SESSION['groups']);
+		//return isset($groups['HR']);
+		// For Keycloak:
+		$groups = $_SESSION['groups'];
+		return in_array('HR', $groups);
 	}
 }
