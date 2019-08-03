@@ -72,6 +72,9 @@ class Authentication {
 		$oidc = self::getOidc();
 		//$oidc->setCertPath('/path/to/my.cert');
 		$oidc->setRedirectURL(CRAUTO_URL . '/login.php');
+		$oidc->addScope('openid');
+		$oidc->addScope('profile');
+		$oidc->addScope('roles');
 		$oidc->authenticate();
 
 		self::setAttributes($oidc);
