@@ -27,7 +27,7 @@ $this->layout('base', ['title' => 'Register']);
 		<div class="col-md-10">
 			<input type="text" class="form-control" id="profile-uid" name="uid" value="<?= $this->e($attributes['uid'] ?? '') ?>" pattern="^[a-zA-Z][a-zA-Z0-9-_\.]*$" maxlength="50"  aria-describedby="uid-help" required>
 			<small id="uid-help" class="form-text text-muted">
-				You will use this username to sign in and you won't be able to change it later. Unless you ask nicely the sysadmin, that is. Case-insensitive.
+				You will use this username to sign in and you won't be able to change it later. Unless you ask nicely the sysadmin, that is. Case-insensitive, must begin with a letter, only alphanumeric, -, _ and . are allowed.
 			</small>
 		</div>
 	</div>
@@ -135,7 +135,15 @@ $this->layout('base', ['title' => 'Register']);
 			</select>
 		</div>
 	</div>
-	<!-- TODO: add "accept tos" checkbox -->
+	<div class="form-row">
+		<p>Read the <a href="tos.php" target="_blank">Informazioni sul trattamento dei dati personali (privacy policy)</a></p>
+	</div>
+	<div class="form-row">
+		<div class="form-group form-check">
+			<input type="checkbox" class="form-check-input" id="register-tos" name="register-tos">
+			<label class="form-check-label" for="register-tos">I have read and accept "Informazioni sul trattamento dei dati personali (privacy policy)"</label>
+		</div>
+	</div>
 	<div class="form-group">
 		<input type="submit" class="btn btn-primary" value="Save">
 	</div>

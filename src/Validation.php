@@ -281,6 +281,10 @@ class Validation {
 	 * @param string[] $province
 	 */
 	public static function handleUserRegisterPost(array $attributes, array $allowedAttributes, Ldap $ldap, array $degreeCourses, array $countries, array $province): void {
+		if(!self::hasValue('register-tos', $attributes) || $attributes['register-tos'] !== 'on') {
+			throw new ValidationException('Accept our privacy policy to continue');
+		}
+
 		// Check degree course according to the list
 		if(!self::hasValue('degreecourse', $attributes)) {
 			throw new ValidationException('Select a degree course');
