@@ -72,8 +72,7 @@ if(isset($_GET['uid'])) {
 		'attributes' => $attributes,
 		'allowedAttributes' => $allowedAttributes,
 		'editableAttributes' => $editableAttributes,
-		'adminRequireOldPassword' => $requireOldPasswordForChange ?? true,
-		'target' => $_SERVER['REQUEST_URI'], // $_SERVER['REQUEST_URI'] is already url encoded
+		'adminRequireOldPassword' => $requireOldPasswordForChange ?? true
 	]);
 } else {
 	$users = [];

@@ -16,7 +16,7 @@ try {
 		Validation::handlePasswordChangePost($ldap, $_SESSION['uid'], $_POST);
 		$_SESSION['success'] = 'Password updated successfully';
 		http_response_code(303);
-		header("Location: /authentication.php");
+		header("Location: authentication.php");
 		exit;
 	}
 } catch(LdapException $e) {
@@ -38,7 +38,6 @@ $template = Template::create();
 $template->addData(['currentSection' => 'authentication'], 'navbar');
 echo $template->render('authenticationeditor', [
 	'error' => $error,
-	'success' => $success,
-	'target' => '/authentication.php'
+	'success' => $success
 ]);
 

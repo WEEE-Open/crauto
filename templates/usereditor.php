@@ -2,7 +2,6 @@
 /** @var $title string */
 /** @var $error string|null */
 /** @var $adminRequireOldPassword bool */
-/** @var $target string */
 /** @var $attributes array */
 /** @var $editableAttributes string[] */
 $this->layout('base');
@@ -22,5 +21,5 @@ $this->layout('base');
 	</div>
 <?php endif ?>
 
-<?= $this->fetch('userform', ['attributes' => $attributes, 'editableAttributes' => $editableAttributes, 'allowedAttributes' => $allowedAttributes, 'target' => $target]) ?>
-<?= $this->fetch('authenticationform', ['requireOldPassword' => $adminRequireOldPassword, 'target' => $target]) ?>
+<?= $this->fetch('userform', ['attributes' => $attributes, 'editableAttributes' => $editableAttributes, 'allowedAttributes' => $allowedAttributes]) ?>
+<?= $this->fetch('authenticationform', ['requireOldPassword' => $adminRequireOldPassword]) ?>

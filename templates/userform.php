@@ -1,5 +1,4 @@
 <?php
-/** @var $target string */
 /** @var $attributes array */
 /** @var $editableAttributes string[] */
 /** @var $allowedAttributes string[] */
@@ -31,7 +30,7 @@ $attributeNames = [
 	'nsaccountlock' => 'Account locked',
 ]
 ?>
-<form method="POST" target="<?= $target ?>">
+<form method="POST">
 	<div class="form-row">
 		<div class="form-group col-sm-6">
 			<label for="profile-uid"><?= $attributeNames['uid'] ?></label>

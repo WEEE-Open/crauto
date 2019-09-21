@@ -1,6 +1,5 @@
 <?php
 /** @var $error string|null */
-/** @var $target string */
 /** @var $success string */
 $this->layout('base', ['title' => 'Authentication']);
 ?>
@@ -18,4 +17,4 @@ Error: <?= $this->e($error) ?>
 	</div>
 <?php endif ?>
 
-<?= $this->fetch('authenticationform', ['requireOldPassword' => true, 'target' => $target]) ?>
+<?= $this->fetch('authenticationform', ['requireOldPassword' => true]) ?>
