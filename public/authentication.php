@@ -14,10 +14,9 @@ try {
 
 	if(isset($_POST) && !empty($_POST)) {
 		Validation::handlePasswordChangePost($ldap, $_SESSION['uid'], $_POST);
-		$location = 'authentication.php';
 		$_SESSION['success'] = 'Password updated successfully';
 		http_response_code(303);
-		header("Location: $location");
+		header("Location: /authentication.php");
 		exit;
 	}
 } catch(LdapException $e) {
