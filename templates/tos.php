@@ -1,5 +1,5 @@
 <?php
-$this->layout('base', ['title' => 'Logged out']) ?>
+$this->layout('base', ['title' => 'Terms of Service']) ?>
 
 <h1>Terms of service</h1>
 <p>TBD</p>
