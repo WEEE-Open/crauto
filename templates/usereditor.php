@@ -23,3 +23,5 @@ $this->layout('base');
 
 <?= $this->fetch('userform', ['attributes' => $attributes, 'editableAttributes' => $editableAttributes, 'allowedAttributes' => $allowedAttributes]) ?>
 <?= $this->fetch('authenticationform', ['requireOldPassword' => $adminRequireOldPassword]) ?>
+
+<small>Created <?= $attributes['createtimestamp'] ?> last edited <?= $attributes['modifytimestamp'] ?></small>

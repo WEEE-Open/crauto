@@ -13,7 +13,7 @@ if(!Authentication::isAdmin()) {
 }
 
 if(isset($_GET['uid'])) {
-	$allowedAttributes = Validation::allowedAttributesAdmin;
+	$allowedAttributes = Validation::allowedAttributesAdmin + ['createtimestamp', 'modifytimestamp'];
 	$editableAttributes = array_combine(Validation::editableAttributesAdmin, Validation::editableAttributesAdmin);
 
 	$targetUid = $_GET['uid'];
@@ -21,7 +21,6 @@ if(isset($_GET['uid'])) {
 	$attributes = [];
 	$error = null;
 	try {
-		// TODO: add another group of super-admin and only allow them to change others' passwords?
 		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
 			CRAUTO_LDAP_GROUPS_DN, false);
 		$attributes = $ldap->getUser($targetUid, $allowedAttributes);
@@ -70,7 +69,6 @@ if(isset($_GET['uid'])) {
 	echo $template->render('usereditor', [
 		'error' => $error,
 		'attributes' => $attributes,
-		'allowedAttributes' => $allowedAttributes,
 		'editableAttributes' => $editableAttributes,
 		'adminRequireOldPassword' => $requireOldPasswordForChange ?? true
 	]);
