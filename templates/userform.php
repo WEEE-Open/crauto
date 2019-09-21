@@ -26,6 +26,7 @@ $attributeNames = [
 	'telegramid' => 'Telegram ID',
 	'telegramnickname' => 'Telegram nickname',
 	'sshpublickey' => 'SSH public keys',
+	'weeelabnickname' => 'Nicknames for weeelab',
 	'description' => 'Notes',
 	'nsaccountlock' => 'Account locked',
 ]
@@ -109,6 +110,10 @@ $attributeNames = [
 	<div class="form-group">
 		<label for="profile-sshpublickey"><?= $attributeNames['sshpublickey'] ?></label>
 		<textarea class="form-control" id="profile-sshpublickey" name="sshpublickey" rows="<?= count($attributes['sshpublickey']) + 1 ?>" <?= $editable('sshpublickey') ?> maxlength="10000"><?= implode("\r\n", array_map([$this, 'e'], $attributes['sshpublickey'])) ?></textarea>
+	</div>
+	<div class="form-group">
+		<label for="profile-weeelabnickname"><?= $attributeNames['weeelabnickname'] ?></label>
+		<textarea class="form-control" id="profile-weeelabnickname" name="weeelabnickname" rows="<?= count($attributes['weeelabnickname']) + 1 ?>" <?= $editable('weeelabnickname') ?> maxlength="500"><?= implode("\r\n", array_map([$this, 'e'], $attributes['weeelabnickname'])) ?></textarea>
 	</div>
 	<?php if(in_array('description', $allowedAttributes)): ?>
 		<div class="form-group">

@@ -25,6 +25,7 @@ class Validation {
 		'telegramid',
 		'telegramnickname',
 		'sshpublickey',
+		'weeelabnickname',
 	];
 	const allowedAttributesAdmin = [
 		'uid',
@@ -42,6 +43,7 @@ class Validation {
 		'telegramid',
 		'telegramnickname',
 		'sshpublickey',
+		'weeelabnickname',
 		'description',
 		'nsaccountlock',
 	];
@@ -66,6 +68,7 @@ class Validation {
 		'safetytestdate',
 		'telegramid',
 		'telegramnickname',
+		'weeelabnickname',
 		'description',
 		'nsaccountlock',
 	];
@@ -123,6 +126,10 @@ class Validation {
 			$inputs['sshpublickey'] = explode("\r\n", $inputs['sshpublickey']);
 			$inputs['sshpublickey'] = array_filter($inputs['sshpublickey'], function($name) { return $name !== ''; });
 		}
+		if(self::hasValue('weeelabnickname', $inputs)) {
+			$inputs['weeelabnickname'] = explode("\r\n", $inputs['weeelabnickname']);
+			$inputs['weeelabnickname'] = array_filter($inputs['weeelabnickname'], function($name) { return $name !== ''; });
+		}
 		if(self::hasValue('memberof', $inputs)) {
 			try {
 				$groupNames = explode("\r\n", $inputs['memberof']);
@@ -138,6 +145,9 @@ class Validation {
 		}
 		if(array_key_exists('sshpublickey', $inputs) && !is_array($inputs['sshpublickey'])) {
 			$inputs['sshpublickey'] = [];
+		}
+		if(array_key_exists('weeelabnickname', $inputs) && !is_array($inputs['weeelabnickname'])) {
+			$inputs['weeelabnickname'] = [];
 		}
 		if(array_key_exists('memberof', $inputs) && !is_array($inputs['memberof'])) {
 			$inputs['memberof'] = [];

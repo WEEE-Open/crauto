@@ -11,7 +11,7 @@ class Ldap {
 	protected $usersDn;
 	protected $url;
 	protected $starttls;
-	public static $multivalued = ['memberof' => true, 'sshpublickey' => true];
+	public static $multivalued = ['memberof' => true, 'sshpublickey' => true, 'weeelabnickname' => true];
 
 	public function __construct(string $url, string $bindDn, string $password, string $usersDn, string $groupsDn, bool $startTls = true) {
 		$this->url = $url;
