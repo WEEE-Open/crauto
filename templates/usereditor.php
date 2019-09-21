@@ -5,6 +5,12 @@
 /** @var $attributes array */
 /** @var $editableAttributes string[] */
 $this->layout('base');
+
+$created = DateTime::createFromFormat( 'YmdHis\Z', $attributes['createtimestamp']);
+$created = $created->format('Y-m-d H:i:s') . ' UTC';
+
+$modified = DateTime::createFromFormat( 'YmdHis\Z', $attributes['modifytimestamp']);
+$modified = $modified->format('Y-m-d H:i:s') . ' UTC';
 ?>
 
 <h1><?= $title ?></h1>
@@ -24,4 +30,4 @@ $this->layout('base');
 <?= $this->fetch('userform', ['attributes' => $attributes, 'editableAttributes' => $editableAttributes, 'allowedAttributes' => $allowedAttributes]) ?>
 <?= $this->fetch('authenticationform', ['requireOldPassword' => $adminRequireOldPassword]) ?>
 
-<small>Created <?= $attributes['createtimestamp'] ?> last edited <?= $attributes['modifytimestamp'] ?></small>
+<small>Created <?= $created ?> - Last modified <?= $modified ?></small>
