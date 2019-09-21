@@ -119,8 +119,8 @@ $attributeNames = [
 	<?php if(in_array('nsaccountlock', $allowedAttributes)): ?>
 		<div class="form-group">
 			<div class="form-check">
-				<input class="form-check-input" type="checkbox" value="true" id="profile-description" <?= $attributes['nsaccountlock'] === 'true' ? 'checked' : '' ?> name="nsaccountlock" <?= $disabled('nsaccountlock') ?>>
-				<label for="profile-description"><?= $attributeNames['nsaccountlock'] ?></label>
+				<input class="form-check-input" type="checkbox" value="true" id="profile-accountlock" <?= $attributes['nsaccountlock'] === 'true' ? 'checked' : '' ?> name="nsaccountlock" <?= $disabled('nsaccountlock') ?>>
+				<label for="profile-accountlock"><?= $attributeNames['nsaccountlock'] ?></label>
 			</div>
 		</div>
 	<?php endif ?>
