@@ -225,13 +225,6 @@ class Validation {
 				throw new ValidationException('Cellphone number should contain only digits and optionally a +, sorry if you have a number with an extension or some weird symbols in it');
 			}
 		}
-		if(self::hasValue('memberof', $inputs)) {
-			foreach($inputs['memberof'] as $groupDn) {
-				if(strtolower(ldap_explode_dn($groupDn, 1)[0]) === 'wso2_admin') {
-					throw new ValidationException('You wish you could join that group. You can\'t. Sorry about that.');
-				}
-			}
-		}
 	}
 
 	public static function dateSchacToHtml(string $date): string {
