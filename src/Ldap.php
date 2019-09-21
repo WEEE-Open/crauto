@@ -122,7 +122,7 @@ class Ldap {
 				$simpler[] = $user;
 			}
 		}
-		usort($simpler, function(array $a, array $b): int { return strcmp($a['uid'], $b['uid']); });
+		usort($simpler, function(array $a, array $b): int { return strcasecmp($a['uid'], $b['uid']); });
 		return $simpler;
 	}
 
