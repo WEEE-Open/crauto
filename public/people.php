@@ -13,7 +13,7 @@ if(!Authentication::isAdmin()) {
 }
 
 if(isset($_GET['uid'])) {
-	$allowedAttributes = Validation::allowedAttributesAdmin + ['createtimestamp', 'modifytimestamp'];
+	$allowedAttributes = array_merge(Validation::allowedAttributesAdmin, ['createtimestamp', 'modifytimestamp']);
 	$editableAttributes = array_combine(Validation::editableAttributesAdmin, Validation::editableAttributesAdmin);
 
 	$targetUid = $_GET['uid'];
