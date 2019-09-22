@@ -3,6 +3,7 @@
 /** @var $error string|null */
 /** @var $adminRequireOldPassword bool */
 /** @var $attributes array */
+/** @var $allowedAttributes array */
 /** @var $editableAttributes string[] */
 $this->layout('base');
 

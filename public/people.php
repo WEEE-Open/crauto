@@ -13,7 +13,7 @@ if(!Authentication::isAdmin()) {
 }
 
 if(isset($_GET['uid'])) {
-	$allowedAttributes = array_merge(Validation::allowedAttributesAdmin, ['createtimestamp', 'modifytimestamp']);
+	$allowedAttributes = Validation::allowedAttributesAdmin;
 	$editableAttributes = array_combine(Validation::editableAttributesAdmin, Validation::editableAttributesAdmin);
 
 	$targetUid = $_GET['uid'];
@@ -23,7 +23,7 @@ if(isset($_GET['uid'])) {
 	try {
 		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
 			CRAUTO_LDAP_GROUPS_DN, false);
-		$attributes = $ldap->getUser($targetUid, $allowedAttributes);
+		$attributes = $ldap->getUser($targetUid, array_merge($allowedAttributes, ['createtimestamp', 'modifytimestamp']));
 		$targetUid = $attributes['uid'] ?? $targetUid; // Canonicalize uid, or use the supplied one
 
 		// Cannot change its own password without entering the old password. Can change any other password without knowning
@@ -70,6 +70,7 @@ if(isset($_GET['uid'])) {
 		'error' => $error,
 		'attributes' => $attributes,
 		'editableAttributes' => $editableAttributes,
+		'allowedAttributes' => $allowedAttributes,
 		'adminRequireOldPassword' => $requireOldPasswordForChange ?? true
 	]);
 } else {
