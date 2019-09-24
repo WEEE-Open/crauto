@@ -405,6 +405,14 @@ class Validation {
 		// Oh, one more thing...
 		$edited['nsAccountLock'] = 'true';
 
+		if($edited['telegramid'] === null) {
+			unset($edited['telegramid']);
+		}
+
+		if($edited['telegramnickname'] === null) {
+			unset($edited['telegramnickname']);
+		}
+
 		$ldap->addUser($edited);
 	}
 
