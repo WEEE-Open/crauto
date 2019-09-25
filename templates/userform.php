@@ -73,13 +73,13 @@ $attributeNames = [
 		</div>
 		<div class="form-group col-sm-6">
 			<label for="profile-schacpersonaluniquecode"><?= $attributeNames['schacpersonaluniquecode'] ?></label>
-			<input type="text" class="form-control" id="profile-schacpersonaluniquecode" name="schacpersonaluniquecode" value="<?= $this->e($attributes['schacpersonaluniquecode'] ?? '') ?>" <?= $editable('schacpersonaluniquecode') ?> pattern="(s|d|S|D)?\d+" maxlength="500">
+			<input type="text" class="form-control" id="profile-schacpersonaluniquecode" placeholder="s123456" minlength="2" name="schacpersonaluniquecode" value="<?= $this->e($attributes['schacpersonaluniquecode'] ?? '') ?>" <?= $editable('schacpersonaluniquecode') ?> pattern="(s|d|S|D)?\d+" maxlength="500">
 		</div>
 	</div>
 	<div class="form-row">
 		<div class="form-group col-sm-6">
 			<label for="profile-schacdateofbirth"><?= $attributeNames['schacdateofbirth'] ?></label>
-			<input type="date" class="form-control" id="profile-schacdateofbirth" name="schacdateofbirth" value="<?= $this->e($attributes['schacdateofbirth'] ?? '') ?>" <?= $editable('schacdateofbirth') ?> maxlength="500">
+			<input type="date" class="form-control" id="profile-schacdateofbirth" name="schacdateofbirth" placeholder="1996-01-30" pattern="\d{4}-\d{2}-\d{2}" value="<?= $this->e($attributes['schacdateofbirth'] ?? '') ?>" <?= $editable('schacdateofbirth') ?> maxlength="500">
 		</div>
 		<div class="form-group col-sm-6">
 			<label for="profile-schacplaceofbirth"><?= $attributeNames['schacplaceofbirth'] ?></label>

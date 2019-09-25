@@ -102,13 +102,13 @@ $this->layout('base', ['title' => 'Register']);
 		</div>
 		<div class="form-group col-sm-6">
 			<label for="profile-schacpersonaluniquecode">Student ID (matricola)</label>
-			<input type="text" class="form-control" id="profile-schacpersonaluniquecode" name="schacpersonaluniquecode" value="<?= $this->e($attributes['schacpersonaluniquecode'] ?? '') ?>" pattern="(s|d|S|D)?\d+" maxlength="500" required>
+			<input type="text" class="form-control" id="profile-schacpersonaluniquecode" placeholder="s123456" minlength="2" name="schacpersonaluniquecode" value="<?= $this->e($attributes['schacpersonaluniquecode'] ?? '') ?>" pattern="(s|d|S|D)?\d+" maxlength="500" required>
 		</div>
 	</div>
 	<div class="form-row">
 		<div class="form-group col-sm-6">
 			<label for="profile-schacdateofbirth">Date of birth</label>
-			<input type="date" class="form-control" id="profile-schacdateofbirth" name="schacdateofbirth" value="<?= $this->e($attributes['schacdateofbirth'] ?? '') ?>" maxlength="500" required>
+			<input type="date" class="form-control" id="profile-schacdateofbirth" placeholder="1996-01-30" pattern="\d{4}-\d{2}-\d{2}" name="schacdateofbirth" value="<?= $this->e($attributes['schacdateofbirth'] ?? '') ?>" maxlength="500" required>
 		</div>
 	</div>
 	<div class="form-row">

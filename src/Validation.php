@@ -209,6 +209,16 @@ class Validation {
 				throw new ValidationException('Place of birth does not match regex');
 			}
 		}
+		if(self::hasValue('schacdateofbirth', $inputs)) {
+			if(preg_match('#^\d{4}-\d{2}-\d{2}$#u', $inputs['schacdateofbirth']) !== 1) {
+				throw new ValidationException('Date of birth should be in YYYY-MM-DD format (or whatever the date picker chooses)');
+			}
+		}
+		if(self::hasValue('safetytestdate', $inputs)) {
+			if(preg_match('#^\d{4}-\d{2}-\d{2}$#u', $inputs['safetytestdate']) !== 1) {
+				throw new ValidationException('Date of the test on safety should be in YYYY-MM-DD format (or whatever the date picker chooses)');
+			}
+		}
 		if(self::hasValue('nsaccountlock', $inputs)) {
 			if($inputs['nsaccountlock'] !== 'true') {
 				throw new ValidationException('nsAccountLock can only be true or be removed');
