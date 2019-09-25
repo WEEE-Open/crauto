@@ -114,6 +114,16 @@ class Validation {
 			$inputs['schacpersonaluniquecode'] = $letter . $numbers;
 		}
 		if(self::hasValue('schacdateofbirth', $inputs)) {
+			if(preg_match('#^\d{4}-\d{2}-\d{2}$#u', $inputs['schacdateofbirth']) !== 1) {
+				throw new ValidationException('Date of birth should be in YYYY-MM-DD format (or whatever the date picker chooses)');
+			}
+		}
+		if(self::hasValue('safetytestdate', $inputs)) {
+			if(preg_match('#^\d{4}-\d{2}-\d{2}$#u', $inputs['safetytestdate']) !== 1) {
+				throw new ValidationException('Date of the test on safety should be in YYYY-MM-DD format (or whatever the date picker chooses)');
+			}
+		}
+		if(self::hasValue('schacdateofbirth', $inputs)) {
 			$inputs['schacdateofbirth'] = self::dateHtmlToSchac($inputs['schacdateofbirth']);
 		}
 		if(self::hasValue('safetytestdate', $inputs)) {
@@ -210,13 +220,13 @@ class Validation {
 			}
 		}
 		if(self::hasValue('schacdateofbirth', $inputs)) {
-			if(preg_match('#^\d{4}-\d{2}-\d{2}$#u', $inputs['schacdateofbirth']) !== 1) {
-				throw new ValidationException('Date of birth should be in YYYY-MM-DD format (or whatever the date picker chooses)');
+			if(strlen($inputs['schacdateofbirth']) !== 8 || !is_numeric($inputs['schacdateofbirth'])) {
+				throw new ValidationException('Date of birth cannot be converted to SCHAC format');
 			}
 		}
 		if(self::hasValue('safetytestdate', $inputs)) {
-			if(preg_match('#^\d{4}-\d{2}-\d{2}$#u', $inputs['safetytestdate']) !== 1) {
-				throw new ValidationException('Date of the test on safety should be in YYYY-MM-DD format (or whatever the date picker chooses)');
+			if(strlen($inputs['safetytestdate']) !== 8 || !is_numeric($inputs['safetytestdate'])) {
+				throw new ValidationException('Date of the test on safety cannot be converted to SCHAC format');
 			}
 		}
 		if(self::hasValue('nsaccountlock', $inputs)) {
@@ -247,10 +257,26 @@ class Validation {
 		}
 	}
 
+	/**
+	 * What it says on the tin.
+	 * Throws a fatal error if not in the correct input format, check before calling this function...
+	 *
+	 * @param string $date Ymd from LDAP
+	 *
+	 * @return string Y-m-d for HTML input tags
+	 */
 	public static function dateSchacToHtml(string $date): string {
 		return DateTime::createFromFormat('Ymd', $date)->format('Y-m-d');
 	}
 
+	/**
+	 * What it says on the tin.
+	 * Throws a fatal error if not in the correct input format, check before calling this function...
+	 *
+	 * @param string $date Y-m-d from HTML input tags
+	 *
+	 * @return string Ymd for LDAP
+	 */
 	public static function dateHtmlToSchac(string $date): string {
 		return DateTime::createFromFormat('Y-m-d', $date)->format('Ymd');
 	}
