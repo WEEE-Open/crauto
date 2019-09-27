@@ -215,7 +215,7 @@ class Validation {
 			}
 		}
 		if(self::hasValue('schacplaceofbirth', $inputs)) {
-			if(preg_match('#^\w[\w\s]*(?:\([A-Za-z][A-Za-z]\))?, .*$#u', $inputs['schacplaceofbirth']) !== 1) {
+			if(preg_match('#^\w[\w\s]*(?:\([A-Za-z][A-Za-z]\))?, .+$#u', $inputs['schacplaceofbirth']) !== 1) {
 				throw new ValidationException('Place of birth does not match regex');
 			}
 		}

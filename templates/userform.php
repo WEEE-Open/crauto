@@ -83,7 +83,7 @@ $attributeNames = [
 		</div>
 		<div class="form-group col-sm-6">
 			<label for="profile-schacplaceofbirth"><?= $attributeNames['schacplaceofbirth'] ?></label>
-			<input type="text" class="form-control" id="profile-schacplaceofbirth" name="schacplaceofbirth" value="<?= $this->e($attributes['schacplaceofbirth'] ?? '') ?>" <?= $editable('schacplaceofbirth') ?> maxlength="500" pattern="\w[\w\s]*(\([A-Za-z][A-Za-z]\))?, \w[\w\s]*">
+			<input type="text" class="form-control" id="profile-schacplaceofbirth" name="schacplaceofbirth" value="<?= $this->e($attributes['schacplaceofbirth'] ?? '') ?>" <?= $editable('schacplaceofbirth') ?> maxlength="500" pattern="\w[\w\s]*(\([A-Za-z][A-Za-z]\))?, .+">
 		</div>
 	</div>
 	<div class="form-row">
