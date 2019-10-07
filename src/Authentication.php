@@ -205,8 +205,8 @@ class Authentication {
 
 		$oidc = new OpenIDConnectClient(CRAUTO_OIDC_ISSUER, CRAUTO_OIDC_CLIENT_KEY, CRAUTO_OIDC_CLIENT_SECRET);
 		$oidc->addScope(['openid', 'profile']);
-		$oidc->setVerifyHost(false);
-		$oidc->setVerifyPeer(false);
+		$oidc->setVerifyHost(VERIFY_CERTIFICATES);
+		$oidc->setVerifyPeer(VERIFY_CERTIFICATES);
 
 		return $oidc;
 	}
