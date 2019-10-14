@@ -17,7 +17,7 @@ $this->layout('base', ['title' => 'Register']);
 
 <?php if(!isset($attributes['telegramid'])): ?>
 	<div class="alert alert-warning" role="alert">
-		Give the link to this page to <a href="https://telegram.me/weeelab_bot" target="_blank">@weeelab_bot</a> and reload the page to fill the Telegram ID field automatically.
+		Copy and paste the address of this page to <a href="https://telegram.me/weeelab_bot" target="_blank">@weeelab_bot</a> and reload the page to fill the Telegram ID field automatically. You <em>really</em> should, the telegram nickname is not enough.
 	</div>
 <?php endif ?>
 
