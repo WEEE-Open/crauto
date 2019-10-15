@@ -22,7 +22,7 @@ if(isset($_GET['uid'])) {
 	$error = null;
 	try {
 		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
-			CRAUTO_LDAP_GROUPS_DN, false);
+			CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
 		$attributes = $ldap->getUser($targetUid, array_merge($allowedAttributes, ['createtimestamp', 'modifytimestamp']));
 		$targetUid = $attributes['uid'] ?? $targetUid; // Canonicalize uid, or use the supplied one
 
@@ -78,7 +78,7 @@ if(isset($_GET['uid'])) {
 	$error = null;
 	try {
 		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
-			CRAUTO_LDAP_GROUPS_DN, false);
+			CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
 		$users = $ldap->getUsers(['uid', 'cn', 'memberof', 'nsaccountlock']);
 
 		foreach($users as &$user) {

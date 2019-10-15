@@ -460,7 +460,7 @@ $template->addData(['authenticated' => $loggedin, 'isAdmin' => $loggedin && Auth
 
 try {
 	$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
-		CRAUTO_LDAP_GROUPS_DN, false);
+		CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
 	if(isset($_GET['invite'])) {
 		$defaultAttributes = $ldap->getInvitedUser($_GET['invite'], CRAUTO_LDAP_INVITES_DN);
 		if($defaultAttributes === null) {

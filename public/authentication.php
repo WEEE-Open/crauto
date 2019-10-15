@@ -10,7 +10,7 @@ Authentication::requireLogin();
 $error = null;
 try {
 	$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
-		CRAUTO_LDAP_GROUPS_DN, false);
+		CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
 
 	if(isset($_POST) && !empty($_POST)) {
 		Validation::handlePasswordChangePost($ldap, $_SESSION['uid'], $_POST);

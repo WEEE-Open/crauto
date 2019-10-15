@@ -20,7 +20,7 @@ $attributes = [];
 $error = null;
 try {
 	$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
-		CRAUTO_LDAP_GROUPS_DN, false);
+		CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
 	$attributes = $ldap->getUser($_SESSION['uid'], $allowedAttributes);
 
 	if(isset($_GET['download'])) {
