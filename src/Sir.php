@@ -59,9 +59,9 @@ class Sir {
 	private function compileSir($filename) {
 		$tex = $this->filePath($filename, 'tex');
 		$command = 'pdflatex -interaction=nonstopmode -output-directory=' . escapeshellarg($this->directory) . ' ' . escapeshellarg($tex);
-		system($command, $ret);
+		exec($command, $output, $ret);
 		if($ret !== 0) {
-			throw new SirException("pdflatex failed, exit status $ret");
+			throw new SirException("pdflatex failed, exit status $ret\nHere's the output:\n\n$output");
 		}
 
 		// Remove temporary files
