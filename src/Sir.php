@@ -61,6 +61,7 @@ class Sir {
 		$command = 'pdflatex -interaction=nonstopmode -output-directory=' . escapeshellarg($this->directory) . ' ' . escapeshellarg($tex);
 		exec($command, $output, $ret);
 		if($ret !== 0) {
+			$output = implode("\n", $output);
 			throw new SirException("pdflatex failed, exit status $ret\nHere's the output:\n\n$output");
 		}
 
