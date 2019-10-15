@@ -2,3 +2,6 @@
 composer.phar
 /vendor/
 config/config.php
+tests/pasta/output
+T-MOD-SIR.pdf
+F-MOD-LABORATORI.pdf

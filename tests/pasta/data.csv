@@ -1,0 +1,5 @@
+NAME,SURNAME,ID,DD,MM,YYYY,PLACE,COUNTRY,MOBILE,EMAIL
+Mario,Rossi,s123456,01,01,1970,555 666 7777,Torino,Italia,s123456@studenti.polimi.exe
+Luigi,Verdi,s9001,02,03,1994,555 123 4567,Roma,Italia,luigi.verdi@studenti.polito.it
+Giovanni,Bianchi,d000123,10,11,1984,555 999 9999,Napoli,Italia,joe.vanni.bianchi@dottorandi.polito.it
+

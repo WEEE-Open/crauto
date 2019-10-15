@@ -1,0 +1,141 @@
+\documentclass[a4paper]{article}
+\usepackage[italian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\renewcommand{\familydefault}{\ttdefault} % typewriter font
+\usepackage[paper=a4paper,top=0pt,bottom=0pt,right=0pt,left=0pt]{geometry}
+\usepackage{pdfpages} % import pdf pages
+\usepackage[overlay]{textpos} % floating text
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+\setlength{\parindent}{0em}
+\setlength{\parskip}{0em}
+
+% distance from top of page, from left, text box width, text. Everything is in millimeters.
+\newcommand{\text}[4]{\begin{textblock}{#3}(#2,#1)
+{\large #4}
+\end{textblock}}
+\newcommand{\insertpage}[1]{\begin{textblock*}{297mm}(0pt,0pt)%
+		\includepdf[pages=#1,scale=1]{T-MOD-SIR.pdf}%
+	\end{textblock*}%
+}
+
+
+\begin{document}
+	\insertpage{1}
+	% Part 1 - General information
+	\text{82}{38}{42}{\hfill [SURNAME]} % surname
+	\text{82}{96}{36.5}{\hfill [NAME]} % name
+	\text{82}{174}{20}{[ID]} % id
+	\text{96}{49}{10}{[DD]} % dd
+	\text{96}{58}{10}{[MM]} % mm
+	\text{96}{67}{10}{[YYYY]} % yyyy
+	\text{92}{113}{20}{[PLACE]} % place of birth
+	\text{96}{166}{28}{\hfill [COUNTRY]} % country
+	\text{109}{49}{63}{[MOBILE]} % mobile phone
+	\text{109.5}{126}{67}{\hfill\small [EMAIL]} % email
+	
+	\text{118}{115}{20}{DISAT} % department
+	\text{116}{175}{20}{\small Corso Duca} % headquarters
+	\text{119}{173}{20}{\small degli Abruzzi}
+	\text{122}{175}{20}{\small 24}
+	\text{127}{115}{80}{Esempio Uno} % department manager
+	\text{136}{115}{80}{Esempio Due} % laboratory manager
+
+	\text{157}{109}{80}{\Large X} % job
+	\text{183}{63}{45}{01/01/2017} % start date
+	\text{183}{165}{45}{31/12/2017} % end date
+	
+	% Part 1 - Workplace information
+	\text{215}{90}{130}{DISAT} % department
+	
+	\text{223}{90}{130}{Laboratorio di esempio} % room name
+	\text{228}{90}{80}{\Large X} % room type
+	\text{230}{49}{130}{AAA123} % room code
+	
+	\text{237}{90}{130}{Magazzino di esempio} % room name
+	\text{241}{141}{80}{\Large X} % room type
+	\text{245}{141}{130}{Magazzino} % room type (other)
+	\text{244}{49}{130}{BBB456} % room code
+	
+	\newpage
+	\insertpage{2}
+	\text{46}{89}{98}{Faccio cose, vedo gente.\\Lorem ipsum dolor sit amet, consectetur adipi\-scing elit. Mauris elementum vehicula elit, sed congue risus tempus et. Sed convallis turpis.}
+	
+	\newpage
+	\insertpage{3}
+	% place Xs as you see fit
+	% checkboxes are about 15 mm apart
+	\text{102}{143}{80}{\Large X}
+	\text{119}{143}{80}{\Large X}
+	\text{134}{143}{80}{\Large X}
+	\text{150}{143}{80}{\Large X}
+	\text{165}{143}{80}{\Large X}
+	\text{181}{143}{80}{\Large X}
+	\text{198}{143}{80}{\Large X}
+	\text{216}{143}{80}{\Large X}
+	\text{232}{143}{80}{\Large X}
+	\text{244}{143}{80}{\Large X}
+	\text{254}{143}{80}{\Large X}
+	
+	\newpage
+	\insertpage{4}
+	\text{58}{160.5}{80}{\Large X}
+	\text{74}{162}{80}{\Large X}
+	
+	\text{96}{152.5}{80}{\Large X}
+	
+	\text{122}{143}{80}{\Large X}
+	\text{137}{143}{80}{\Large X}
+	\text{153}{143}{80}{\Large X}
+	
+	\text{188.5}{152.5}{80}{\Large X}
+	
+	\text{221}{143}{80}{\Large X}
+	\text{239}{143}{80}{\Large X}
+	\text{262}{143}{80}{\Large X}
+	
+	\newpage
+	\insertpage{5}
+	\text{58}{160}{80}{\Large X}
+	
+	\text{89}{142}{80}{\Large X}
+	\text{107}{142}{80}{\Large X}
+	\text{138}{142}{80}{\Large X}
+	\text{161}{142}{80}{\Large X}
+	\text{184}{142}{80}{\Large X}
+	
+	\newpage
+	\insertpage{6}
+	\text{122}{47.5}{80}{\Large X}
+	\text{190}{47.5}{80}{\Large X}
+	\text{219}{150}{80}{\Large X}
+	
+	\newpage
+	\insertpage{7}
+	\text{98}{55}{80}{\Large X}
+	
+	% 2nd number is 155 for yes
+	\text{116.5}{175}{80}{\Large X}
+	\text{130}{175}{80}{\Large X}
+	\text{141}{175}{80}{\Large X}
+	\text{149}{175}{80}{\Large X}
+	\text{159}{175}{80}{\Large X}
+	\text{172.5}{175}{80}{\Large X}
+	\text{184}{175}{80}{\Large X}
+	\text{193}{175}{80}{\Large X}
+	\text{203}{175}{80}{\Large X}
+	\text{215}{175}{80}{\Large X}
+	\text{225}{175}{80}{\Large X}
+	\text{234}{175}{80}{\Large X}
+	\text{244.5}{175}{80}{\Large X}
+	\text{258}{175}{80}{\Large X}
+	\text{269}{175}{80}{\Large X}
+	
+	\newpage
+	\insertpage{8}
+	\text{46}{175}{80}{\Large X}
+	\text{60}{175}{80}{\Large X}
+	
+\end{document}
