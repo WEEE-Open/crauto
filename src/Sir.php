@@ -7,6 +7,19 @@ namespace WEEEOpen\Crauto;
 class Sir {
 	protected $directory;
 
+	static $replace = [
+		"#"  => "\\#",
+		"$"  => "\\$",
+		"%"  => "\\%",
+		"&"  => "\\&",
+		"~"  => "\\~{}",
+		"_"  => "\\_",
+		"^"  => "\\^{}",
+		"\\" => "\\textbackslash{}",
+		"{"  => "\\{",
+		"}"  => "\\}",
+	];
+
 	public function __construct(string $directory) {
 		if(substr($directory, -1, 1) !== '/' && substr($directory, -1, 1) !== DIRECTORY_SEPARATOR) {
 			$directory = $directory . '/';
@@ -29,6 +42,7 @@ class Sir {
 		$theTex = $this->generateSirTex($template, $replacements);
 		file_put_contents($tex, $theTex);
 		$this->compileSir($filename);
+
 		return $pdf;
 	}
 
@@ -44,7 +58,7 @@ class Sir {
 
 	private function compileSir($filename) {
 		$tex = $this->filePath($filename, 'tex');
-		$command = 'pdflatex -interaction=nonstopmode -output-directory='  . escapeshellarg($this->directory) . ' ' . escapeshellarg($tex);
+		$command = 'pdflatex -interaction=nonstopmode -output-directory=' . escapeshellarg($this->directory) . ' ' . escapeshellarg($tex);
 		system($command, $ret);
 		if($ret !== 0) {
 			throw new SirException("pdflatex failed, exit status $ret");
@@ -79,5 +93,18 @@ class Sir {
 
 	public function getDirectory(): string {
 		return $this->directory;
+	}
+
+	public static function politoMail(string $matricola): string {
+		$first = strtolower(substr($matricola, 0, 1));
+		if($first === 'd') {
+			return "$matricola@polito.it";
+		} else {
+			return "$matricola@studenti.polito.it";
+		}
+	}
+
+	public static function escapeString(string $s): string {
+		return str_replace(array_keys(self::$replace), array_values(self::$replace), $s);
 	}
 }
