@@ -42,7 +42,7 @@ if(isset($_GET['uid'])) {
 
 		list($yyyy, $mm, $dd) = explode('-', Validation::dateSchacToHtml($attributes['schacdateofbirth']), 3);
 		$safetytestdate = Validation::dateSchacToHtml($attributes['safetytestdate']);
-		list($place, $country) = explode(', ', $attributes['schacplaceofbirth'], 1);
+		list($place, $country) = explode(', ', $attributes['schacplaceofbirth'], 2);
 
 		$replace = [
 			'[NAME]'     => Sir::escapeString($attributes['givenname']),
