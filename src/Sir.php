@@ -67,7 +67,7 @@ class Sir {
 
 		// Remove temporary files
 		unlink($this->filePath($filename, 'aux'));
-		unlink($this->filePath($filename, 'log'));
+		//unlink($this->filePath($filename, 'log'));
 	}
 
 	private function ensureDirectory(string $directory) {
