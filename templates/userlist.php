@@ -27,7 +27,7 @@ $today = new DateTimeImmutable();
 		<?php
 		if($user['safetytestdate'] !== null) {
 			if((int) $user['safetytestdate']->diff($today)->format('%a') >= 0) {
-				$testdates[$user['safetytestdate']->format('Y-m-d')][] = $user['safetytestdate'];
+				$testdates[$user['safetytestdate']->format('Y-m-d')][] = $user;
 			}
 		}
 		?>
