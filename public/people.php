@@ -2,6 +2,8 @@
 
 namespace WEEEOpen\Crauto;
 
+use DateTime;
+use DateTimeZone;
 use InvalidArgumentException;
 
 require '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
@@ -79,8 +81,9 @@ if(isset($_GET['uid'])) {
 	try {
 		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
 			CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
-		$users = $ldap->getUsers(['uid', 'cn', 'memberof', 'nsaccountlock']);
+		$users = $ldap->getUsers(['uid', 'cn', 'memberof', 'nsaccountlock', 'safetytestdate']);
 
+		$tz = new DateTimeZone('Europe/Rome');
 		foreach($users as &$user) {
 			if(isset($user['memberof'])) {
 				$groups = [];
@@ -88,6 +91,10 @@ if(isset($_GET['uid'])) {
 					$groups[] = Ldap::groupDnToName($dn);
 				}
 				$user['memberof'] = $groups;
+			}
+			if(isset($user['safetytestdate'])) {
+				$user['safetytestdate'] = DateTime::createFromFormat('Ymd', $user['safetytestdate'], $tz);
+				$user['safetytestdate']->diff(new \DateTimeImmutable())->format('%a');
 			}
 		}
 	} catch(LdapException $e) {
