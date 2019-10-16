@@ -58,8 +58,11 @@ class Sir {
 
 	private function compileSir($filename) {
 		$tex = $this->filePath($filename, 'tex');
+		$cwd = getcwd();
+		chdir($this->directory);
 		$command = 'pdflatex -interaction=nonstopmode -output-directory=' . escapeshellarg($this->directory) . ' ' . escapeshellarg($tex);
 		exec($command, $output, $ret);
+		chdir($cwd);
 		if($ret !== 0) {
 			$output = implode("\n", $output);
 			throw new SirException("pdflatex failed, exit status $ret\nHere's the output:\n\n$output");
