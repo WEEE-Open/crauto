@@ -30,6 +30,11 @@ if(isset($_GET['uid'])) {
 		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
 			CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
 		$attributes = $ldap->getUser($targetUid, $getTheseAttributes);
+		if($attributes === null) {
+			$template = Template::create();
+			echo $template->render('404');
+			exit;
+		}
 
 		foreach($attributes as $attr => $value) {
 			if(is_array($attr) && count($attr)) {
@@ -69,11 +74,12 @@ if(isset($_GET['uid'])) {
 		$replace['[FMODPATH]'] = Sir::escapeString(__DIR__ . '/../resources/latex/F-MOD-LABORATORI.pdf');
 		$filename = "sir-$targetUid-".sha1(var_export($replace, 1));
 		$pdf = $sir->getSir($filename, file_get_contents($template), $replace);
-
 		header('Content-type: application/pdf');
 		header("Content-Disposition: attachment; filename=\"sir-$targetUid.pdf\"");
 		readfile($pdf);
+
 		exit;
+
 	} catch(LdapException $e) {
 		$error = $e->getMessage();
 	} catch(InvalidArgumentException $e) {
@@ -84,18 +90,19 @@ if(isset($_GET['uid'])) {
 		$error = $e->getMessage();
 	}
 
-	if($error === null) {
-
-	} else {
+	if($error !== null) {
 		$template = Template::create();
 		echo $template->render('500', [
 			'error' => $error,
 		]);
+
+		exit;
 	}
 
 } else {
 	$template = Template::create();
 	echo $template->render('400', ['error' => 'For which user?']);
+
 	exit;
 }
 
