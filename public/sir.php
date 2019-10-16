@@ -36,11 +36,11 @@ if(isset($_GET['uid'])) {
 			exit;
 		}
 
-		foreach($attributes as $attr => $value) {
+		foreach($attributes as $name => $attr) {
 			if(is_array($attr) && count($attr)) {
 				throw new InvalidArgumentException("$attr is empty (and multivalued)");
 			}
-			if($attr === null || strlen($attr) === 0) {
+			if($attr === null || $attr === '') {
 				throw new InvalidArgumentException("$attr is empty");
 			}
 		}
