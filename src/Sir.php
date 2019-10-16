@@ -60,7 +60,9 @@ class Sir {
 		$tex = $this->filePath($filename, 'tex');
 		$cwd = getcwd();
 		chdir($this->directory);
-		$command = 'pdflatex -interaction=nonstopmode -output-directory=' . escapeshellarg($this->directory) . ' ' . escapeshellarg($tex);
+		// For some reason, "pdflatex -v" works, "ls" works, and "pdflatex -interaction=..." does not. You *NEED* the
+		// full path. Or else the pdflatex process dies with SIGABRT without even starting. For no discernible reason.
+		$command = '/usr/bin/pdflatex -interaction=nonstopmode -output-directory=' . escapeshellarg($this->directory) . ' ' . escapeshellarg($tex);
 		exec($command, $output, $ret);
 		chdir($cwd);
 		if($ret !== 0) {
@@ -70,7 +72,7 @@ class Sir {
 
 		// Remove temporary files
 		unlink($this->filePath($filename, 'aux'));
-		//unlink($this->filePath($filename, 'log'));
+		unlink($this->filePath($filename, 'log'));
 	}
 
 	private function ensureDirectory(string $directory) {
