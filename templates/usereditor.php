@@ -31,6 +31,6 @@ $modified = $modified->format('Y-m-d H:i:s') . ' UTC';
 <?= $this->fetch('userform', ['attributes' => $attributes, 'editableAttributes' => $editableAttributes, 'allowedAttributes' => $allowedAttributes]) ?>
 <?= $this->fetch('authenticationform', ['requireOldPassword' => $adminRequireOldPassword]) ?>
 <div class="mb-2">
-	<a class="btn btn-outline-primary" href="/sir.php?uid=<?= $this->e() ?>">Download SIR 📝</a>
+	<a class="btn btn-outline-primary" href="/sir.php?uid=<?= $this->e($attributes['uid']) ?>">Download SIR 📝</a>
 </div>
 <small>Created <?= $created ?> - Last modified <?= $modified ?></small>
