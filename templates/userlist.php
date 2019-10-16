@@ -26,7 +26,7 @@ $today = new DateTimeImmutable();
 	<?php foreach($users as $user): ?>
 		<?php
 		if($user['safetytestdate'] !== null) {
-			if((int) $user['safetytestdate']->diff($today)->format('%a') >= 0) {
+			if((int) $user['safetytestdate']->diff($today)->format('%a') <= 0) {
 				$testdates[$user['safetytestdate']->format('Y-m-d')][] = $user;
 			}
 		}
@@ -38,17 +38,18 @@ $today = new DateTimeImmutable();
 		</tr>
 	<?php endforeach ?>
 	</tbody>
-	<?php if(count($testdates) > 0): ?>
+</table>
+
+<?php if(count($testdates) > 0): ?>
 	<div>
 		<h2>Upcoming tests on safety</h2>
 		<?php foreach($testdates as $date => $users): ?>
 			<h3><?= $date ?></h3>
 			<ul class="list-unstyled">
 				<?php foreach($users as $user): ?>
-						<li><?= $this->e($user['cn']) ?> (<a href="/sir.php?uid=<?= $this->e($user['uid']) ?>">get SIR</a>)</li>
+					<li><?= $this->e($user['cn']) ?> (<a href="/sir.php?uid=<?= $this->e($user['uid']) ?>">get SIR</a>)</li>
 				<?php endforeach; ?>
 			</ul>
 		<?php endforeach; ?>
 	</div>
-	<?php endif ?>
-</table>
+<?php endif ?>
