@@ -50,7 +50,7 @@ $today = new DateTimeImmutable();
 				<?php
 				$user = ksort($users,  SORT_NATURAL | SORT_FLAG_CASE);
 				foreach($users as $user): ?>
-					<li><?= $this->e($user['cn']) ?>, <?= $this->e($user['schacpersonaluniquecode']) ?> (<a href="/sir.php?uid=<?= $this->e($user['uid']) ?>">get SIR</a>)</li>
+					<li><a href="/people.php?uid=<?= $this->e($user['uid']) ?>"><?= $this->e($user['cn']) ?></a>, <?= $this->e($user['schacpersonaluniquecode']) ?> (<a href="/sir.php?uid=<?= $this->e($user['uid']) ?>">get SIR</a>)</li>
 				<?php endforeach; ?>
 			</ul>
 		<?php endforeach; ?>
