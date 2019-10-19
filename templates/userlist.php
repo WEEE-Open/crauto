@@ -26,8 +26,9 @@ $today = new DateTimeImmutable();
 	<?php foreach($users as $user): ?>
 		<?php
 		if($user['safetytestdate'] !== null) {
-			if((int) $user['safetytestdate']->diff($today)->format('%a') <= 0) {
-				$testdates[$user['safetytestdate']->format('Y-m-d')][] = $user;
+			if((int) $user['safetytestdate']->diff($today)->format('%R%a') <= 0) {
+				$sortkey = $user['sn'] . ' ' . $user['cn'] . ' ' . $user['uid'];
+				$testdates[$user['safetytestdate']->format('Y-m-d')][$sortkey] = $user;
 			}
 		}
 		?>
@@ -46,8 +47,10 @@ $today = new DateTimeImmutable();
 		<?php foreach($testdates as $date => $users): ?>
 			<h3><?= $date ?></h3>
 			<ul class="list-unstyled">
-				<?php foreach($users as $user): ?>
-					<li><?= $this->e($user['cn']) ?> (<a href="/sir.php?uid=<?= $this->e($user['uid']) ?>">get SIR</a>)</li>
+				<?php
+				$user = ksort($users,  SORT_NATURAL | SORT_FLAG_CASE);
+				foreach($users as $user): ?>
+					<li><?= $this->e($user['cn']) ?>, <?= $this->e($user['schacpersonaluniquecode']) ?> (<a href="/sir.php?uid=<?= $this->e($user['uid']) ?>">get SIR</a>)</li>
 				<?php endforeach; ?>
 			</ul>
 		<?php endforeach; ?>
