@@ -72,9 +72,7 @@ class Authentication {
 		$oidc = self::getOidc();
 		//$oidc->setCertPath('/path/to/my.cert');
 		$oidc->setRedirectURL(CRAUTO_URL . '/login.php');
-		$oidc->addScope('openid');
-		$oidc->addScope('profile');
-		$oidc->addScope('roles');
+		$oidc->addScope(['openid', 'profile']);
 		$oidc->authenticate();
 
 		self::setAttributes($oidc);
@@ -216,7 +214,7 @@ class Authentication {
 		$id = $oidc->getVerifiedClaims('sub');
 		$cn = $oidc->getVerifiedClaims('name');
 		// WSO2 IS works as-is, for Keycloak go to clients > crauto > mappers > add builtin > groups
-		$groups = $oidc->requestUserInfo('groups');
+		$groups = $oidc->getVerifiedClaims('groups');
 		$exp = $oidc->getVerifiedClaims('exp');
 		$refresh_token = $oidc->getRefreshToken();
 		$id_token = $oidc->getIdToken();
