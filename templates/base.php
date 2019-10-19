@@ -6,37 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title><?= $this->e($title) ?> - Crauto</title>
-	<style>
-		.navbar {
-			border-bottom: 0.5rem solid #00983a;
-			margin-bottom: 0.5rem;
-		}
-
-		a:not(.btn), a:link:not(.btn) {
-			color: #00983a;
-		}
-
-		a:visited:not(.btn), a:link:visited:not(.btn) {
-			color: #00692b;
-		}
-
-		a:hover:not(.btn), a:link:hover:not(.btn) {
-			color: #00cc4e;
-		}
-
-		a:active:not(.btn), a:link:active:not(.btn) {
-			color: #33ff81;
-		}
-
-		tr.locked {
-			background: #d6d8db;
-			color: #666;
-		}
-
-		tr.locked a {
-			color: #333;
-		}
-	</style>
+	<link rel="stylesheet" href="crauto.css">
 	<link rel="stylesheet" href="bootstrap.min.css">
 </head>
 <body>
