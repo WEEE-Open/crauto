@@ -28,4 +28,3 @@ $this->layout('base', ['title' => 'Welcome']) ?>
 	}
 	?>
 </ul>
-<p>Coming soon: T.A.R.A.L.L.O., a wiki, and other nice things</p>
