@@ -29,28 +29,41 @@ $attributeNames = [
 	'weeelabnickname' => 'Nicknames for weeelab',
 	'description' => 'Notes',
 	'nsaccountlock' => 'Account locked',
-]
+];
+$hasImage = true;
+if($hasImage) {
+	$innerColumnClass = '';
+} else {
+	$innerColumnClass = 'col-sm-6';
+}
 ?>
 <form method="POST">
 	<div class="form-row">
-		<div class="form-group col-sm-6">
-			<label for="profile-uid"><?= $attributeNames['uid'] ?></label>
-			<input type="text" class="form-control" id="profile-uid" name="uid" value="<?= $this->e($attributes['uid'] ?? '') ?>" <?= $editable('uid') ?> pattern="^[a-zA-Z][a-zA-Z0-9-_\.]*$" maxlength="50">
+		<?php if($hasImage): ?>
+		<div class="col-sm-6 col-md-4">
+			<img alt="profile picture" class="img-fluid" src="https://via.placeholder.com/320x320">
 		</div>
-		<div class="form-group col-sm-6">
-			<label for="profile-cn"><?= $attributeNames['cn'] ?></label>
-			<input type="text" class="form-control" id="profile-cn" name="cn" value="<?= $this->e($attributes['cn'] ?? '') ?>" <?= $editable('cn') ?> maxlength="500">
+		<div class="col-sm-6 col-md-8">
+		<?php endif ?>
+			<div class="form-group <?= $innerColumnClass ?>">
+				<label for="profile-uid"><?= $attributeNames['uid'] ?></label>
+				<input type="text" class="form-control" id="profile-uid" name="uid" value="<?= $this->e($attributes['uid'] ?? '') ?>" <?= $editable('uid') ?> pattern="^[a-zA-Z][a-zA-Z0-9-_\.]*$" maxlength="50">
+			</div>
+			<div class="form-group <?= $innerColumnClass ?>">
+				<label for="profile-cn"><?= $attributeNames['cn'] ?></label>
+				<input type="text" class="form-control" id="profile-cn" name="cn" value="<?= $this->e($attributes['cn'] ?? '') ?>" <?= $editable('cn') ?> maxlength="500">
+			</div>
+			<div class="form-group <?= $innerColumnClass ?>">
+				<label for="profile-givenname"><?= $attributeNames['givenname'] ?></label>
+				<input type="text" class="form-control" id="profile-givenname" name="givenname" value="<?= $this->e($attributes['givenname'] ?? '') ?>" <?= $editable('givenname') ?> maxlength="500">
+			</div>
+			<div class="form-group <?= $innerColumnClass ?>">
+				<label for="profile-sn"><?= $attributeNames['sn'] ?></label>
+				<input type="text" class="form-control" id="profile-sn" name="sn" value="<?= $this->e($attributes['sn'] ?? '') ?>" <?= $editable('sn') ?> maxlength="500">
+			</div>
+		<?php if($hasImage): ?>
 		</div>
-	</div>
-	<div class="form-row">
-		<div class="form-group col-sm-6">
-			<label for="profile-givenname"><?= $attributeNames['givenname'] ?></label>
-			<input type="text" class="form-control" id="profile-givenname" name="givenname" value="<?= $this->e($attributes['givenname'] ?? '') ?>" <?= $editable('givenname') ?> maxlength="500">
-		</div>
-		<div class="form-group col-sm-6">
-			<label for="profile-sn"><?= $attributeNames['sn'] ?></label>
-			<input type="text" class="form-control" id="profile-sn" name="sn" value="<?= $this->e($attributes['sn'] ?? '') ?>" <?= $editable('sn') ?> maxlength="500">
-		</div>
+		<?php endif ?>
 	</div>
 	<div class="form-group">
 		<label for="profile-memberof"><?= $attributeNames['memberof'] ?></label>
