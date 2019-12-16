@@ -12,12 +12,34 @@ class Ldap {
 	protected $url;
 	protected $starttls;
 	public static $multivalued = ['memberof' => true, 'sshpublickey' => true, 'weeelabnickname' => true];
+	private const EXAMPLE_USERS = [
+		'alice' => [
+			'uid' => 'alice',
+			'cn' => 'Alice Test',
+			'sn' => 'Test',
+			'memberof' => [],
+			'createtimestamp' => '20191025105022Z',
+			'modifytimestamp' => '20191025155317Z',
+		],
+		'bob' => [
+			'uid' => 'bob',
+			'cn' => 'Bob Testington',
+			'sn' => 'Testington',
+			'memberof' => [],
+			'createtimestamp' => '20191216155022Z',
+			'modifytimestamp' => '20191216155022Z',
+		],
+	];
 
 	public function __construct(string $url, string $bindDn, string $password, string $usersDn, string $groupsDn, bool $startTls = true) {
 		$this->url = $url;
 		$this->starttls = $startTls;
 		$this->groupsDn = $groupsDn;
 		$this->usersDn = $usersDn;
+		if(defined('TEST_MODE') && TEST_MODE) {
+			error_log('TEST_MODE, not connecting to LDAP');
+			return;
+		}
 		$this->ds = ldap_connect($url);
 		if(!$this->ds) {
 			throw new LdapException('Cannot connect to LDAP server');
@@ -44,6 +66,10 @@ class Ldap {
 	}
 
 	public function getUser(string $uid, ?array $attributes = null): ?array {
+		if(defined('TEST_MODE') && TEST_MODE) {
+			error_log('TEST_MODE, returning sample user');
+			return self::EXAMPLE_USERS[$uid];
+		}
 		$sr = $this->searchByUid($uid, $attributes);
 		if($sr === null) {
 			return null;
@@ -79,6 +105,11 @@ class Ldap {
 	}
 
 	public function getUsers(array $attributes) {
+		if(defined('TEST_MODE') && TEST_MODE) {
+			error_log('TEST_MODE, returning sample users');
+			return array_values(self::EXAMPLE_USERS);
+		}
+
 		if(version_compare(PHP_VERSION, '7.3', '>=')) {
 			// From PHP 7.3 onward, the serverctrls parameter is available. This is the only reasonable way to have the results sorted.
 			// Well, if there's more than one page which is actually not supported, but let's use it anyway.

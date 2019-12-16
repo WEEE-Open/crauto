@@ -69,13 +69,23 @@ class Authentication {
 			session_start();
 		}
 
-		$oidc = self::getOidc();
-		//$oidc->setCertPath('/path/to/my.cert');
-		$oidc->setRedirectURL(CRAUTO_URL . '/login.php');
-		$oidc->addScope(['openid', 'profile']);
-		$oidc->authenticate();
-
-		self::setAttributes($oidc);
+		if(defined('TEST_MODE') && TEST_MODE) {
+			error_log('TEST_MODE, faking authentication');
+			$_SESSION['uid'] = 'test.administrator';
+			$_SESSION['id'] = 'fake:example:68048769-c06d-4873-adf6-dbfa6b0afcd3';
+			$_SESSION['cn'] = 'Test Administrator';
+			$_SESSION['groups'] = ['HR'];
+			$_SESSION['expires'] = PHP_INT_MAX;
+			$_SESSION['refresh_token'] = 'refresh_token';
+			$_SESSION['id_token'] = 'id_token';
+		} else {
+			$oidc = self::getOidc();
+			//$oidc->setCertPath('/path/to/my.cert');
+			$oidc->setRedirectURL(CRAUTO_URL . '/login.php');
+			$oidc->addScope(['openid', 'profile']);
+			$oidc->authenticate();
+			self::setAttributes($oidc);
+		}
 
 		self::returnToPreviousPage();
 	}
@@ -91,7 +101,12 @@ class Authentication {
 		$oidc = self::getOidc();
 		$token = $_SESSION['id_token'];
 		session_destroy();
-		$oidc->signOut($token, CRAUTO_URL . '/logout_done.php');
+
+		if(defined('TEST_MODE') && TEST_MODE) {
+			error_log('TEST_MODE, no need to log out');
+		} else {
+			$oidc->signOut($token, CRAUTO_URL . '/logout_done.php');
+		}
 		exit;
 	}
 
@@ -228,20 +243,20 @@ class Authentication {
 		$_SESSION['id_token'] = $id_token;
 	}
 
-	/**
-	 * Split claimed groups into an array
-	 *
-	 * @param string $groups String returned by the OIDC library, e.g. "internal/everyone,HR,admin"
-	 *
-	 * @return string[] Groups, key and value are both the group name
-	 */
-	public static function splitGroups(?string $groups): array {
-		if($groups === null) {
-			return [];
-		}
-		$groups = explode(',', $groups);
-		return array_combine($groups, $groups); // a hashmap
-	}
+//	/**
+//	 * Split claimed groups into an array
+//	 *
+//	 * @param string $groups String returned by the OIDC library, e.g. "internal/everyone,HR,admin"
+//	 *
+//	 * @return string[] Groups, key and value are both the group name
+//	 */
+//	public static function splitGroups(?string $groups): array {
+//		if($groups === null) {
+//			return [];
+//		}
+//		$groups = explode(',', $groups);
+//		return array_combine($groups, $groups); // a hashmap
+//	}
 
 	/**
 	 * Check whether a user is an "admin" or not (part of HR group or not)
