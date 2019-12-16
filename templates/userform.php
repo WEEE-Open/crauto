@@ -2,6 +2,7 @@
 /** @var $attributes array */
 /** @var $editableAttributes string[] */
 /** @var $allowedAttributes string[] */
+/** @var $image \WEEEOpen\Crauto\Image */
 ?>
 <?php
 $editable = function(string $attr) use ($editableAttributes): string {
@@ -30,8 +31,7 @@ $attributeNames = [
 	'description' => 'Notes',
 	'nsaccountlock' => 'Account locked',
 ];
-$hasImage = true;
-if($hasImage) {
+if($image->exists()) {
 	$innerColumnClass = '';
 } else {
 	$innerColumnClass = 'col-sm-6';
@@ -39,7 +39,7 @@ if($hasImage) {
 ?>
 <form method="POST">
 	<div class="form-row">
-		<?php if($hasImage): ?>
+		<?php if($image->exists()): ?>
 		<div class="col-sm-6 col-md-4">
 			<img alt="profile picture" class="img-fluid" src="https://via.placeholder.com/320x320">
 		</div>
@@ -61,7 +61,7 @@ if($hasImage) {
 				<label for="profile-sn"><?= $attributeNames['sn'] ?></label>
 				<input type="text" class="form-control" id="profile-sn" name="sn" value="<?= $this->e($attributes['sn'] ?? '') ?>" <?= $editable('sn') ?> maxlength="500">
 			</div>
-		<?php if($hasImage): ?>
+		<?php if($image->exists()): ?>
 		</div>
 		<?php endif ?>
 	</div>

@@ -15,7 +15,7 @@ $this->layout('base', ['title' => $title]);
 	</div>
 <?php endif ?>
 
-<?= $this->fetch('userform', ['attributes' => $attributes, 'editableAttributes' => $editableAttributes, 'allowedAttributes' => $allowedAttributes]) ?>
+<?= $this->fetch('userform', ['attributes' => $attributes, 'editableAttributes' => $editableAttributes, 'allowedAttributes' => $allowedAttributes, 'image' => new WEEEOpen\Crauto\Image($attributes['uid'])]) ?>
 
 <p>
 	<a class="btn btn-secondary" href="/personal.php?download" role="button">Download this data</a> and admire our GDPR compliance!
