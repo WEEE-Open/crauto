@@ -22,6 +22,7 @@ if(isset($_GET['uid'])) {
 $image = new Image($uid, null);
 
 if($image->exists()) {
+	$image->bumpAccessTime();
 	$path = $image->getPath();
 	$etag = filemtime($path) . md5($path);
 	header('Content-type: image/jpeg');

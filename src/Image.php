@@ -43,6 +43,12 @@ class Image {
 		return $this->fileExists();
 	}
 
+	public function bumpAccessTime() {
+		if($this->fileExists()) {
+			touch($this->path, filemtime($this->path), time());
+		}
+	}
+
 	protected function tryDownload(string $id): bool {
 		$url = sprintf(CRAUTO_IMAGE_URL, rawurlencode(substr($id, 1)));
 		$fp = fopen($this->path, 'w');
