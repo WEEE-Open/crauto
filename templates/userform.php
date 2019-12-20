@@ -3,7 +3,6 @@
 /** @var $editableAttributes string[] */
 /** @var $allowedAttributes string[] */
 /** @var $image \WEEEOpen\Crauto\Image */
-/** @var $selfImage bool|null */
 ?>
 <?php
 $editable = function(string $attr) use ($editableAttributes): string {
@@ -42,7 +41,7 @@ if($image->exists()) {
 	<div class="form-row">
 		<?php if($image->exists()): ?>
 		<div class="col-sm-6 col-md-5 col-lg-4 col-xl-3">
-			<img alt="profile picture" class="img-fluid rounded fill-large" src="<?= $this->e($image->getUrl($selfImage ?? false)) ?>">
+			<img alt="profile picture" class="img-fluid rounded fill-large" src="<?= $this->e($image->getUrl()) ?>">
 		</div>
 		<div class="col-sm-6 col-md-7 col-lg-8 col-xl-9">
 		<?php endif ?>

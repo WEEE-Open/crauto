@@ -18,12 +18,8 @@ class Image {
 		}
 	}
 
-	public function getUrl(bool $self = false): string {
-		if($self) {
-			return '/image.php';
-		} else {
-			return '/image.php?uid=' . rawurlencode($this->uid);
-		}
+	public function getUrl(): string {
+		return '/image.php?uid=' . rawurlencode($this->uid);
 	}
 
 	public function getPath(): string {

@@ -7,7 +7,8 @@ require '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.
 Authentication::requireLogin();
 
 if(isset($_GET['uid'])) {
-	if(Authentication::isAdmin()) {
+	// Keycloak returns all uid attributes lowercase for no good reason, apparently, possibly
+	if(strtolower($_SESSION['uid']) === strtolower($_GET['uid']) || Authentication::isAdmin()) {
 		$uid = $_GET['uid'];
 	} else {
 		http_response_code(403);
@@ -16,7 +17,10 @@ if(isset($_GET['uid'])) {
 		exit;
 	}
 } else {
-	$uid = $_SESSION['uid'];
+	http_response_code(400);
+	header('Content-Type: text/plain; charset=utf-8');
+	echo 'Which uid?';
+	exit;
 }
 
 $image = new Image($uid, null);
