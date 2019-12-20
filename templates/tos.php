@@ -6,8 +6,9 @@ $this->layout('base', ['title' => 'Privacy policy']) ?>
 <h2>Titolare del trattamento</h2>
 <p>Titolare del trattamento è il Team WEEE Open, associazione non riconosciuta ai sensi degli articoli del 36, 37 e 38 del Codice civile. I contatti del Team WEEE Open sono disponibili sulla pagina "<a href="http://weeeopen.polito.it/contatti.html">contatti</a>" del sito web weeeopen.polito.it oppure all'indirizzo di posta elettronica composto dalla stringa <i>weeeopen</i> seguita dal simbolo @ seguito dal dominio <i>polito.it</i>.</p>
 <h2>Tipi di dati trattati</h2>
-<p>Sono trattati i dati comunicati dall'utente tramite la compilazione e l'invio, esplicito e volontario, dei moduli presenti sul sito, in aggiunta all'indirizzo email istituzionale.</p>
+<p>Sono trattati i dati comunicati dall'utente tramite la compilazione e l'invio, esplicito e volontario, dei moduli presenti sul sito, in aggiunta all'indirizzo email istituzionale e alla foto del profilo.</p>
 <p>L'indirizzo email istituzionale degli utenti viene ottenuto concatenando la matricola, inserita dagli utenti nei moduli, alla stringa "@studenti.polito.it" o "@polito.it" a seconda del tipo di matricola immesso nei moduli.</p>
+<p>La foto del profilo è quella fornita dall'utente al Politecnico di Torino, ottenuta a partire dalla matricola. In caso l'utente non avesse una matricola del Politecnico di Torino, la sua foto del profilo non verrà trattata.</p>
 <h2>Finalità e base giuridica del trattamento</h2>
 <p>I dati personali verranno trattati per le seguenti finalità:</p>
 <ul>
@@ -31,7 +32,7 @@ $this->layout('base', ['title' => 'Privacy policy']) ?>
 <h3>Diritto di accesso ai dati e portabilità dei dati</h3>
 <p>È possibile scaricare tutti i dati immessi sul pannello di gestione account tramite lo stesso, accedendo con le credenziali scelte durante la registrazione.</p>
 <p>I dati vengono forniti in formato JSON.</p>
-<p>I dati aggiuntivi immessi in altri applicazioni possono essere scaricati tramite l'applicazione stessa, nel formato in cui sono stati immessi, o contattando il Team WEEE Open e richiedendo i dati.</p>
+<p>I dati aggiuntivi immessi in altre applicazioni possono essere scaricati tramite l'applicazione stessa, nel formato in cui sono stati immessi, o contattando il Team WEEE Open e richiedendo i dati.</p>
 <h3>Diritto di revoca del consenso al trattamento dei dati personali o cancellazione dei dati</h3>
 <p>È possibile richiedere la cancellazione di tutti i dati contattando il Team WEEE Open. I log inseriti in altre applicazioni non verranno cancellati, potranno al massimo essere pseudonimizzati se richiesto.</p>
 <p>La richiesta di eliminazione dei dati da parte degli utenti implica una rinuncia all'accesso alle applicazioni e al laboratorio e una revoca del consenso prestato al trattamento dei dati personali, senza pregiudicare la liceità del trattamento basata sul consenso prestato prima della revoca.</p>
@@ -40,3 +41,5 @@ $this->layout('base', ['title' => 'Privacy policy']) ?>
 <p>Per modificare i dati non modificabili dagli utenti, è necessario contattare il Team WEEE Open e fare richiesta.</p>
 <h3>Diritto di proporre reclamo a un'autorità di controllo</h3>
 <p>Gli utenti hanno diritto di proporre reclamo a un'autorità di controllo.</p>
+<h3>Modifiche a questo documento</h3>
+<p>Le modalità e le finalità di trattamento dei dati personali e il tipo di dati trattati, come indicato in questo documento, può essere modificato in qualsiasi momento. Le modifiche verranno notificate sul gruppo Telegram del team WEEE Open.</p>
