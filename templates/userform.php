@@ -38,7 +38,7 @@ if($image->exists()) {
 }
 ?>
 <form method="POST">
-	<div class="form-row">
+	<div class="form-row d-flex flex-wrap align-items-center">
 		<?php if($image->exists()): ?>
 		<div class="col-sm-6 col-md-5 col-lg-4 col-xl-3">
 			<img alt="profile picture" class="img-fluid rounded fill-large" src="<?= $this->e($image->getUrl()) ?>">
