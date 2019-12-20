@@ -17,3 +17,7 @@ Connects to a LDAP backend and possibly some day in the future to Keycloak via A
 ```shell
 composer install
 ```
+
+# License
+
+MIT, however favicon.ico [was originally public domain](https://www.wpclipart.com/food/vegetables/cabbage/green_cabbage.png.html).
