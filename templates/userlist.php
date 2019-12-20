@@ -17,6 +17,7 @@ $today = new DateTimeImmutable();
 	<caption>List of people</caption>
 	<thead class="thead-dark">
 	<tr>
+		<th scope="col">Photo</th>
 		<th scope="col">Username</th>
 		<th scope="col">Full name</th>
 		<th scope="col">Groups</th>
@@ -31,11 +32,13 @@ $today = new DateTimeImmutable();
 				$testdates[$user['safetytestdate']->format('Y-m-d')][$sortkey] = $user;
 			}
 		}
+		$photo = new \WEEEOpen\Crauto\Image($user['uid'], null);
 		?>
 		<tr <?= isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true' ? 'class="locked"' : '' ?>>
-			<td><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a><?= isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true' ? ' (locked)' : '' ?></td>
-			<td><?= $this->e($user['cn']) ?></td>
-			<td><?= implode(', ', $user['memberof']) ?></td>
+			<td class="photo"><?php if($photo->exists()): ?><img alt="profile picture" src="<?= $this->e($image->getUrl()) ?>"><?php endif; ?></td>
+			<td class="align-middle"><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a><?= isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true' ? ' (locked)' : '' ?></td>
+			<td class="align-middle"><?= $this->e($user['cn']) ?></td>
+			<td class="align-middle"><?= implode(', ', $user['memberof']) ?></td>
 		</tr>
 	<?php endforeach ?>
 	</tbody>
