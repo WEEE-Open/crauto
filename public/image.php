@@ -12,17 +12,17 @@ if(isset($_GET['uid'])) {
 	} else {
 		http_response_code(403);
 		header('Content-Type: text/plain; charset=utf-8');
-		echo 'Which uid?';
+		echo 'You are not an admin';
 		exit;
 	}
 } else {
 	$uid = $_SESSION['uid'];
 }
 
-$image = new Image($uid);
-$path = $image->getPath();
+$image = new Image($uid, null);
 
 if($image->exists()) {
+	$path = $image->getPath();
 	$etag = filemtime($path) . md5($path);
 	header('Content-type: image/jpeg');
 	header("Etag: $etag");
@@ -30,6 +30,10 @@ if($image->exists()) {
 		http_response_code(304);
 		exit;
 	}
+	header('Content-Length: ' . filesize($path));
+//	if(ob_get_level() > 0) {
+//		ob_end_clean();
+//	}
 	readfile($path);
 } else {
 	http_response_code(404);

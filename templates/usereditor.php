@@ -28,7 +28,7 @@ $modified = $modified->format('Y-m-d H:i:s') . ' UTC';
 	</div>
 <?php endif ?>
 
-<?= $this->fetch('userform', ['attributes' => $attributes, 'editableAttributes' => $editableAttributes, 'allowedAttributes' => $allowedAttributes, 'image' => new WEEEOpen\Crauto\Image($attributes['uid'])]) ?>
+<?= $this->fetch('userform', ['attributes' => $attributes, 'editableAttributes' => $editableAttributes, 'allowedAttributes' => $allowedAttributes, 'image' => new WEEEOpen\Crauto\Image($attributes['uid'], $attributes['schacpersonaluniquecode'] ?? null)]) ?>
 <?= $this->fetch('authenticationform', ['requireOldPassword' => $adminRequireOldPassword]) ?>
 <div class="mb-2">
 	<a class="btn btn-outline-primary" href="/sir.php?uid=<?= $this->e($attributes['uid']) ?>">Download SIR 📝</a>

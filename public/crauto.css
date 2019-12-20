@@ -27,3 +27,9 @@ tr.locked {
 tr.locked a {
 	color: #333;
 }
+
+@media (min-width: 576px) {
+	img.fill-large {
+		width: 100% !important;
+	}
+}
