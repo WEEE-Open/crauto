@@ -27,6 +27,7 @@ if($image->exists()) {
 	$etag = filemtime($path) . md5($path);
 	header('Content-type: image/jpeg');
 	header("Etag: $etag");
+	header('Cache-Control: private, max-age=604800');
 	if(isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
 		http_response_code(304);
 		exit;
