@@ -13,6 +13,14 @@ class Ldap {
 	protected $starttls;
 	public static $multivalued = ['memberof' => true, 'sshpublickey' => true, 'weeelabnickname' => true];
 	private const EXAMPLE_USERS = [
+		'test.administrator' => [
+			'uid' => 'test.administrator',
+			'cn' => 'Test Administrator',
+			'sn' => 'Administrator',
+			'memberof' => [],
+			'createtimestamp' => '20191025105022Z',
+			'modifytimestamp' => '20191025155317Z',
+		],
 		'alice' => [
 			'uid' => 'alice',
 			'cn' => 'Alice Test',
