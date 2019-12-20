@@ -32,10 +32,10 @@ $today = new DateTimeImmutable();
 				$testdates[$user['safetytestdate']->format('Y-m-d')][$sortkey] = $user;
 			}
 		}
-		$photo = new \WEEEOpen\Crauto\Image($user['uid'], null);
+		$image = new \WEEEOpen\Crauto\Image($user['uid'], null);
 		?>
 		<tr <?= isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true' ? 'class="locked"' : '' ?>>
-			<td class="photo"><?php if($photo->exists()): ?><img alt="profile picture" src="<?= $this->e($image->getUrl()) ?>"><?php endif; ?></td>
+			<td class="photo"><?php if($image->exists()): ?><img alt="profile picture" src="<?= $this->e($image->getUrl()) ?>"><?php endif; ?></td>
 			<td class="align-middle"><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a><?= isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true' ? ' (locked)' : '' ?></td>
 			<td class="align-middle"><?= $this->e($user['cn']) ?></td>
 			<td class="align-middle"><?= implode(', ', $user['memberof']) ?></td>
