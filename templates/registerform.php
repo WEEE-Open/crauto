@@ -15,9 +15,9 @@ $this->layout('base', ['title' => 'Register']);
 	</div>
 <?php endif ?>
 
-<?php if(!isset($attributes['telegramid'])): ?>
+<?php if(!isset($attributes['telegramid']) && !isset($attributes['telegramnickname'])): ?>
 	<div class="alert alert-warning" role="alert">
-		Copy and paste the address of this page to <a href="https://telegram.me/weeelab_bot" target="_blank">@weeelab_bot</a> and reload the page to fill the Telegram ID field automatically. You <em>really</em> should, the telegram nickname is not enough.
+		Copy and paste the address of this page to <a href="https://telegram.me/weeelab_bot" target="_blank">@weeelab_bot</a> and reload the page to fill the Telegram ID field automatically.
 	</div>
 <?php endif ?>
 
@@ -67,7 +67,7 @@ $this->layout('base', ['title' => 'Register']);
 	<hr>
 	<div class="form-group">
 		<small id="data-help" class="form-text text-muted">
-			Type these informations as they appear in any official place, e.g. your student ID card, the "<a href="https://didattica.polito.it/" target="_blank">portale della didattica</a>", and so on.
+			Type these informations as they appear in any official place, e.g. your student ID card, the "<a href="https://didattica.polito.it/" target="_blank">portale della didattica</a>", and so on. If you have multiple first names and want just the first one displayed, or if you prefer a nickname, ask an admin.
 		</small>
 	</div>
 	<div class="form-row">
