@@ -14,9 +14,10 @@ Connects to a LDAP backend and possibly some day in the future to Keycloak via A
 
 ## How
 
-```shell
-composer install
-```
+`composer install`  
+`cp config/config-example.php config/config.php`  
+For development: set TEST_MODE to true in config.php.  
+`php -S localhost:8777 -t public`
 
 # License
 
