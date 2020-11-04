@@ -28,6 +28,7 @@ class Ldap {
 			'memberof' => [],
 			'createtimestamp' => '20191025105022Z',
 			'modifytimestamp' => '20191025155317Z',
+            'nsaccountlock' => 'true'
 		],
 		'bob' => [
 			'uid' => 'bob',
@@ -36,6 +37,7 @@ class Ldap {
 			'memberof' => [],
 			'createtimestamp' => '20191216155022Z',
 			'modifytimestamp' => '20191216155022Z',
+
 		],
 	];
 
