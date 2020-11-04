@@ -46,7 +46,7 @@ $today = new DateTimeImmutable();
 	</tbody>
 </table>
 
-<h2>Locked users</h2>
+<h2>Locked accounts</h2>
 
 <!-- Blocked user table -->
 <table class="table">
