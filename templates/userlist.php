@@ -28,7 +28,7 @@ $today = new DateTimeImmutable();
 	<tbody>
 	<?php foreach($users as $user): ?>
 		<?php
-    $testDone = false;
+        $testDone = false;
 		if($user['safetytestdate'] !== null) {
 			if((int) $user['safetytestdate']->diff($today)->format('%R%a') >= 0) {
 				$sortkey = $user['sn'] . ' ' . $user['cn'] . ' ' . $user['uid'];
