@@ -26,10 +26,10 @@ endforeach; ?>
     <table class="table" data-toggle="table">
         <thead class="thead-dark">
         <tr>
-            <th scope="col" class="text-center" data-sortable="true">Photo</th>
+            <th scope="col" class="text-center" data-sortable="false">Photo</th>
             <th scope="col" class="text-center" data-sortable="true">Username</th>
             <th scope="col" class="text-center" data-sortable="true">Full name</th>
-            <th scope="col" class="text-center" data-sortable="true">Groups</th>
+            <th scope="col" class="text-center" data-sortable="true">Other Groups</th>
             <th scope="col" class="text-center" data-sortable="true">Test done</th>
             <th scope="col" class="text-center" data-sortable="true">Telegram</th>
         </tr>
@@ -55,7 +55,13 @@ endforeach; ?>
                                 href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a>
                     </td>
                     <td class="text-center"><?= $this->e($user['cn']) ?></td>
-                    <td class="text-center"><?= implode(', ', $user['memberof']) ?></td>
+                    <td class="text-center"><?php
+                        $key = array_search($group, $user['memberof']);
+                        $otherGroups = $user['memberof'];
+                        unset($otherGroups[$key]);
+                        echo implode(', ', $otherGroups);
+                        ?>
+                    </td>
                     <td class="text-center"><?= $testDone ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>' ?></td>
                     <td class="text-center">
                         <?php
