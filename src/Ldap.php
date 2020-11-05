@@ -36,7 +36,7 @@ class Ldap {
             'uid' => 'brodino1',
             'cn' => 'brodino1 Test',
             'sn' => 'Test1',
-            'memberof' => ["cn=Soviet,ou=Groups,dc=weeeopen,dc=it"] ,
+            'memberof' => ["cn=Soviet,ou=Groups,dc=weeeopen,dc=it"],
             'createtimestamp' => '20191025105022Z',
             'modifytimestamp' => '20191025155317Z',
             'safetytestdate' => '20201104',
