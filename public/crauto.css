@@ -42,3 +42,11 @@ td.photo {
 td.photo img {
 	width: 4rem;
 }
+
+table,td{
+	border:none !important;
+}
+
+td {
+	border-top: 1px solid #dee2e6 !important;
+}

@@ -81,7 +81,8 @@ if(isset($_GET['uid'])) {
 	try {
 		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
 			CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
-		$users = $ldap->getUsers(['uid', 'cn', 'sn', 'schacpersonaluniquecode', 'memberof', 'nsaccountlock', 'safetytestdate']);
+		$users = $ldap->getUsers(['uid', 'cn', 'sn', 'schacpersonaluniquecode', 'memberof', 'nsaccountlock',
+                                    'safetytestdate', 'telegramid', 'telegramnickname']);
 
 		$tz = new DateTimeZone('Europe/Rome');
 		foreach($users as &$user) {
