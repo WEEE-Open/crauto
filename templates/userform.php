@@ -1,6 +1,7 @@
 <?php
 /** @var $attributes array */
 /** @var $editableAttributes string[] */
+/** @var $allGroups string[] */
 /** @var $allowedAttributes string[] */
 /** @var $image \WEEEOpen\Crauto\Image */
 ?>
@@ -50,9 +51,13 @@ if($image->exists()) {
 				<input type="text" class="form-control" id="profile-uid" name="uid" value="<?= $this->e($attributes['uid'] ?? '') ?>" <?= $editable('uid') ?> pattern="^[a-zA-Z][a-zA-Z0-9-_\.]*$" maxlength="50">
 			</div>
 			<div class="form-group <?= $innerColumnClass ?>">
-				<label for="profile-cn"><?= $attributeNames['cn'] ?></label>
-				<input type="text" class="form-control" id="profile-cn" name="cn" value="<?= $this->e($attributes['cn'] ?? '') ?>" <?= $editable('cn') ?> maxlength="500">
-			</div>
+                <p style="margin-bottom: 10px;">Groups</p>
+                <select class="selectpicker" multiple id="groupSelect" data-size="6" data-container="body">
+                        <?php foreach ($allGroups as $group): ?>
+                            <option <?php if(in_array($group,$attributes['memberof'])) echo 'selected'; ?> value="<?=$group?>"><?=$group?></option>
+                        <?php endforeach; ?>
+                </select>
+            </div>
 			<div class="form-group <?= $innerColumnClass ?>">
 				<label for="profile-givenname"><?= $attributeNames['givenname'] ?></label>
 				<input type="text" class="form-control" id="profile-givenname" name="givenname" value="<?= $this->e($attributes['givenname'] ?? '') ?>" <?= $editable('givenname') ?> maxlength="500">

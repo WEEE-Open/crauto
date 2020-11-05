@@ -17,7 +17,7 @@ class Ldap {
 			'uid' => 'test.administrator',
 			'cn' => 'Test Administrator',
 			'sn' => 'Administrator',
-			'memberof' => ["cn=Cloud,ou=Groups,dc=weeeopen,dc=it", "cn=Soviet,ou=Groups,dc=weeeopen,dc=it"] ,
+			'memberof' => ["cn=Cloud,ou=Groups,dc=weeeopen,dc=it","cn=Soviet,ou=Groups,dc=weeeopen,dc=it"] ,
 			'createtimestamp' => '20191025105022Z',
 			'modifytimestamp' => '20191025155317Z',
             'nsaccountlock' => 'false'
@@ -48,7 +48,7 @@ class Ldap {
             'uid' => 'brodino2',
             'cn' => 'brodino2 Test',
             'sn' => 'Test2',
-            'memberof' => [],
+            'memberof' => ["cn=Pollo,ou=Groups,dc=weeeopen,dc=it"],
             'createtimestamp' => '20191025105022Z',
             'modifytimestamp' => '20191025155317Z',
             'safetytestdate' => '20201025',
@@ -65,6 +65,7 @@ class Ldap {
             'nsaccountlock' => 'false'
         ]
 	];
+	private const EXAMPLE_GROUPS = ['Soviet', 'Cloud'];
 
 	public function __construct(string $url, string $bindDn, string $password, string $usersDn, string $groupsDn, bool $startTls = true) {
 		$this->url = $url;
@@ -129,6 +130,15 @@ class Ldap {
 		}
 		return $attr;
 	}
+
+    public function getGroups(): array {
+        if(defined('TEST_MODE') && TEST_MODE) {
+            error_log('TEST_MODE, returning sample groups');
+            return self::EXAMPLE_GROUPS;
+        }else{
+            //TODO: Get all groups
+        }
+    }
 
 	public function getUserDn(string $uid): string {
 		$sr = $this->searchByUid($uid, ['entrydn']);

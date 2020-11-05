@@ -21,12 +21,14 @@ if(isset($_GET['uid'])) {
 	$targetUid = $_GET['uid'];
 
 	$attributes = [];
+	$allGroups = [];
 	$error = null;
 	try {
 		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
 			CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
 		$attributes = $ldap->getUser($targetUid, array_merge($allowedAttributes, ['createtimestamp', 'modifytimestamp']));
 		$targetUid = $attributes['uid'] ?? $targetUid; // Canonicalize uid, or use the supplied one
+        $allGroups = $ldap->getGroups();
 
 		// Cannot change its own password without entering the old password. Can change any other password without knowning
 		// the old one, but at least it's a thin veil of protection (would allow to bypass the authentication.php
@@ -73,8 +75,9 @@ if(isset($_GET['uid'])) {
 		'attributes' => $attributes,
 		'editableAttributes' => $editableAttributes,
 		'allowedAttributes' => $allowedAttributes,
-		'adminRequireOldPassword' => $requireOldPasswordForChange ?? true
-	]);
+		'adminRequireOldPassword' => $requireOldPasswordForChange ?? true,
+        'allGroups' => $allGroups
+    ]);
 } else {
 	$users = [];
 	$error = null;
