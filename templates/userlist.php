@@ -17,9 +17,9 @@ $today = new DateTimeImmutable();
 <table class="table" data-toggle="table">
 	<thead class="thead-dark">
 	<tr>
-		<th scope="col" class="text-center" data-sortable="true">Photo</th>
-		<th scope="col" class="text-center" data-sortable="true">Username</th>
-		<th scope="col" class="text-center" data-sortable="true">Full name</th>
+        <th scope="col" class="text-center" data-sortable="false">Photo</th>
+        <th scope="col" class="text-center" data-sortable="true">Username</th>
+        <th scope="col" class="text-center" data-sortable="true">Full name</th>
         <th scope="col" class="text-center" data-sortable="true">Groups</th>
         <th scope="col" class="text-center" data-sortable="true">Test done</th>
         <th scope="col" class="text-center" data-sortable="true">Telegram</th>
@@ -69,7 +69,7 @@ $today = new DateTimeImmutable();
 <table class="table" data-toggle="table">
     <thead class="thead-dark">
     <tr>
-        <th scope="col" class="text-center" data-sortable="true">Photo</th>
+        <th scope="col" class="text-center" data-sortable="false">Photo</th>
         <th scope="col" class="text-center" data-sortable="true">Username</th>
         <th scope="col" class="text-center" data-sortable="true">Full name</th>
         <th scope="col" class="text-center" data-sortable="true">Groups</th>
