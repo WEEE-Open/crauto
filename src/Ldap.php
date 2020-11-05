@@ -20,16 +20,41 @@ class Ldap {
 			'memberof' => [],
 			'createtimestamp' => '20191025105022Z',
 			'modifytimestamp' => '20191025155317Z',
-		],
-		'alice' => [
-			'uid' => 'alice',
-			'cn' => 'Alice Test',
-			'sn' => 'Test',
-			'memberof' => [],
-			'createtimestamp' => '20191025105022Z',
-			'modifytimestamp' => '20191025155317Z',
+            'nsaccountlock' => 'false'
+        ],
+        'alice' => [
+            'uid' => 'alice',
+            'cn' => 'Alice Test',
+            'sn' => 'Test',
+            'memberof' => [],
+            'createtimestamp' => '20191025105022Z',
+            'modifytimestamp' => '20191025155317Z',
+            'safetytestdate' => '20211104',
             'nsaccountlock' => 'true'
-		],
+        ],
+        'brodino1' => [
+            'uid' => 'brodino1',
+            'cn' => 'brodino1 Test',
+            'sn' => 'Test1',
+            'memberof' => [],
+            'createtimestamp' => '20191025105022Z',
+            'modifytimestamp' => '20191025155317Z',
+            'safetytestdate' => '20201104',
+            'nsaccountlock' => 'true',
+            'telegramid' => '123456789',
+            'telegramnickname' => 'brodino'
+        ],
+        'brodino2' => [
+            'uid' => 'brodino2',
+            'cn' => 'brodino2 Test',
+            'sn' => 'Test2',
+            'memberof' => [],
+            'createtimestamp' => '20191025105022Z',
+            'modifytimestamp' => '20191025155317Z',
+            'safetytestdate' => '20201025',
+            'nsaccountlock' => 'false',
+            'telegramid' => '123456789'
+        ],
 		'bob' => [
 			'uid' => 'bob',
 			'cn' => 'Bob Testington',
@@ -37,8 +62,8 @@ class Ldap {
 			'memberof' => [],
 			'createtimestamp' => '20191216155022Z',
 			'modifytimestamp' => '20191216155022Z',
-
-		],
+            'nsaccountlock' => 'false'
+        ]
 	];
 
 	public function __construct(string $url, string $bindDn, string $password, string $usersDn, string $groupsDn, bool $startTls = true) {
