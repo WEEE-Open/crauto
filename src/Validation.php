@@ -306,7 +306,7 @@ class Validation {
 		}
 		if(isset($edited['memberof'])) {
 			// Backwards compatibility layer
-			$edited['memberof'] = implode("\n", $edited['memberof']);
+			$edited['memberof'] = implode("\r\n", $edited['memberof']);
 		}
 		$edited = Validation::normalize($ldap, $edited);
 		Validation::validate($edited);
