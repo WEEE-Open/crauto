@@ -26,13 +26,11 @@ foreach($users as $user) {
 		}
 	}
 }
-ksort($groups);
-$keys = array_keys($groups);
-$i = 0; ?>
+ksort($groups); ?>
 
 <?php // Printing tables
-foreach($groups as $group): ?>
-    <h4><?= $keys[$i] ?></h4>
+foreach($groups as $name => $group): ?>
+    <h4><?= $name ?></h4>
     <table class="table" data-toggle="table">
         <thead class="thead-dark">
         <tr>
@@ -48,9 +46,7 @@ foreach($groups as $group): ?>
         <?php foreach ($group as $user):
             $testDone = false;
             if ($user['safetytestdate'] !== null) {
-                if ((int)$user['safetytestdate']->diff($today)->format('%R%a') >= 0) {
-                    $sortkey = $user['sn'] . ' ' . $user['cn'] . ' ' . $user['uid'];
-                    $testdates[$user['safetytestdate']->format('Y-m-d')][$sortkey] = $user;
+                if((int)$user['safetytestdate']->diff($today)->format('%R%a') >= 0) {
                     $testDone = true;
                 }
             }
@@ -86,7 +82,7 @@ foreach($groups as $group): ?>
         </tbody>
     </table>
     <br/>
-<?php $i++; endforeach; ?>
+<?php endforeach; ?>
 
 <script>
     document.getElementsByName('table').bootstrapTable('refreshOptions', {
