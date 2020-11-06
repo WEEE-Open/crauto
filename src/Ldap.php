@@ -65,7 +65,7 @@ class Ldap {
             'nsaccountlock' => 'false'
         ]
 	];
-	private const EXAMPLE_GROUPS = ['Soviet', 'Cloud'];
+	private const EXAMPLE_GROUPS = ['Admin', 'Cloud', 'Persone'];
 
 	public function __construct(string $url, string $bindDn, string $password, string $usersDn, string $groupsDn, bool $startTls = true) {
 		$this->url = $url;
@@ -135,8 +135,23 @@ class Ldap {
         if(defined('TEST_MODE') && TEST_MODE) {
             error_log('TEST_MODE, returning sample groups');
             return self::EXAMPLE_GROUPS;
-        }else{
-            //TODO: Get all groups
+        } else {
+        	$attributes = ['cn'];
+	        $sr = ldap_search($this->ds, $this->groupsDn, '(cn=*)', );
+		    if(!$sr) {
+			    throw new LdapException('Cannot search groups');
+		    }
+
+	        $simpler = $this->simplifyAll($sr, $attributes);
+
+		    $groups = [];
+	        foreach($simpler as $entry) {
+		        if(isset($entry['cn'])) {
+			        $groups[] = $entry['cn'];
+		        }
+	        }
+
+	        return $groups;
         }
     }
 
@@ -184,20 +199,8 @@ class Ldap {
 			throw new LdapException('Cannot search users');
 		}
 
-		$count = ldap_count_entries($this->ds, $sr);
-		if($count === 0) {
-			return [];
-		}
+		$simpler = $this->simplifyAll($sr, $attributes);
 
-		$entries = ldap_get_entries($this->ds, $sr);
-		$simpler = [];
-		foreach($entries as $k => $entry) {
-			if($k !== 'count') {
-				$user = self::simplify($entry);
-				$user = self::fillAndSortAttributes($user, $attributes);
-				$simpler[] = $user;
-			}
-		}
 		usort($simpler, function(array $a, array $b): int { return strcasecmp($a['uid'], $b['uid']); });
 		return $simpler;
 	}
@@ -478,5 +481,24 @@ class Ldap {
 
 	public function getStarttls(): bool {
 		return $this->starttls;
+	}
+
+	private function simplifyAll($sr, array $attributes): array {
+		$count = ldap_count_entries($this->ds, $sr);
+		if($count === 0) {
+			return [];
+		}
+
+		$entries = ldap_get_entries($this->ds, $sr);
+		$simpler = [];
+		foreach($entries as $k => $entry) {
+			if($k !== 'count') {
+				$user = self::simplify($entry);
+				$user = self::fillAndSortAttributes($user, $attributes);
+				$simpler[] = $user;
+			}
+		}
+
+		return $simpler;
 	}
 }

@@ -53,7 +53,7 @@ if($image->exists()) {
 			<div class="form-group <?= $innerColumnClass ?>">
                 <label for="profile-memberof">Groups</label>
                 <select class="form-control selectpicker" multiple id="profile-memberof" name="memberof" data-size="6" data-container="body">
-	                <?php foreach ($allGroups as $group): ?>
+	                <?php foreach($allGroups as $group): ?>
 	                    <option <?php if(in_array($group,$attributes['memberof'])) echo 'selected'; ?> value="<?=$group?>"><?=$group?></option>
 	                <?php endforeach; ?>
                 </select>
