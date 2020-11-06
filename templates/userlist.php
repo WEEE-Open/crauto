@@ -17,7 +17,7 @@ $today = new DateTimeImmutable();
 <table class="table" data-toggle="table">
 	<thead class="thead-dark">
 	<tr>
-        <th scope="col" class="text-center" data-sortable="false">Photo</th>
+        <!--<th scope="col" class="text-center" data-sortable="false">Photo</th>-->
         <th scope="col" class="text-center" data-sortable="true">Username</th>
         <th scope="col" class="text-center" data-sortable="true">Full name</th>
         <th scope="col" class="text-center" data-sortable="true">Groups</th>
@@ -40,7 +40,7 @@ $today = new DateTimeImmutable();
 
 		if(isset($user['nsaccountlock']) && $user['nsaccountlock'] !== 'true' ): ?>
 		<tr >
-			<td class="photo"><?php if($image->exists()): ?><img alt="profile picture" src="<?= $this->e($image->getUrl()) ?>"><?php endif; ?></td>
+			<!--<td class="photo"><img alt="profile picture" src=""></td>-->
 			<td class="text-center" ><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
 			<td class="text-center"><?= $this->e($user['cn']) ?></td>
             <td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : 'No groups' ?></td>
@@ -69,7 +69,7 @@ $today = new DateTimeImmutable();
 <table class="table" data-toggle="table">
     <thead class="thead-dark">
     <tr>
-        <th scope="col" class="text-center" data-sortable="false">Photo</th>
+        <!--<th scope="col" class="text-center" data-sortable="false">Photo</th>-->
         <th scope="col" class="text-center" data-sortable="true">Username</th>
         <th scope="col" class="text-center" data-sortable="true">Full name</th>
         <th scope="col" class="text-center" data-sortable="true">Groups</th>
@@ -92,7 +92,7 @@ $today = new DateTimeImmutable();
         ?>
         <?php if(isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true'): ?>
             <tr class="locked">
-                <td class="photo"><?php if($image->exists()): ?><img alt="profile picture" src="<?= $this->e($image->getUrl()) ?>"><?php endif; ?></td>
+	            <!--<td class="photo"><img alt="profile picture" src=""></td>-->
                 <td class="text-center"><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
                 <td class="text-center"><?= $this->e($user['cn']) ?></td>
                 <td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : 'No groups' ?></td>
