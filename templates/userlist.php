@@ -30,9 +30,10 @@ $today = new DateTimeImmutable();
 		<?php
         $testDone = false;
 		if($user['safetytestdate'] !== null) {
-			if((int) $user['safetytestdate']->diff($today)->format('%R%a') >= 0) {
+			if((int) $user['safetytestdate']->diff($today)->format('%R%a') < 0) {
 				$sortkey = $user['sn'] . ' ' . $user['cn'] . ' ' . $user['uid'];
 				$testdates[$user['safetytestdate']->format('Y-m-d')][$sortkey] = $user;
+			} else {
 				$testDone = true;
 			}
 		}
@@ -80,12 +81,13 @@ $today = new DateTimeImmutable();
     <?php foreach($users as $user): ?>
         <?php
         $testDone = false;
-        if($user['safetytestdate'] !== null) {
-            if((int) $user['safetytestdate']->diff($today)->format('%R%a') >= 0) {
-                $sortkey = $user['sn'] . ' ' . $user['cn'] . ' ' . $user['uid'];
-                $testdates[$user['safetytestdate']->format('Y-m-d')][$sortkey] = $user;
-                $testDone = true;
-            }
+	    if($user['safetytestdate'] !== null) {
+		    if((int) $user['safetytestdate']->diff($today)->format('%R%a') < 0) {
+			    $sortkey = $user['sn'] . ' ' . $user['cn'] . ' ' . $user['uid'];
+			    $testdates[$user['safetytestdate']->format('Y-m-d')][$sortkey] = $user;
+		    } else {
+			    $testDone = true;
+		    }
         }
         ?>
         <?php if(isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true'): ?>
@@ -122,7 +124,7 @@ $today = new DateTimeImmutable();
 				<?php
 				$user = ksort($users,  SORT_NATURAL | SORT_FLAG_CASE);
 				foreach($users as $user): ?>
-					<li><a href="/people.php?uid=<?= $this->e($user['uid']) ?>"><?= $this->e($user['cn']) ?></a>, <?= $this->e($user['schacpersonaluniquecode']) ?> (<a href="/sir.php?uid=<?= $this->e($user['uid']) ?>">get SIR</a>)</li>
+					<li><a href="/people.php?uid=<?= $this->e($user['uid']) ?>"><?= $this->e($user['cn']) ?></a>, <?= $this->e($user['schacpersonaluniquecode'])?> (<a href="/sir.php?uid=<?= $this->e($user['uid']) ?>">get SIR</a>)</li>
 				<?php endforeach; ?>
 			</ul>
 		<?php endforeach; ?>

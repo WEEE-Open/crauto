@@ -20,7 +20,9 @@ class Ldap {
 			'memberof' => ["cn=Cloud,ou=Groups,dc=weeeopen,dc=it","cn=Admin,ou=Groups,dc=weeeopen,dc=it"] ,
 			'createtimestamp' => '20191025105022Z',
 			'modifytimestamp' => '20191025155317Z',
-            'nsaccountlock' => 'false'
+			'safetytestdate' => '20160909',
+			'schacpersonaluniquecode' => 's111111',
+            'nsaccountlock' => null
         ],
         'alice' => [
             'uid' => 'alice',
@@ -30,6 +32,7 @@ class Ldap {
             'createtimestamp' => '20191025105022Z',
             'modifytimestamp' => '20191025155317Z',
             'safetytestdate' => '20211104',
+            'schacpersonaluniquecode' => 's22222',
             'nsaccountlock' => 'true'
         ],
         'brodino' => [
@@ -42,6 +45,7 @@ class Ldap {
             'safetytestdate' => '20201104',
             'nsaccountlock' => 'true',
             'telegramid' => '123456789',
+            'schacpersonaluniquecode' => 's333333',
             'telegramnickname' => 'brodino'
         ],
         'broski' => [
@@ -52,7 +56,8 @@ class Ldap {
             'createtimestamp' => '20191025105022Z',
             'modifytimestamp' => '20191025155317Z',
             'safetytestdate' => '20201025',
-            'nsaccountlock' => 'false',
+            'nsaccountlock' => null,
+            'schacpersonaluniquecode' => 's4444444',
             'telegramid' => '123456789'
         ],
 		'bob' => [
@@ -62,7 +67,9 @@ class Ldap {
 			'memberof' => ["cn=Admin,ou=Groups,dc=weeeopen,dc=it"],
 			'createtimestamp' => '20191216155022Z',
 			'modifytimestamp' => '20191216155022Z',
-            'nsaccountlock' => 'false'
+			'safetytestdate' => '20201025',
+			'schacpersonaluniquecode' => 's55555',
+            'nsaccountlock' => null
         ]
 	];
 	private const EXAMPLE_GROUPS = ['Admin', 'Cloud', 'Persone'];
