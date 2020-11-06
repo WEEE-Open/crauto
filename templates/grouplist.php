@@ -73,7 +73,7 @@ foreach($groups as $group): ?>
                     <?php
                     //Telegram username ( if it exists )
                     if(isset($user['telegramnickname']) && $user['telegramnickname'] !== null) {
-	                    echo '<a href="https://t.me/' . $user['telegramnickname'] . '">' . $user['telegramnickname'];
+	                    echo '<a href="https://t.me/' . $user['telegramnickname'] . '">@' . $user['telegramnickname'];
                     } elseif (isset($user['telegramid']) && $user['telegramid'] !== null) {
 	                    echo 'ID Only';
                     } else {

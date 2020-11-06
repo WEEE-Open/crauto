@@ -246,7 +246,7 @@ class Validation {
 			if(strlen($inputs['mobile']) < 2) {
 				throw new ValidationException('Cellphone number too short (1 digit?)');
 			}
-			if($inputs['mobile']{0} === '+') {
+			if($inputs['mobile'][0] === '+') {
 				$num = substr($inputs['mobile'], 1);
 			} else {
 				$num = $inputs['mobile'];

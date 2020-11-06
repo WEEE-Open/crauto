@@ -17,7 +17,7 @@ class Ldap {
 			'uid' => 'test.administrator',
 			'cn' => 'Test Administrator',
 			'sn' => 'Administrator',
-			'memberof' => ["cn=Cloud,ou=Groups,dc=weeeopen,dc=it","cn=Soviet,ou=Groups,dc=weeeopen,dc=it"] ,
+			'memberof' => ["cn=Cloud,ou=Groups,dc=weeeopen,dc=it","cn=Admin,ou=Groups,dc=weeeopen,dc=it"] ,
 			'createtimestamp' => '20191025105022Z',
 			'modifytimestamp' => '20191025155317Z',
             'nsaccountlock' => 'false'
@@ -26,17 +26,17 @@ class Ldap {
             'uid' => 'alice',
             'cn' => 'Alice Test',
             'sn' => 'Test',
-            'memberof' => ["cn=Cloud,ou=Groups,dc=weeeopen,dc=it"] ,
+            'memberof' => ["cn=Cloud,ou=Groups,dc=weeeopen,dc=it", "cn=Gente,ou=Groups,dc=weeeopen,dc=it", "cn=Riparatori,ou=Groups,dc=weeeopen,dc=it"] ,
             'createtimestamp' => '20191025105022Z',
             'modifytimestamp' => '20191025155317Z',
             'safetytestdate' => '20211104',
             'nsaccountlock' => 'true'
         ],
-        'brodino1' => [
-            'uid' => 'brodino1',
-            'cn' => 'brodino1 Test',
-            'sn' => 'Test1',
-            'memberof' => ["cn=Soviet,ou=Groups,dc=weeeopen,dc=it"],
+        'brodino' => [
+            'uid' => 'brodino',
+            'cn' => 'Bro Dino',
+            'sn' => 'Dino',
+            'memberof' => ["cn=Admin,ou=Groups,dc=weeeopen,dc=it", "cn=Gente,ou=Groups,dc=weeeopen,dc=it"],
             'createtimestamp' => '20191025105022Z',
             'modifytimestamp' => '20191025155317Z',
             'safetytestdate' => '20201104',
@@ -44,11 +44,11 @@ class Ldap {
             'telegramid' => '123456789',
             'telegramnickname' => 'brodino'
         ],
-        'brodino2' => [
-            'uid' => 'brodino2',
-            'cn' => 'brodino2 Test',
-            'sn' => 'Test2',
-            'memberof' => ["cn=Pollo,ou=Groups,dc=weeeopen,dc=it"],
+        'broski' => [
+            'uid' => 'broski',
+            'cn' => 'Bro Ski',
+            'sn' => 'Ski',
+            'memberof' => ["cn=Admin,ou=Groups,dc=weeeopen,dc=it", "cn=Gente,ou=Groups,dc=weeeopen,dc=it"],
             'createtimestamp' => '20191025105022Z',
             'modifytimestamp' => '20191025155317Z',
             'safetytestdate' => '20201025',
@@ -59,7 +59,7 @@ class Ldap {
 			'uid' => 'bob',
 			'cn' => 'Bob Testington',
 			'sn' => 'Testington',
-			'memberof' => [],
+			'memberof' => ["cn=Admin,ou=Groups,dc=weeeopen,dc=it"],
 			'createtimestamp' => '20191216155022Z',
 			'modifytimestamp' => '20191216155022Z',
             'nsaccountlock' => 'false'
