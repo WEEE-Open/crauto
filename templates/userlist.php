@@ -28,7 +28,7 @@ $today = new DateTimeImmutable();
 	<tbody>
 	<?php foreach($users as $user): ?>
 		<?php
-    $testDone = false;
+        $testDone = false;
 		if($user['safetytestdate'] !== null) {
 			if((int) $user['safetytestdate']->diff($today)->format('%R%a') >= 0) {
 				$sortkey = $user['sn'] . ' ' . $user['cn'] . ' ' . $user['uid'];
@@ -43,7 +43,7 @@ $today = new DateTimeImmutable();
 			<td class="photo"><?php if($image->exists()): ?><img alt="profile picture" src="<?= $this->e($image->getUrl()) ?>"><?php endif; ?></td>
 			<td class="text-center" ><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
 			<td class="text-center"><?= $this->e($user['cn']) ?></td>
-            <td class="text-center"><?= implode(', ', $user['memberof']) ?></td>
+            <td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : 'No groups' ?></td>
             <td class="text-center"><?= $testDone ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>' ?></td>
             <td class="text-center">
                 <?php
@@ -95,7 +95,7 @@ $today = new DateTimeImmutable();
                 <td class="photo"><?php if($image->exists()): ?><img alt="profile picture" src="<?= $this->e($image->getUrl()) ?>"><?php endif; ?></td>
                 <td class="text-center"><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
                 <td class="text-center"><?= $this->e($user['cn']) ?></td>
-                <td class="text-center"><?= implode(', ', $user['memberof']) ?></td>
+                <td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : 'No groups' ?></td>
                 <td class="text-center"><?= $testDone ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>' ?></td>
                 <td class="text-center">
                     <?php

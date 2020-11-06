@@ -3,6 +3,7 @@
 /** @var $attributes array */
 /** @var $editableAttributes string[] */
 /** @var $allowedAttributes string[] */
+/** @var $allGroups string[] */
 $title = 'Personal profile';
 $this->layout('base', ['title' => $title]);
 ?>
@@ -20,7 +21,8 @@ $this->layout('base', ['title' => $title]);
 	'editableAttributes' => $editableAttributes,
 	'allowedAttributes'  => $allowedAttributes,
 	'image'              => new WEEEOpen\Crauto\Image($attributes['uid'], $attributes['schacpersonaluniquecode'] ?? null),
-	'selfImage'          => true
+	'selfImage'          => true,
+    'allGroups'          => $allGroups
 ])?>
 
 <p>

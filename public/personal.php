@@ -17,11 +17,13 @@ if(Authentication::isAdmin()) {
 }
 
 $attributes = [];
+$allGroups = [];
 $error = null;
 try {
 	$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
 		CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
 	$attributes = $ldap->getUser($_SESSION['uid'], $allowedAttributes);
+	$allGroups = $ldap->getGroups();
 
 	if(isset($_GET['download'])) {
 		header('Content-Type: application/json');
@@ -61,4 +63,5 @@ echo $template->render('personaleditor', [
 	'attributes' => $attributes,
 	'allowedAttributes' => $allowedAttributes,
 	'editableAttributes' => $editableAttributes,
+    'allGroups' => $allGroups
 ]);
