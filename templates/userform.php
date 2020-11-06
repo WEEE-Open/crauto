@@ -32,47 +32,29 @@ $attributeNames = [
 	'description' => 'Notes',
 	'nsaccountlock' => 'Account locked',
 ];
-if($image->exists()) {
-	$innerColumnClass = '';
-} else {
-	$innerColumnClass = 'col-sm-6';
-}
 ?>
 <form method="POST">
-	<div class="form-row d-flex flex-wrap align-items-center">
-		<?php if($image->exists()): ?>
-		<div class="col-sm-6 col-md-5 col-lg-4 col-xl-3">
-			<img alt="profile picture" class="img-fluid rounded fill-large" src="<?= $this->e($image->getUrl()) ?>">
+	<div class="form-group">
+		<label for="profile-uid"><?= $attributeNames['uid'] ?></label>
+		<input type="text" class="form-control" id="profile-uid" name="uid" value="<?= $this->e($attributes['uid'] ?? '') ?>" <?= $editable('uid') ?> pattern="^[a-zA-Z][a-zA-Z0-9-_\.]*$" maxlength="50">
+	</div>
+	<div class="form-row">
+		<div class="form-group col-sm-6">
+			<label for="profile-givenname"><?= $attributeNames['givenname'] ?></label>
+			<input type="text" class="form-control" id="profile-givenname" name="givenname" value="<?= $this->e($attributes['givenname'] ?? '') ?>" <?= $editable('givenname') ?> maxlength="500">
 		</div>
-		<div class="col-sm-6 col-md-7 col-lg-8 col-xl-9">
-		<?php endif ?>
-			<div class="form-group <?= $innerColumnClass ?>">
-				<label for="profile-uid"><?= $attributeNames['uid'] ?></label>
-				<input type="text" class="form-control" id="profile-uid" name="uid" value="<?= $this->e($attributes['uid'] ?? '') ?>" <?= $editable('uid') ?> pattern="^[a-zA-Z][a-zA-Z0-9-_\.]*$" maxlength="50">
-			</div>
-			<div class="form-group <?= $innerColumnClass ?>">
-                <label for="profile-memberof">Groups</label>
-                <select class="form-control selectpicker" multiple id="profile-memberof" name="memberof" data-size="6" data-container="body">
-	                <?php foreach($allGroups as $group): ?>
-	                    <option <?php if(in_array($group,$attributes['memberof'])) echo 'selected'; ?> value="<?=$group?>"><?=$group?></option>
-	                <?php endforeach; ?>
-                </select>
-            </div>
-			<div class="form-group <?= $innerColumnClass ?>">
-				<label for="profile-givenname"><?= $attributeNames['givenname'] ?></label>
-				<input type="text" class="form-control" id="profile-givenname" name="givenname" value="<?= $this->e($attributes['givenname'] ?? '') ?>" <?= $editable('givenname') ?> maxlength="500">
-			</div>
-			<div class="form-group <?= $innerColumnClass ?>">
-				<label for="profile-sn"><?= $attributeNames['sn'] ?></label>
-				<input type="text" class="form-control" id="profile-sn" name="sn" value="<?= $this->e($attributes['sn'] ?? '') ?>" <?= $editable('sn') ?> maxlength="500">
-			</div>
-		<?php if($image->exists()): ?>
+		<div class="form-group col-sm-6">
+			<label for="profile-sn"><?= $attributeNames['sn'] ?></label>
+			<input type="text" class="form-control" id="profile-sn" name="sn" value="<?= $this->e($attributes['sn'] ?? '') ?>" <?= $editable('sn') ?> maxlength="500">
 		</div>
-		<?php endif ?>
 	</div>
 	<div class="form-group">
 		<label for="profile-memberof"><?= $attributeNames['memberof'] ?></label>
-		<textarea class="form-control" id="profile-memberof" name="memberof" rows="<?= count($attributes['memberof']) + 1 ?>" <?= $editable('memberof') ?>><?= implode("\r\n", array_map([$this, 'e'], $attributes['memberof'])) . "\r\n" ?></textarea>
+		<select class="form-control selectpicker" multiple id="profile-memberof" name="memberof" <?= $editable('memberof') === '' ? '' : 'disabled' ?> data-size="6" data-container="body">
+			<?php foreach($allGroups as $group): ?>
+				<option <?php if(in_array($group,$attributes['memberof'])) echo 'selected'; ?> value="<?=$group?>"><?=$group?></option>
+			<?php endforeach; ?>
+		</select>
 	</div>
 	<div class="form-row">
 		<div class="form-group col-sm-6">
