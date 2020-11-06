@@ -36,9 +36,8 @@ $today = new DateTimeImmutable();
 				$testDone = true;
 			}
 		}
-		$image = new \WEEEOpen\Crauto\Image($user['uid'], null);
 
-		if(isset($user['nsaccountlock']) && $user['nsaccountlock'] !== 'true' ): ?>
+		if(!isset($user['nsaccountlock']) || $user['nsaccountlock'] === null): ?>
 		<tr >
 			<!--<td class="photo"><img alt="profile picture" src=""></td>-->
 			<td class="text-center" ><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
@@ -88,7 +87,6 @@ $today = new DateTimeImmutable();
                 $testDone = true;
             }
         }
-        $image = new \WEEEOpen\Crauto\Image($user['uid'], null);
         ?>
         <?php if(isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true'): ?>
             <tr class="locked">
