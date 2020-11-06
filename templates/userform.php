@@ -50,9 +50,9 @@ $attributeNames = [
 	</div>
 	<div class="form-group">
 		<label for="profile-memberof"><?= $attributeNames['memberof'] ?></label>
-		<select class="form-control selectpicker" multiple id="profile-memberof" name="memberof" <?= $editable('memberof') === '' ? '' : 'disabled' ?> data-size="6" data-container="body">
+		<select class="form-control selectpicker" multiple id="profile-memberof" name="memberof[]" <?= $editable('memberof') === '' ? '' : 'disabled' ?> data-size="6" data-container="body">
 			<?php foreach($allGroups as $group): ?>
-				<option <?php if(in_array($group,$attributes['memberof'])) echo 'selected'; ?> value="<?=$group?>"><?=$group?></option>
+				<option <?= in_array($group,$attributes['memberof']) ? 'selected' : '' ?> value="<?=$this->e($group)?>"><?=$this->e($group)?></option>
 			<?php endforeach; ?>
 		</select>
 	</div>

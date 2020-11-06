@@ -304,6 +304,10 @@ class Validation {
 		if(isset($editableAttributes['nsaccountlock']) && !isset($edited['nsaccountlock'])) {
 			$edited['nsaccountlock'] = '';
 		}
+		if(isset($edited['memberof'])) {
+			// Backwards compatibility layer
+			$edited['memberof'] = implode("\n", $edited['memberof']);
+		}
 		$edited = Validation::normalize($ldap, $edited);
 		Validation::validate($edited);
 		$ldap->updateUser($uid, $edited, $previous);
