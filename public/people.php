@@ -79,27 +79,11 @@ if(isset($_GET['uid'])) {
         'allGroups' => $allGroups
     ]);
 } else {
-	$users = [];
 	$error = null;
+	$users = [];
 	try {
-		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
-			CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
-		$users = $ldap->getUsers(['uid', 'cn', 'sn', 'schacpersonaluniquecode', 'memberof', 'nsaccountlock',
-                                    'safetytestdate', 'telegramid', 'telegramnickname']);
-
-		$tz = new DateTimeZone('Europe/Rome');
-		foreach($users as &$user) {
-			if(isset($user['memberof'])) {
-				$groups = [];
-				foreach($user['memberof'] as $dn) {
-					$groups[] = Ldap::groupDnToName($dn);
-				}
-				$user['memberof'] = $groups;
-			}
-			if(isset($user['safetytestdate'])) {
-				$user['safetytestdate'] = DateTime::createFromFormat('Ymd', $user['safetytestdate'], $tz);
-			}
-		}
+		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN, CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
+		$users = $ldap->getUsersList(new DateTimeZone('Europe/Rome'));
 	} catch(LdapException $e) {
 		$error = $e->getMessage();
 	}

@@ -330,6 +330,35 @@ class Ldap {
 		}
 	}
 
+	public function getUsersList(\DateTimeZone $tz): array {
+		$users = $this->getUsers([
+			'uid',
+			'cn',
+			'sn',
+			'schacpersonaluniquecode',
+			'memberof',
+			'nsaccountlock',
+			'safetytestdate',
+			'telegramid',
+			'telegramnickname'
+		]);
+
+		foreach($users as &$user) {
+			if(isset($user['memberof'])) {
+				$groups = [];
+				foreach($user['memberof'] as $dn) {
+					$groups[] = Ldap::groupDnToName($dn);
+				}
+				$user['memberof'] = $groups;
+			}
+			if(isset($user['safetytestdate'])) {
+				$user['safetytestdate'] = \DateTime::createFromFormat('Ymd', $user['safetytestdate'], $tz);
+			}
+		}
+
+		return $users;
+	}
+
 	public function deleteInvite(string $invitesDn, string $inviteCode) {
 		$sr = $this->searchByInvite($inviteCode, $invitesDn, ['entrydn']);
 		if($sr !== null) {

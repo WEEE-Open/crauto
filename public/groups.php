@@ -14,99 +14,20 @@ if(!Authentication::isAdmin()) {
 	exit;
 }
 
-if(isset($_GET['uid'])) {
-	$allowedAttributes = Validation::allowedAttributesAdmin;
-	$editableAttributes = array_combine(Validation::editableAttributesAdmin, Validation::editableAttributesAdmin);
-
-	$targetUid = $_GET['uid'];
-
-	$attributes = [];
-	$error = null;
-	try {
-		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
-			CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
-		$attributes = $ldap->getUser($targetUid, array_merge($allowedAttributes, ['createtimestamp', 'modifytimestamp']));
-		$targetUid = $attributes['uid'] ?? $targetUid; // Canonicalize uid, or use the supplied one
-
-		// Cannot change its own password without entering the old password. Can change any other password without knowning
-		// the old one, but at least it's a thin veil of protection (would allow to bypass the authentication.php
-		// password change otherwise)
-		// The strtolower stuff is an additional safeguard but the the uid canonicalization above should make it kind of
-		// useless...
-		$requireOldPasswordForChange = strtolower($_SESSION['uid']) === strtolower($attributes['uid']);
-
-		if(isset($_POST) && !empty($_POST)) {
-			if(isset($_POST['password1'])) {
-				Validation::handlePasswordChangePost($ldap, $targetUid, $_POST, $requireOldPasswordForChange);
-				http_response_code(303);
-				header("Location: ${_SERVER['REQUEST_URI']}");
-				exit;
-			} else {
-				Validation::handleUserEditPost($editableAttributes, $ldap, $targetUid, $attributes);
-				http_response_code(303);
-				// $_SERVER['REQUEST_URI'] is already url encoded
-				header("Location: ${_SERVER['REQUEST_URI']}");
-				exit;
-			}
-		}
-	} catch(LdapException $e) {
-		$error = $e->getMessage();
-	} catch(InvalidArgumentException $e) {
-		$error = $e->getMessage();
-	} catch(ValidationException $e) {
-		$error = $e->getMessage();
-	}
-
-	$groups = [];
-	foreach($attributes['memberof'] as $dn) {
-		$groups[] = Ldap::groupDnToName($dn);
-	}
-	$attributes['memberof'] = $groups;
-	$attributes['safetytestdate'] = isset($attributes['safetytestdate']) ? Validation::dateSchacToHtml($attributes['safetytestdate']) : '';
-	$attributes['schacdateofbirth'] = isset($attributes['schacdateofbirth']) ? Validation::dateSchacToHtml($attributes['schacdateofbirth']) : '';
-
-	$template = Template::create();
-	$template->addData(['currentSection' => 'people'], 'navbar');
-	$template->addData(['title' => "Edit $targetUid"]);
-	echo $template->render('usereditor', [
-		'error' => $error,
-		'attributes' => $attributes,
-		'editableAttributes' => $editableAttributes,
-		'allowedAttributes' => $allowedAttributes,
-		'adminRequireOldPassword' => $requireOldPasswordForChange ?? true
-	]);
-} else {
-	$users = [];
-	$error = null;
-	try {
-		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
-			CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
-		$users = $ldap->getUsers(['uid', 'cn', 'sn', 'schacpersonaluniquecode', 'memberof', 'nsaccountlock',
-                                    'safetytestdate', 'telegramid', 'telegramnickname']);
-
-		$tz = new DateTimeZone('Europe/Rome');
-		foreach($users as &$user) {
-			if(isset($user['memberof'])) {
-				$groups = [];
-				foreach($user['memberof'] as $dn) {
-					$groups[] = Ldap::groupDnToName($dn);
-				}
-				$user['memberof'] = $groups;
-			}
-			if(isset($user['safetytestdate'])) {
-				$user['safetytestdate'] = DateTime::createFromFormat('Ymd', $user['safetytestdate'], $tz);
-			}
-		}
-	} catch(LdapException $e) {
-		$error = $e->getMessage();
-	}
-
-	$template = Template::create();
-	$template->addData(['currentSection' => 'groups'], 'navbar');
-	echo $template->render('grouplist', [
-		'users' => $users,
-		'error' => $error,
-	]);
+$error = null;
+$users = [];
+try {
+	$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN, CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
+	$users = $ldap->getUsersList(new DateTimeZone('Europe/Rome'));
+} catch(LdapException $e) {
+	$error = $e->getMessage();
 }
+
+$template = Template::create();
+$template->addData(['currentSection' => 'groups'], 'navbar');
+echo $template->render('grouplist', [
+	'users' => $users,
+	'error' => $error,
+]);
 
 
