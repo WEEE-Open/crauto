@@ -43,18 +43,10 @@ $today = new DateTimeImmutable();
 			<!--<td class="photo"><img alt="profile picture" src=""></td>-->
 			<td class="text-center" ><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
 			<td class="text-center"><?= $this->e($user['cn']) ?></td>
-            <td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : 'No groups' ?></td>
-            <td class="text-center"><?= $testDone ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>' ?></td>
+            <td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : '' ?></td>
+            <td class="text-center"><?= $testDone ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times text-danger"></i>' ?></td>
             <td class="text-center">
-                <?php
-                    //Telegram username ( if it exists )
-                    if(isset($user['telegramnickname']) && $user['telegramnickname'] !== null )
-                        echo '<a href="https://t.me/' . $user['telegramnickname'] . '">@'. $user['telegramnickname'];
-                    elseif(isset($user['telegramid']) && $user['telegramid'] !== null)
-                        echo 'ID Only';
-                    else
-                        echo 'N/D';
-                ?>
+	            <?= \WEEEOpen\Crauto\Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?>
             </td>
 		</tr>
 		<?php endif ?>
@@ -95,18 +87,10 @@ $today = new DateTimeImmutable();
 	            <!--<td class="photo"><img alt="profile picture" src=""></td>-->
                 <td class="text-center"><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
                 <td class="text-center"><?= $this->e($user['cn']) ?></td>
-                <td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : 'No groups' ?></td>
-                <td class="text-center"><?= $testDone ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>' ?></td>
+                <td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : '' ?></td>
+                <td class="text-center"><?= $testDone ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times text-danger"></i>' ?></td>
                 <td class="text-center">
-                    <?php
-                    //Telegram username ( if it exists )
-                    if(isset($user['telegramnickname']) && $user['telegramnickname'] !== null )
-                        echo '<a href="https://t.me/' . $user['telegramnickname'] . '">@'. $user['telegramnickname'];
-                    elseif(isset($user['telegramid']) && $user['telegramid'] !== null)
-                        echo 'ID Only';
-                    else
-                        echo 'N/D';
-                    ?>
+	                <?= \WEEEOpen\Crauto\Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?>
                 </td>
             </tr>
         <?php endif ?>

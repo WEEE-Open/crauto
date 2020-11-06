@@ -5,7 +5,6 @@ $this->layout('base', ['title' => 'Groups']);
 $testdates = [];
 $today = new DateTimeImmutable();
 $groups = []; //[ 'Cloud' => [ cloud users ], "Soviet" => [ soviet users ], etc ... ]
-$keys = [];
 ?>
 <h2>Groups</h2>
 
@@ -56,7 +55,7 @@ foreach($groups as $name => $group): ?>
                 <td class="text-center"><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
                 <td class="text-center"><?= $this->e($user['cn']) ?></td>
                 <td class="text-center"><?php
-                    $key = array_search($keys[$i], $user['memberof']);
+                    $key = array_search($name, $user['memberof']);
                     $otherGroups = $user['memberof'];
                     unset($otherGroups[$key]);
                     if(!empty($otherGroups)) {
@@ -64,18 +63,9 @@ foreach($groups as $name => $group): ?>
                     }
                     ?>
                 </td>
-                <td class="text-center"><?= $testDone ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>' ?></td>
+                <td class="text-center"><?= $testDone ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times text-danger"></i>' ?></td>
                 <td class="text-center">
-                    <?php
-                    //Telegram username ( if it exists )
-                    if(isset($user['telegramnickname']) && $user['telegramnickname'] !== null) {
-	                    echo '<a href="https://t.me/' . $user['telegramnickname'] . '">@' . $user['telegramnickname'];
-                    } elseif (isset($user['telegramid']) && $user['telegramid'] !== null) {
-	                    echo 'ID Only';
-                    } else {
-	                    echo 'N/D';
-                    }
-                    ?>
+                    <?= \WEEEOpen\Crauto\Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?>
                 </td>
             </tr>
         <?php endforeach; ?>

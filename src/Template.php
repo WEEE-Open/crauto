@@ -15,4 +15,14 @@ class Template {
 		], 'navbar');
 		return $engine;
 	}
+
+	public static function telegramColumn($nickname, $id): string {
+		if(isset($nickname) && $nickname !== null) {
+			return '<a href="https://t.me/' . $nickname . '">@' . $nickname;
+		} elseif(isset($id) && $id !== null) {
+			return 'ID Only';
+		} else {
+			return '<span class="text-danger">N/A</span>';
+		}
+	}
 }
