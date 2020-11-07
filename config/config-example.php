@@ -17,7 +17,7 @@ define('CRAUTO_OIDC_CLIENT_SECRET', 'Fd4BxUyaYYlByimKfAwv6_rDyl0a'); // This is 
 define('VERIFY_CERTIFICATES', true); // Set to false for development with self-signed certificates
 define('CRAUTO_URL', 'http://[::1]:8200');
 define('CRAUTO_DEBUG_ALWAYS_REFRESH', false); // Set to true to use the refresh token to get a new id token on each request
-define('CRAUTO_IMAGE_URL', 'http://[::1]:8300/?id=%s');
+define('CRAUTO_DEFAULT_GROUPS', 'Test,Cloud,Admin');
 define('CRAUTO_HOME_PAGE_SERVICES', [
 	['Description description description', 'https://url.example.com', 'something'],
 	['Description', 'https://url.example.com'],

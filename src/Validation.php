@@ -445,6 +445,8 @@ class Validation {
 		// Oh, one more thing...
 		$edited['nsAccountLock'] = 'true';
 
+		$edited['memberOf'] = $ldap->groupNamesToDn(explode(',', CRAUTO_DEFAULT_GROUPS));
+
 		if($edited['telegramid'] === null) {
 			unset($edited['telegramid']);
 		}
