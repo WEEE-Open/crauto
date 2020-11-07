@@ -332,6 +332,7 @@ class Ldap {
 			'schacPersonalCharacteristics',
 			'telegramAccount',
 			'weeeOpenPerson',
+			'nsMemberOf',
 		];
 		$dn = 'uid=' . ldap_escape($edited['uid'], '', LDAP_ESCAPE_DN) . ',' . $this->usersDn;
 		$result = ldap_add($this->ds, $dn, $edited);
