@@ -4,30 +4,7 @@
 $this->layout('base', ['title' => 'People']);
 $testdates = [];
 $today = new DateTimeImmutable();
-
-$safetyTest = function(array $user, array &$testdates) use ($today) {
-	if($user['safetytestdate'] !== null) {
-		if((int) $user['safetytestdate']->diff($today)->format('%R%a') < 0) {
-			$sortkey = $user['sn'] . ' ' . $user['cn'] . ' ' . $user['uid'];
-			$testdates[$user['safetytestdate']->format('Y-m-d')][$sortkey] = $user;
-			return [false, true];
-		} else {
-			return [true, false];
-		}
-	}
-	return [false, false];
-};
-
-$safetyTestIcon = function(bool $testDone, bool $testToDo): string {
-	if($testDone) {
-		return '<i class="fas fa-check"></i>';
-	} else if ($testToDo) {
-		return '<i class="fas fa-hourglass"></i>';
-	} else {
-		return '<i class="fas fa-times text-danger"></i>';
-	}
-};
-
+require_once 'safety_test.php';
 ?>
 <h2>People</h2>
 
@@ -52,7 +29,7 @@ $safetyTestIcon = function(bool $testDone, bool $testToDo): string {
 	<tbody>
 	<?php foreach($users as $user): ?>
 		<?php
-		list($testDone, $testToDo) = $safetyTest($user, $testdates);
+		list($testDone, $testToDo) = safetyTest($user, $testdates, $today);
 
 		if(!isset($user['nsaccountlock']) || $user['nsaccountlock'] === null): ?>
 		<tr >
@@ -60,7 +37,7 @@ $safetyTestIcon = function(bool $testDone, bool $testToDo): string {
 			<td class="text-center" ><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
 			<td class="text-center"><?= $this->e($user['cn']) ?></td>
             <td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : '' ?></td>
-            <td class="text-center"><?= $safetyTestIcon($testDone, $testToDo); ?></td>
+            <td class="text-center"><?= safetyTestIcon($testDone, $testToDo); ?></td>
             <td class="text-center">
 	            <?= \WEEEOpen\Crauto\Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?>
             </td>
@@ -90,7 +67,7 @@ $safetyTestIcon = function(bool $testDone, bool $testToDo): string {
     <tbody>
     <?php foreach($users as $user): ?>
         <?php
-	    list($testDone, $testToDo) = $safetyTest($user, $testdates);
+	    list($testDone, $testToDo) = safetyTest($user, $testdates, $today);
 
         if(isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true'): ?>
             <tr class="locked">
@@ -98,7 +75,7 @@ $safetyTestIcon = function(bool $testDone, bool $testToDo): string {
                 <td class="text-center"><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
                 <td class="text-center"><?= $this->e($user['cn']) ?></td>
                 <td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : '' ?></td>
-	            <td class="text-center"><?= $safetyTestIcon($testDone, $testToDo); ?></td>
+	            <td class="text-center"><?= safetyTestIcon($testDone, $testToDo); ?></td>
                 <td class="text-center">
 	                <?= \WEEEOpen\Crauto\Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?>
                 </td>

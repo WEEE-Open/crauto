@@ -3,8 +3,9 @@
 /** @var $error string|null */
 $this->layout('base', ['title' => 'Groups']);
 $testdates = [];
+$groups = []; //[ 'Cloud' => [ cloud users ], "Soviet" => [ soviet users ], ... ]
 $today = new DateTimeImmutable();
-$groups = []; //[ 'Cloud' => [ cloud users ], "Soviet" => [ soviet users ], etc ... ]
+require_once 'safety_test.php';
 ?>
 <h2>Groups</h2>
 
@@ -43,12 +44,7 @@ foreach($groups as $name => $group): ?>
         </thead>
         <tbody>
         <?php foreach ($group as $user):
-            $testDone = false;
-            if ($user['safetytestdate'] !== null) {
-                if((int)$user['safetytestdate']->diff($today)->format('%R%a') >= 0) {
-                    $testDone = true;
-                }
-            }
+	        list($testDone, $testToDo) = safetyTest($user, $testdates, $today);
             ?>
             <tr <?= isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true' ? 'class="locked"' : '' ?> >
                 <!--<td class="photo"><img alt="profile picture" src=""></td>-->
@@ -63,7 +59,7 @@ foreach($groups as $name => $group): ?>
                     }
                     ?>
                 </td>
-                <td class="text-center"><?= $testDone ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times text-danger"></i>' ?></td>
+                <td class="text-center"><?= safetyTestIcon($testDone, $testToDo); ?></td>
                 <td class="text-center">
                     <?= \WEEEOpen\Crauto\Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?>
                 </td>
