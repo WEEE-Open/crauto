@@ -82,19 +82,28 @@ if(isset($_GET['uid'])) {
 } else {
 	$error = null;
 	$users = [];
+	$website = isset($_GET['for']) && $_GET['for'] == 'website';
 	try {
 		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN, CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
-		$users = $ldap->getUsersList(new DateTimeZone('Europe/Rome'));
+		$users = $ldap->getUsersList(new DateTimeZone('Europe/Rome'), $website ? ['degreecourse'] : []);
 	} catch(LdapException $e) {
 		$error = $e->getMessage();
 	}
 
 	$template = Template::create();
 	$template->addData(['currentSection' => 'people'], 'navbar');
-	echo $template->render('userlist', [
-		'users' => $users,
-		'error' => $error,
-	]);
+
+	if($website) {
+		echo $template->render('websiteuserlist', [
+			'users' => $users,
+			'error' => $error,
+		]);
+	} else {
+		echo $template->render('userlist', [
+			'users' => $users,
+			'error' => $error,
+		]);
+	}
 }
 
 

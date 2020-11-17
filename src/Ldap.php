@@ -48,6 +48,18 @@ class Ldap {
             'schacpersonaluniquecode' => 's333333',
             'telegramnickname' => 'brodino'
         ],
+		'bob' => [
+			'uid' => 'bob',
+			'cn' => 'Bob Testington',
+			'sn' => 'Testington',
+			'memberof' => ["cn=Admin,ou=Groups,dc=weeeopen,dc=it"],
+			'createtimestamp' => '20191216155022Z',
+			'modifytimestamp' => '20191216155022Z',
+			'safetytestdate' => '20201025',
+			'schacpersonaluniquecode' => 's55555',
+			'degreecourse' => 'Ingegneria dell\'Ingegnerizzazione',
+			'nsaccountlock' => null
+		],
         'broski' => [
             'uid' => 'broski',
             'cn' => 'Bro Ski',
@@ -60,17 +72,6 @@ class Ldap {
             'schacpersonaluniquecode' => 's4444444',
             'telegramid' => '123456789'
         ],
-		'bob' => [
-			'uid' => 'bob',
-			'cn' => 'Bob Testington',
-			'sn' => 'Testington',
-			'memberof' => ["cn=Admin,ou=Groups,dc=weeeopen,dc=it"],
-			'createtimestamp' => '20191216155022Z',
-			'modifytimestamp' => '20191216155022Z',
-			'safetytestdate' => '20201025',
-			'schacpersonaluniquecode' => 's55555',
-            'nsaccountlock' => null
-        ]
 	];
 	private const EXAMPLE_GROUPS = ['Admin', 'Cloud', 'Persone'];
 
@@ -341,8 +342,8 @@ class Ldap {
 		}
 	}
 
-	public function getUsersList(\DateTimeZone $tz): array {
-		$users = $this->getUsers([
+	public function getUsersList(\DateTimeZone $tz, array $moreAttrs = []): array {
+		$users = $this->getUsers(array_merge([
 			'uid',
 			'cn',
 			'sn',
@@ -352,7 +353,7 @@ class Ldap {
 			'safetytestdate',
 			'telegramid',
 			'telegramnickname'
-		]);
+		], $moreAttrs));
 
 		foreach($users as &$user) {
 			if(isset($user['memberof'])) {

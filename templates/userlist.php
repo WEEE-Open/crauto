@@ -54,6 +54,8 @@ $today = new DateTimeImmutable();
 	</tbody>
 </table>
 
+<p class="text-muted"><a href="people.php?for=website">View code</a> for the website "Chi siamo" page</p>
+
 <br/>
 <h2>Locked accounts</h2>
 
