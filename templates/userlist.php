@@ -4,6 +4,30 @@
 $this->layout('base', ['title' => 'People']);
 $testdates = [];
 $today = new DateTimeImmutable();
+
+$safetyTest = function(array $user, array &$testdates) use ($today) {
+	if($user['safetytestdate'] !== null) {
+		if((int) $user['safetytestdate']->diff($today)->format('%R%a') < 0) {
+			$sortkey = $user['sn'] . ' ' . $user['cn'] . ' ' . $user['uid'];
+			$testdates[$user['safetytestdate']->format('Y-m-d')][$sortkey] = $user;
+			return [false, true];
+		} else {
+			return [true, false];
+		}
+	}
+	return [false, false];
+};
+
+$safetyTestIcon = function(bool $testDone, bool $testToDo): string {
+	if($testDone) {
+		return '<i class="fas fa-check"></i>';
+	} else if ($testToDo) {
+		return '<i class="fas fa-hourglass"></i>';
+	} else {
+		return '<i class="fas fa-times text-danger"></i>';
+	}
+};
+
 ?>
 <h2>People</h2>
 
@@ -28,15 +52,7 @@ $today = new DateTimeImmutable();
 	<tbody>
 	<?php foreach($users as $user): ?>
 		<?php
-        $testDone = false;
-		if($user['safetytestdate'] !== null) {
-			if((int) $user['safetytestdate']->diff($today)->format('%R%a') < 0) {
-				$sortkey = $user['sn'] . ' ' . $user['cn'] . ' ' . $user['uid'];
-				$testdates[$user['safetytestdate']->format('Y-m-d')][$sortkey] = $user;
-			} else {
-				$testDone = true;
-			}
-		}
+		list($testDone, $testToDo) = $safetyTest($user, $testdates);
 
 		if(!isset($user['nsaccountlock']) || $user['nsaccountlock'] === null): ?>
 		<tr >
@@ -44,7 +60,7 @@ $today = new DateTimeImmutable();
 			<td class="text-center" ><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
 			<td class="text-center"><?= $this->e($user['cn']) ?></td>
             <td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : '' ?></td>
-            <td class="text-center"><?= $testDone ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times text-danger"></i>' ?></td>
+            <td class="text-center"><?= $safetyTestIcon($testDone, $testToDo); ?></td>
             <td class="text-center">
 	            <?= \WEEEOpen\Crauto\Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?>
             </td>
@@ -74,23 +90,15 @@ $today = new DateTimeImmutable();
     <tbody>
     <?php foreach($users as $user): ?>
         <?php
-        $testDone = false;
-	    if($user['safetytestdate'] !== null) {
-		    if((int) $user['safetytestdate']->diff($today)->format('%R%a') < 0) {
-			    $sortkey = $user['sn'] . ' ' . $user['cn'] . ' ' . $user['uid'];
-			    $testdates[$user['safetytestdate']->format('Y-m-d')][$sortkey] = $user;
-		    } else {
-			    $testDone = true;
-		    }
-        }
-        ?>
-        <?php if(isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true'): ?>
+	    list($testDone, $testToDo) = $safetyTest($user, $testdates);
+
+        if(isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true'): ?>
             <tr class="locked">
 	            <!--<td class="photo"><img alt="profile picture" src=""></td>-->
                 <td class="text-center"><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
                 <td class="text-center"><?= $this->e($user['cn']) ?></td>
                 <td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : '' ?></td>
-                <td class="text-center"><?= $testDone ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times text-danger"></i>' ?></td>
+	            <td class="text-center"><?= $safetyTestIcon($testDone, $testToDo); ?></td>
                 <td class="text-center">
 	                <?= \WEEEOpen\Crauto\Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?>
                 </td>
