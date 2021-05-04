@@ -4,6 +4,7 @@
 /** @var $allGroups string[] */
 /** @var $allowedAttributes string[] */
 /** @var $image \WEEEOpen\Crauto\Image */
+sort($allGroups);
 ?>
 <?php
 $editable = function(string $attr) use ($editableAttributes): string {

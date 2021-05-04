@@ -100,7 +100,7 @@ class Ldap {
             'telegramid' => '123456789'
         ],
 	];
-	private const EXAMPLE_GROUPS = ['Admin', 'Cloud', 'Persone'];
+	private const EXAMPLE_GROUPS = ['Admin', 'Persone', 'Cloud'];
 
 	public function __construct(string $url, string $bindDn, string $password, string $usersDn, string $groupsDn, bool $startTls = true) {
 		$this->url = $url;
