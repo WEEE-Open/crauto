@@ -31,6 +31,8 @@ $attributeNames = [
 	'weeelabnickname' => 'Nicknames for weeelab',
 	'description' => 'Notes',
 	'nsaccountlock' => 'Account locked',
+	'haskey' => 'Has a key to the lab',
+	'signedsir' => 'SIR signed',
 ];
 ?>
 <form method="POST">
@@ -121,14 +123,36 @@ $attributeNames = [
 			<textarea class="form-control" id="profile-description" name="description" rows="<?= floor(strlen($attributes['description']) / 100 + 3) ?>" <?= $editable('description') ?> maxlength="10000"><?= $this->e($attributes['description'] ?? '') ?></textarea>
 		</div>
 	<?php endif ?>
+
+	<?php if(in_array('nsaccountlock', $allowedAttributes) || in_array('signedsir', $allowedAttributes) || in_array('haskey', $allowedAttributes)): ?>
+	<div class="form-row">
 	<?php if(in_array('nsaccountlock', $allowedAttributes)): ?>
-		<div class="form-group">
+		<div class="form-group col-sm-6 col-md-4">
 			<div class="form-check">
 				<input class="form-check-input" type="checkbox" value="true" id="profile-accountlock" <?= $attributes['nsaccountlock'] === 'true' ? 'checked' : '' ?> name="nsaccountlock" <?= $disabled('nsaccountlock') ?>>
 				<label for="profile-accountlock"><?= $attributeNames['nsaccountlock'] ?></label>
 			</div>
 		</div>
 	<?php endif ?>
+	<?php if(in_array('signedsir', $allowedAttributes)): ?>
+		<div class="form-group col-sm-6 col-md-4">
+			<div class="form-check">
+				<input class="form-check-input" type="checkbox" value="true" id="profile-signedsir" <?= $attributes['signedsir'] === 'true' ? 'checked' : '' ?> name="signedsir" <?= $disabled('signedsir') ?>>
+				<label for="profile-signedsir"><?= $attributeNames['signedsir'] ?></label>
+			</div>
+		</div>
+	<?php endif ?>
+	<?php if(in_array('haskey', $allowedAttributes)): ?>
+		<div class="form-group col-sm-6 col-md-4">
+			<div class="form-check">
+				<input class="form-check-input" type="checkbox" value="true" id="profile-haskey" <?= $attributes['haskey'] === 'true' ? 'checked' : '' ?> name="haskey" <?= $disabled('haskey') ?>>
+				<label for="profile-haskey"><?= $attributeNames['haskey'] ?></label>
+			</div>
+		</div>
+	<?php endif ?>
+	</div>
+	<?php endif ?>
+
 	<div class="form-group">
 		<button type="submit" class="btn btn-primary">Save</button>
 	</div>

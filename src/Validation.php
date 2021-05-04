@@ -26,6 +26,8 @@ class Validation {
 		'telegramnickname',
 		'sshpublickey',
 		'weeelabnickname',
+		'haskey',
+		'signedsir',
 	];
 	const allowedAttributesAdmin = [
 		'uid',
@@ -46,6 +48,8 @@ class Validation {
 		'weeelabnickname',
 		'description',
 		'nsaccountlock',
+		'haskey',
+		'signedsir',
 	];
 	const editableAttributesUser = [
 		'mail',
@@ -71,6 +75,8 @@ class Validation {
 		'weeelabnickname',
 		'description',
 		'nsaccountlock',
+		'haskey',
+		'signedsir',
 	];
 	const allowedAttributesRegister = [
 		'uid',
@@ -100,6 +106,12 @@ class Validation {
 		}
 		if(self::hasValue('nsaccountlock', $inputs)) {
 			$inputs['nsaccountlock'] = boolval($inputs['nsaccountlock']) ? 'true' : '';
+		}
+		if(self::hasValue('haskey', $inputs)) {
+			$inputs['haskey'] = boolval($inputs['haskey']) ? '1' : '';
+		}
+		if(self::hasValue('signedsir', $inputs)) {
+			$inputs['signedsir'] = boolval($inputs['signedsir']) ? '1' : '';
 		}
 		if(self::hasValue('schacpersonaluniquecode', $inputs)) {
 			$id = $inputs['schacpersonaluniquecode'];
@@ -234,6 +246,16 @@ class Validation {
 				throw new ValidationException('nsAccountLock can only be true or be removed');
 			}
 		}
+		if(self::hasValue('haskey', $inputs)) {
+			if($inputs['haskey'] !== 'true') {
+				throw new ValidationException('hasKey can only be true or be removed');
+			}
+		}
+		if(self::hasValue('signedsir', $inputs)) {
+			if($inputs['signedsir'] !== 'true') {
+				throw new ValidationException('signedSir can only be true or be removed');
+			}
+		}
 		if(self::hasValue('uid', $inputs)) {
 			if(preg_match('#^[a-zA-Z][a-zA-Z0-9-_\.]*$#', $inputs['uid']) !== 1) {
 				throw new ValidationException('Username should contain only alphanumeric characters, dash, underscore and dot (A-Z a-z 0-9 - _ .), and begin with a letter');
@@ -303,6 +325,12 @@ class Validation {
 		$edited = array_intersect_key($_POST, $editableAttributes);
 		if(isset($editableAttributes['nsaccountlock']) && !isset($edited['nsaccountlock'])) {
 			$edited['nsaccountlock'] = '';
+		}
+		if(isset($editableAttributes['haskey']) && !isset($edited['haskey'])) {
+			$edited['haskey'] = '';
+		}
+		if(isset($editableAttributes['signedsir']) && !isset($edited['signedsir'])) {
+			$edited['signedsir'] = '';
 		}
 		if(isset($edited['memberof'])) {
 			// Backwards compatibility layer

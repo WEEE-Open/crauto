@@ -21,7 +21,13 @@ class Ldap {
 			'createtimestamp' => '20191025105022Z',
 			'modifytimestamp' => '20191025155317Z',
 			'safetytestdate' => '20160909',
+			'signedSir' => null,
+			'hasKey' => null,
 			'schacpersonaluniquecode' => 's111111',
+			'telegramid' => null,
+			'telegramnickname' => null,
+			'sshpublickey' => [],
+			'weeelabnickname' => ['io'],
             'nsaccountlock' => null
         ],
         'alice' => [
@@ -32,7 +38,13 @@ class Ldap {
             'createtimestamp' => '20191025105022Z',
             'modifytimestamp' => '20191025155317Z',
             'safetytestdate' => '20211104',
+            'signedSir' => 1,
+            'hasKey' => 1,
             'schacpersonaluniquecode' => 's22222',
+            'telegramid' => null,
+            'telegramnickname' => null,
+            'sshpublickey' => [],
+            'weeelabnickname' => [],
             'nsaccountlock' => 'true'
         ],
         'brodino' => [
@@ -43,9 +55,13 @@ class Ldap {
             'createtimestamp' => '20191025105022Z',
             'modifytimestamp' => '20191025155317Z',
             'safetytestdate' => '20201104',
+            'signedSir' => null,
+            'hasKey' => null,
             'nsaccountlock' => 'true',
             'telegramid' => '123456789',
             'schacpersonaluniquecode' => 's333333',
+            'sshpublickey' => [],
+            'weeelabnickname' => [],
             'telegramnickname' => 'brodino'
         ],
 		'bob' => [
@@ -56,8 +72,14 @@ class Ldap {
 			'createtimestamp' => '20191216155022Z',
 			'modifytimestamp' => '20191216155022Z',
 			'safetytestdate' => '20201025',
+			'signedSir' => null,
+			'hasKey' => null,
 			'schacpersonaluniquecode' => 's55555',
 			'degreecourse' => 'Ingegneria dell\'Ingegnerizzazione',
+			'telegramid' => null,
+			'telegramnickname' => null,
+			'sshpublickey' => [],
+			'weeelabnickname' => [],
 			'nsaccountlock' => null
 		],
         'broski' => [
@@ -68,8 +90,13 @@ class Ldap {
             'createtimestamp' => '20191025105022Z',
             'modifytimestamp' => '20191025155317Z',
             'safetytestdate' => '20201025',
+            'signedSir' => null,
+            'hasKey' => null,
             'nsaccountlock' => null,
             'schacpersonaluniquecode' => 's4444444',
+            'telegramnickname' => null,
+            'sshpublickey' => [],
+            'weeelabnickname' => [],
             'telegramid' => '123456789'
         ],
 	];

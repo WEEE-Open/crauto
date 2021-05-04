@@ -33,7 +33,7 @@ $modified = $modified->format('Y-m-d H:i:s') . ' UTC';
     'editableAttributes' => $editableAttributes,
     'allowedAttributes' => $allowedAttributes,
     'allGroups' => $allGroups,
-    'image' => new WEEEOpen\Crauto\Image($attributes['uid'], $attributes['schacpersonaluniquecode'] ?? null)]) ?>
+	]); ?>
 <?= $this->fetch('authenticationform', ['requireOldPassword' => $adminRequireOldPassword]) ?>
 <div class="mb-2">
     <a class="btn btn-outline-primary" href="/sir.php?uid=<?= $this->e($attributes['uid']) ?>">Download SIR 📝</a>
