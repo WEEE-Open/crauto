@@ -13,9 +13,15 @@ function safetyTest(array $user, array &$testdates, DateTimeImmutable $today): a
 	return [false, false];
 }
 
-function safetyTestIcon(bool $testDone, bool $testToDo): string {
+function safetyTestIcon(bool $testDone, bool $testToDo, bool $signedSir): string {
+	if($signedSir) {
+		$sir = '';
+	} else {
+		$sir = '<i class="fas fa-print text-danger" title="SIR not yet signed!"></i>';
+	}
+
 	if($testDone) {
-		return '<i class="fas fa-check"></i>';
+		return '<i class="fas fa-check"></i>' . $sir;
 	} else if ($testToDo) {
 		return '<i class="fas fa-hourglass"></i>';
 	} else {

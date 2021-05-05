@@ -6,6 +6,7 @@ use WEEEOpen\Crauto\Template;
 
 $this->layout('base', ['title' => 'People']);
 $testdates = [];
+$sirsToSign = [];
 $today = new DateTimeImmutable();
 require_once 'safety_test.php';
 ?>
@@ -32,7 +33,11 @@ require_once 'safety_test.php';
 	<tbody>
 	<?php foreach($users as $user): ?>
 		<?php
+		$signedSir = boolval($user['signedsir'] ?? false);
 		list($testDone, $testToDo) = safetyTest($user, $testdates, $today);
+		if($testDone && !$signedSir) {
+			$sirsToSign[] = $user;
+		}
 
 		if(!isset($user['nsaccountlock']) || $user['nsaccountlock'] === null): ?>
 		<tr >
@@ -40,7 +45,7 @@ require_once 'safety_test.php';
 			<td class="text-center" ><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
 			<td class="text-center"><?= $this->e($user['cn']) ?></td>
             <td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : '' ?></td>
-            <td class="text-center"><?= safetyTestIcon($testDone, $testToDo); ?></td>
+            <td class="text-center"><?= safetyTestIcon($testDone, $testToDo, $signedSir); ?></td>
             <td class="text-center">
 	            <?= Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?>
             </td>
@@ -52,48 +57,12 @@ require_once 'safety_test.php';
 
 <p class="text-muted"><a href="people.php?for=website">View code</a> for the website "Chi siamo" page</p>
 
-<br/>
-<h2>Locked accounts</h2>
-
-<!-- Blocked user table -->
-<table class="table" data-toggle="table">
-    <thead class="thead-dark">
-    <tr>
-        <!--<th scope="col" class="text-center" data-sortable="false">Photo</th>-->
-        <th scope="col" class="text-center" data-sortable="true">Username</th>
-        <th scope="col" class="text-center" data-sortable="true">Full name</th>
-        <th scope="col" class="text-center" data-sortable="true">Groups</th>
-        <th scope="col" class="text-center" data-sortable="true">Test done</th>
-        <th scope="col" class="text-center" data-sortable="true">Telegram</th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php foreach($users as $user): ?>
-        <?php
-	    list($testDone, $testToDo) = safetyTest($user, $testdates, $today);
-
-        if(isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true'): ?>
-            <tr class="locked">
-	            <!--<td class="photo"><img alt="profile picture" src=""></td>-->
-                <td class="text-center"><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
-                <td class="text-center"><?= $this->e($user['cn']) ?></td>
-                <td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : '' ?></td>
-	            <td class="text-center"><?= safetyTestIcon($testDone, $testToDo); ?></td>
-                <td class="text-center">
-	                <?= Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?>
-                </td>
-            </tr>
-        <?php endif ?>
-    <?php endforeach ?>
-    </tbody>
-</table>
-<br/>
-
+<div class="row">
 <?php if(count($testdates) > 0): ?>
-	<div>
+	<div class="col-lg-6">
 		<h2>Upcoming tests on safety</h2>
 		<?php foreach($testdates as $date => $users): ?>
-			<h3><?= $date ?></h3>
+			<h5><?= $date ?></h5>
 			<ul class="list-unstyled">
 				<?php
 				$user = ksort($users,  SORT_NATURAL | SORT_FLAG_CASE);
@@ -105,9 +74,57 @@ require_once 'safety_test.php';
 	</div>
 <?php endif ?>
 
+<?php if(count($sirsToSign) > 0): ?>
+	<div class="col-lg-6">
+		<h2>SIRs to print</h2>
+			<ul class="list-unstyled">
+				<?php foreach($sirsToSign as $user): ?>
+					<li><a href="/sir.php?uid=<?= $this->e($user['uid']) ?>"><?= $this->e($user['cn']) ?></a>, <?= $this->e($user['schacpersonaluniquecode'])?></li>
+				<?php endforeach; ?>
+			</ul>
+	</div>
+<?php endif ?>
+</div>
 
 <script>
     document.getElementsByName('table').bootstrapTable('refreshOptions', {
         sortable: true
     })
 </script>
+
+
+<h2>Locked accounts</h2>
+
+<!-- Blocked user table -->
+<table class="table" data-toggle="table">
+	<thead class="thead-dark">
+	<tr>
+		<!--<th scope="col" class="text-center" data-sortable="false">Photo</th>-->
+		<th scope="col" class="text-center" data-sortable="true">Username</th>
+		<th scope="col" class="text-center" data-sortable="true">Full name</th>
+		<th scope="col" class="text-center" data-sortable="true">Groups</th>
+		<th scope="col" class="text-center" data-sortable="true">Test done</th>
+		<th scope="col" class="text-center" data-sortable="true">Telegram</th>
+	</tr>
+	</thead>
+	<tbody>
+	<?php foreach($users as $user): ?>
+		<?php
+		$signedSir = boolval($user['signedsir'] ?? false);
+		list($testDone, $testToDo) = safetyTest($user, $testdates, $today);
+
+		if(isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true'): ?>
+			<tr class="locked">
+				<!--<td class="photo"><img alt="profile picture" src=""></td>-->
+				<td class="text-center"><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
+				<td class="text-center"><?= $this->e($user['cn']) ?></td>
+				<td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : '' ?></td>
+				<td class="text-center"><?= safetyTestIcon($testDone, $testToDo, $signedSir); ?></td>
+				<td class="text-center">
+					<?= Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?>
+				</td>
+			</tr>
+		<?php endif ?>
+	<?php endforeach ?>
+	</tbody>
+</table>
