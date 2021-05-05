@@ -71,7 +71,7 @@ require_once 'safety_test.php';
 <?php
 $columns = (count($testdates) > 0 ? 1 : 0)
 + (count($sirsToSign) > 0 ? 1 : 0)
-+ (count($testdates) > 0 ? 1 : 0);
++ (count($keys) > 0 ? 1 : 0);
 switch($columns) {
 	case 3:
 		$class = 'col-xl-4 col-lg-6';
