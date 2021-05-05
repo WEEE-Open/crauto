@@ -137,7 +137,7 @@ $attributeNames = [
 	<?php if(in_array('signedsir', $allowedAttributes)): ?>
 		<div class="form-group col-sm-6 col-md-4">
 			<div class="form-check">
-				<input class="form-check-input" type="checkbox" value="true" id="profile-signedsir" <?= $attributes['signedsir'] === 'true' ? 'checked' : '' ?> name="signedsir" <?= $disabled('signedsir') ?>>
+				<input class="form-check-input" type="checkbox" value="1" id="profile-signedsir" <?= $attributes['signedsir'] === 'true' ? 'checked' : '' ?> name="signedsir" <?= $disabled('signedsir') ?>>
 				<label for="profile-signedsir"><?= $attributeNames['signedsir'] ?></label>
 			</div>
 		</div>
@@ -145,7 +145,7 @@ $attributeNames = [
 	<?php if(in_array('haskey', $allowedAttributes)): ?>
 		<div class="form-group col-sm-6 col-md-4">
 			<div class="form-check">
-				<input class="form-check-input" type="checkbox" value="true" id="profile-haskey" <?= $attributes['haskey'] === 'true' ? 'checked' : '' ?> name="haskey" <?= $disabled('haskey') ?>>
+				<input class="form-check-input" type="checkbox" value="1" id="profile-haskey" <?= $attributes['haskey'] === 'true' ? 'checked' : '' ?> name="haskey" <?= $disabled('haskey') ?>>
 				<label for="profile-haskey"><?= $attributeNames['haskey'] ?></label>
 			</div>
 		</div>

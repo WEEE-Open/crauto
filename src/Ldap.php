@@ -30,6 +30,7 @@ class Ldap {
 			'telegramnickname' => null,
 			'sshpublickey' => [],
 			'weeelabnickname' => ['io'],
+			'description' => '',
             'nsaccountlock' => null
         ],
         'alice' => [
@@ -47,6 +48,7 @@ class Ldap {
             'telegramnickname' => null,
             'sshpublickey' => [],
             'weeelabnickname' => [],
+            'description' => '',
             'nsaccountlock' => 'true'
         ],
         'brodino' => [
@@ -64,6 +66,7 @@ class Ldap {
             'schacpersonaluniquecode' => 's333333',
             'sshpublickey' => [],
             'weeelabnickname' => [],
+	        'description' => '',
             'telegramnickname' => 'brodino'
         ],
 		'bob' => [
@@ -82,6 +85,7 @@ class Ldap {
 			'telegramnickname' => null,
 			'sshpublickey' => [],
 			'weeelabnickname' => [],
+			'description' => '',
 			'nsaccountlock' => null
 		],
         'broski' => [
@@ -99,6 +103,7 @@ class Ldap {
             'telegramnickname' => null,
             'sshpublickey' => [],
             'weeelabnickname' => [],
+            'description' => '',
             'telegramid' => '123456789'
         ],
 	];
