@@ -198,18 +198,17 @@ class Validation {
 			}
 		}
 		if(self::hasValue('mail', $inputs)) {
+			// Email should be:
+			// At least 3 characters long (a@b)
+			// Not start with an @
+			// Not end with an @
+			// Contain at least one @ somewhere ("@"@example.com should be valid, I think)
 			if(
-				strlen($inputs['mail'])  >= 3 &&
-				substr($inputs['mail'], 0, 1) !== '@' &&
-				substr($inputs['mail'], -1, 1) !== '@' &&
-				substr_count($inputs['mail'], '@') >= 1
+				strlen($inputs['mail']) < 3 ||
+				substr($inputs['mail'], 0, 1) === '@' ||
+				substr($inputs['mail'], -1, 1) === '@' ||
+				substr_count($inputs['mail'], '@') < 1
 			) {
-				// Email should be:
-				// At least 3 characters long (a@b)
-				// Not start with an @
-				// Not end with an @
-				// Contain at least one @ somewhere ("@"@example.com should be valid, I think)
-			} else {
 				throw new ValidationException('Invalid email address');
 			}
 		}
@@ -514,7 +513,7 @@ class Validation {
 				// If this doesn't throw any exception, we're good to go
 				new Ldap($ldap->getUrl(), $dn, $form['oldpassword'], '', '', $ldap->getStarttls());
 			} catch(LdapException $e) {
-				if($requireOldPassword && $e->getMessage() === 'Bind with LDAP server failed') {
+				if($e->getMessage() === 'Bind with LDAP server failed') {
 					throw new LdapException('Current password is incorrect (' . $e->getMessage() . ')');
 				}
 				throw $e;

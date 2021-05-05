@@ -2,9 +2,7 @@
 
 namespace WEEEOpen\Crauto;
 
-use DateTime;
 use DateTimeZone;
-use InvalidArgumentException;
 
 require '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 Authentication::requireLogin();

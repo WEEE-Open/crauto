@@ -20,7 +20,6 @@ $this->layout('base', ['title' => $title]);
 	'attributes'         => $attributes,
 	'editableAttributes' => $editableAttributes,
 	'allowedAttributes'  => $allowedAttributes,
-	'image'              => new WEEEOpen\Crauto\Image($attributes['uid'], $attributes['schacpersonaluniquecode'] ?? null),
 	'selfImage'          => true,
     'allGroups'          => $allGroups
 ])?>

@@ -453,7 +453,6 @@ $province = [
 ];
 
 $error = null;
-$defaultAttributes = null;
 
 $template = Template::create();
 $template->addData(['authenticated' => $loggedin, 'isAdmin' => $loggedin && Authentication::isAdmin()], 'navbar');
@@ -473,11 +472,7 @@ try {
 		echo $template->render('403', ['error' => 'Missing invite code']);
 		exit;
 	}
-} catch(LdapException $e) {
-	$error = $e->getMessage();
-	echo $template->render('500', ['error' => $error]);
-	exit;
-} catch(ValidationException $e) {
+} catch(LdapException | ValidationException $e) {
 	$error = $e->getMessage();
 	echo $template->render('500', ['error' => $error]);
 	exit;
@@ -493,9 +488,7 @@ try {
 		header('Location: register_done.php');
 		exit;
 	}
-} catch(LdapException $e) {
-	$error = $e->getMessage();
-} catch(ValidationException $e) {
+} catch(LdapException | ValidationException $e) {
 	$error = $e->getMessage();
 }
 

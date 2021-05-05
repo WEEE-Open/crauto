@@ -28,7 +28,7 @@ class Sir {
 		$this->ensureDirectory($this->directory);
 	}
 
-	private function filePath(string $filename, string $ext) {
+	private function filePath(string $filename, string $ext): string {
 		return "$this->directory$filename.$ext";
 	}
 

@@ -3,7 +3,6 @@
 /** @var $editableAttributes string[] */
 /** @var $allGroups string[] */
 /** @var $allowedAttributes string[] */
-/** @var $image \WEEEOpen\Crauto\Image */
 sort($allGroups);
 ?>
 <?php

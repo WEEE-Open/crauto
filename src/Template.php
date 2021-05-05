@@ -17,9 +17,9 @@ class Template {
 	}
 
 	public static function telegramColumn($nickname, $id): string {
-		if(isset($nickname) && $nickname !== null) {
+		if(isset($nickname)) {
 			return '<a href="https://t.me/' . $nickname . '">@' . $nickname;
-		} elseif(isset($id) && $id !== null) {
+		} elseif(isset($id)) {
 			return 'ID Only';
 		} else {
 			return '<span class="text-danger">N/A</span>';

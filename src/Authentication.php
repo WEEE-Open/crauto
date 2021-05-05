@@ -49,9 +49,7 @@ class Authentication {
 		if(CRAUTO_DEBUG_ALWAYS_REFRESH || self::idTokenExpired((int) $_SESSION['expires'])) {
 			try {
 				return self::performRefresh();
-			} catch(LogicException $e) {
-				return false;
-			} catch(AuthenticationException $e) {
+			} catch(LogicException | AuthenticationException $e) {
 				return false;
 			}
 		}
@@ -115,7 +113,7 @@ class Authentication {
 	 *
 	 * @return bool True if id token is expired, false otherwise
 	 */
-	private static function idTokenExpired(int $expires) {
+	private static function idTokenExpired(int $expires): bool {
 		return $expires <= time();
 	}
 
@@ -162,7 +160,7 @@ class Authentication {
 		$oidc = self::getOidc();
 		$json = $oidc->refreshToken($_SESSION['refresh_token']);
 		if(isset($json->error)) {
-			throw new AuthenticationException(isset($json->error_description) ? $json->error_description : $json->error);
+			throw new AuthenticationException($json->error_description ?? $json->error);
 		} elseif(isset($json->id_token) && isset($json->access_token)) {
 			// This should return a new access token and a new refresh token.
 			// WSO2 IS also provides a new id token, in the same reply, it's there... but this OIDC library doesn't expose
@@ -213,7 +211,7 @@ class Authentication {
 		unset($_SESSION['redirect_after_login']);
 	}
 
-	private static function getOidc() {
+	private static function getOidc(): OpenIDConnectClient {
 		require_once '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php';
 
 		$oidc = new OpenIDConnectClient(CRAUTO_OIDC_ISSUER, CRAUTO_OIDC_CLIENT_KEY, CRAUTO_OIDC_CLIENT_SECRET);
@@ -263,7 +261,7 @@ class Authentication {
 	 *
 	 * @return bool
 	 */
-	public static function isAdmin() {
+	public static function isAdmin(): bool {
 		// For WSO2 IS:
 		//$groups = Authentication::splitGroups($_SESSION['groups']);
 		//return isset($groups['HR']);

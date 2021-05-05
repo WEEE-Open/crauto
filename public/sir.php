@@ -25,7 +25,6 @@ if(isset($_GET['uid'])) {
 		'safetytestdate',
 	];
 
-	$error = null;
 	try {
 		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
 			CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
@@ -80,13 +79,7 @@ if(isset($_GET['uid'])) {
 
 		exit;
 
-	} catch(LdapException $e) {
-		$error = $e->getMessage();
-	} catch(InvalidArgumentException $e) {
-		$error = $e->getMessage();
-	} catch(ValidationException $e) {
-		$error = $e->getMessage();
-	} catch(SirException $e) {
+	} catch(LdapException | SirException | ValidationException | InvalidArgumentException $e) {
 		$error = $e->getMessage();
 	}
 

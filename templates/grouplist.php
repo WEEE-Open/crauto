@@ -1,6 +1,9 @@
 <?php
 /** @var $users array[] */
 /** @var $error string|null */
+
+use WEEEOpen\Crauto\Template;
+
 $this->layout('base', ['title' => 'Groups']);
 $testdates = [];
 $groups = []; //[ 'Cloud' => [ cloud users ], "Soviet" => [ soviet users ], ... ]
@@ -61,7 +64,7 @@ foreach($groups as $name => $group): ?>
                 </td>
                 <td class="text-center"><?= safetyTestIcon($testDone, $testToDo); ?></td>
                 <td class="text-center">
-                    <?= \WEEEOpen\Crauto\Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?>
+                    <?= Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?>
                 </td>
             </tr>
         <?php endforeach; ?>

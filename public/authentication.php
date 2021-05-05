@@ -19,11 +19,7 @@ try {
 		header("Location: authentication.php");
 		exit;
 	}
-} catch(LdapException $e) {
-	$error = $e->getMessage();
-} catch(InvalidArgumentException $e) {
-	$error = $e->getMessage();
-} catch(ValidationException $e) {
+} catch(LdapException | ValidationException | InvalidArgumentException $e) {
 	$error = $e->getMessage();
 }
 

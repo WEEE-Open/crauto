@@ -2,7 +2,6 @@
 
 namespace WEEEOpen\Crauto;
 
-use DateTime;
 use DateTimeZone;
 use InvalidArgumentException;
 
@@ -41,22 +40,15 @@ if(isset($_GET['uid'])) {
 		if(isset($_POST) && !empty($_POST)) {
 			if(isset($_POST['password1'])) {
 				Validation::handlePasswordChangePost($ldap, $targetUid, $_POST, $requireOldPasswordForChange);
-				http_response_code(303);
-				header("Location: ${_SERVER['REQUEST_URI']}");
-				exit;
 			} else {
 				Validation::handleUserEditPost($editableAttributes, $ldap, $targetUid, $attributes);
-				http_response_code(303);
-				// $_SERVER['REQUEST_URI'] is already url encoded
-				header("Location: ${_SERVER['REQUEST_URI']}");
-				exit;
 			}
+			http_response_code(303);
+			// $_SERVER['REQUEST_URI'] is already url encoded
+			header("Location: ${_SERVER['REQUEST_URI']}");
+			exit;
 		}
-	} catch(LdapException $e) {
-		$error = $e->getMessage();
-	} catch(InvalidArgumentException $e) {
-		$error = $e->getMessage();
-	} catch(ValidationException $e) {
+	} catch(LdapException | ValidationException | InvalidArgumentException $e) {
 		$error = $e->getMessage();
 	}
 

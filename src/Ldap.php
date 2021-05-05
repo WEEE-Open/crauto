@@ -3,6 +3,8 @@
 
 namespace WEEEOpen\Crauto;
 
+use DateTime;
+use DateTimeZone;
 use InvalidArgumentException;
 
 class Ldap {
@@ -128,7 +130,6 @@ class Ldap {
 	private static function usernameify(string $string): string {
 		if(extension_loaded('iconv')) {
 			$string = preg_replace("/[^\p{L}]/u", '', $string);
-			/** @noinspection PhpComposerExtensionStubsInspection */
 			$string = iconv('utf-8', 'us-ascii//TRANSLIT', $string);
 		} else {
 			$string = preg_replace("/[^A-Za-z]/", '', $string);
@@ -172,7 +173,7 @@ class Ldap {
             return self::EXAMPLE_GROUPS;
         } else {
         	$attributes = ['cn'];
-	        $sr = ldap_search($this->ds, $this->groupsDn, '(cn=*)', );
+	        $sr = ldap_search($this->ds, $this->groupsDn, '(cn=*)');
 		    if(!$sr) {
 			    throw new LdapException('Cannot search groups');
 		    }
@@ -199,7 +200,7 @@ class Ldap {
 		return ldap_get_dn($this->ds, $theOnlyResult);
 	}
 
-	public function getUsers(array $attributes) {
+	public function getUsers(array $attributes): array {
 		if(defined('TEST_MODE') && TEST_MODE) {
 			error_log('TEST_MODE, returning sample users');
 			return array_values(self::EXAMPLE_USERS);
@@ -208,7 +209,6 @@ class Ldap {
 		if(version_compare(PHP_VERSION, '7.3', '>=')) {
 			// From PHP 7.3 onward, the serverctrls parameter is available. This is the only reasonable way to have the results sorted.
 			// Well, if there's more than one page which is actually not supported, but let's use it anyway.
-			/** @noinspection PhpUndefinedConstantInspection */
 			$serverctrls = [
 				[
 					'oid' => LDAP_CONTROL_SORTREQUEST,
@@ -225,7 +225,6 @@ class Ldap {
 					]
 				],
 			];
-			/** @noinspection PhpMethodParametersCountMismatchInspection */
 			$sr = ldap_search($this->ds, $this->usersDn, '(uid=*)', $attributes, null, null, null, null, $serverctrls);
 		} else {
 			$sr = ldap_search($this->ds, $this->usersDn, '(uid=*)', $attributes);
@@ -369,7 +368,7 @@ class Ldap {
 		}
 	}
 
-	public function getUsersList(\DateTimeZone $tz, array $moreAttrs = []): array {
+	public function getUsersList(DateTimeZone $tz, array $moreAttrs = []): array {
 		$users = $this->getUsers(array_merge([
 			'uid',
 			'cn',
@@ -391,7 +390,7 @@ class Ldap {
 				$user['memberof'] = $groups;
 			}
 			if(isset($user['safetytestdate'])) {
-				$user['safetytestdate'] = \DateTime::createFromFormat('Ymd', $user['safetytestdate'], $tz);
+				$user['safetytestdate'] = DateTime::createFromFormat('Ymd', $user['safetytestdate'], $tz);
 			}
 		}
 
@@ -507,7 +506,7 @@ class Ldap {
 		return true;
 	}
 
-	private static function isEmpty(string $attr, array $attributes) {
+	private static function isEmpty(string $attr, array $attributes): bool {
 		return $attributes[$attr] === null || (is_array($attributes[$attr]) && count($attributes[$attr]) === 0);
 	}
 
