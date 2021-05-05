@@ -106,10 +106,10 @@ class Validation {
 			$inputs['nsaccountlock'] = boolval($inputs['nsaccountlock']) ? 'true' : '';
 		}
 		if(self::hasValue('haskey', $inputs)) {
-			$inputs['haskey'] = boolval($inputs['haskey']) ? '1' : '';
+			$inputs['haskey'] = boolval($inputs['haskey']) ? 'true' : '';
 		}
 		if(self::hasValue('signedsir', $inputs)) {
-			$inputs['signedsir'] = boolval($inputs['signedsir']) ? '1' : '';
+			$inputs['signedsir'] = boolval($inputs['signedsir']) ? 'true' : '';
 		}
 		if(self::hasValue('schacpersonaluniquecode', $inputs)) {
 			$id = $inputs['schacpersonaluniquecode'];
