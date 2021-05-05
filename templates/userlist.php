@@ -7,7 +7,22 @@ use WEEEOpen\Crauto\Template;
 $this->layout('base', ['title' => 'People']);
 $testdates = [];
 $sirsToSign = [];
+$keys = [];
 $today = new DateTimeImmutable();
+
+$extractInfo = function($user) use ($today, &$testdates, &$sirsToSign, &$keys) {
+	$signedSir = boolval($user['signedsir'] ?? false);
+	list($testDone, $testToDo) = safetyTest($user, $testdates, $today);
+	if($testDone && !$signedSir) {
+		$sirsToSign[] = $user;
+	}
+	$haskey = boolval($user['haskey'] ?? false);
+	if($haskey) {
+		$keys[] = $user;
+	}
+	return [$testDone, $testToDo, $signedSir];
+};
+
 require_once 'safety_test.php';
 ?>
 <h2>People</h2>
@@ -33,11 +48,7 @@ require_once 'safety_test.php';
 	<tbody>
 	<?php foreach($users as $user): ?>
 		<?php
-		$signedSir = boolval($user['signedsir'] ?? false);
-		list($testDone, $testToDo) = safetyTest($user, $testdates, $today);
-		if($testDone && !$signedSir) {
-			$sirsToSign[] = $user;
-		}
+		list($testDone, $testToDo, $signedSir) = $extractInfo($user);
 
 		if(!isset($user['nsaccountlock']) || $user['nsaccountlock'] === null): ?>
 		<tr >
@@ -57,34 +68,64 @@ require_once 'safety_test.php';
 
 <p class="text-muted"><a href="people.php?for=website">View code</a> for the website "Chi siamo" page</p>
 
+<?php
+$columns = (count($testdates) > 0 ? 1 : 0)
++ (count($sirsToSign) > 0 ? 1 : 0)
++ (count($testdates) > 0 ? 1 : 0);
+switch($columns) {
+	case 3:
+		$class = 'col-xl-4 col-lg-6';
+		break;
+	case 2:
+		$class = 'col-lg-6';
+		break;
+	case 1:
+	default:
+		$class = '';
+		break;
+}
+if($columns > 0):
+?>
 <div class="row">
-<?php if(count($testdates) > 0): ?>
-	<div class="col-lg-6">
-		<h2>Upcoming tests on safety</h2>
-		<?php foreach($testdates as $date => $users): ?>
-			<h5><?= $date ?></h5>
-			<ul class="list-unstyled">
-				<?php
-				$user = ksort($users,  SORT_NATURAL | SORT_FLAG_CASE);
-				foreach($users as $user): ?>
-					<li><a href="/people.php?uid=<?= $this->e($user['uid']) ?>"><?= $this->e($user['cn']) ?></a>, <?= $this->e($user['schacpersonaluniquecode'])?> (<a href="/sir.php?uid=<?= $this->e($user['uid']) ?>">get SIR</a>)</li>
-				<?php endforeach; ?>
-			</ul>
-		<?php endforeach; ?>
-	</div>
-<?php endif ?>
+	<?php if(count($testdates) > 0): ?>
+		<div class="<?= $class ?>">
+			<h2>Upcoming tests on safety</h2>
+			<?php foreach($testdates as $date => $users): ?>
+				<h5><?= $date ?></h5>
+				<ul class="list-unstyled">
+					<?php
+					$user = ksort($users,  SORT_NATURAL | SORT_FLAG_CASE);
+					foreach($users as $user): ?>
+						<li><a href="/people.php?uid=<?= $this->e($user['uid']) ?>"><?= $this->e($user['cn']) ?></a>, <?= $this->e($user['schacpersonaluniquecode'])?> (<a href="/sir.php?uid=<?= $this->e($user['uid']) ?>">get SIR</a>)</li>
+					<?php endforeach; ?>
+				</ul>
+			<?php endforeach; ?>
+		</div>
+	<?php endif ?>
 
-<?php if(count($sirsToSign) > 0): ?>
-	<div class="col-lg-6">
-		<h2>SIRs to print</h2>
+	<?php if(count($sirsToSign) > 0): ?>
+		<div class="<?= $class ?>">
+			<h2>SIRs to print</h2>
+				<ul class="list-unstyled">
+					<?php foreach($sirsToSign as $user): ?>
+						<li><a href="/sir.php?uid=<?= $this->e($user['uid']) ?>"><?= $this->e($user['cn']) ?></a>, <?= $this->e($user['schacpersonaluniquecode'])?></li>
+					<?php endforeach; ?>
+				</ul>
+		</div>
+	<?php endif ?>
+
+	<?php if(count($keys) > 0): ?>
+		<div class="<?= $class ?>">
+			<h2>Who has keys to the lab</h2>
 			<ul class="list-unstyled">
-				<?php foreach($sirsToSign as $user): ?>
-					<li><a href="/sir.php?uid=<?= $this->e($user['uid']) ?>"><?= $this->e($user['cn']) ?></a>, <?= $this->e($user['schacpersonaluniquecode'])?></li>
+				<?php foreach($keys as $user): ?>
+					<li><a href="/people.php?uid=<?= $this->e($user['uid']) ?>"><?= $this->e($user['cn']) ?></a>, <?= $this->e($user['schacpersonaluniquecode'])?></li>
 				<?php endforeach; ?>
 			</ul>
-	</div>
-<?php endif ?>
+		</div>
+	<?php endif ?>
 </div>
+<?php endif; ?>
 
 <script>
     document.getElementsByName('table').bootstrapTable('refreshOptions', {
@@ -108,10 +149,13 @@ require_once 'safety_test.php';
 	</tr>
 	</thead>
 	<tbody>
-	<?php foreach($users as $user): ?>
+	<?php
+	foreach($users as $user): ?>
 		<?php
+		// Do not call $extractInfo, these users were already parsed
 		$signedSir = boolval($user['signedsir'] ?? false);
-		list($testDone, $testToDo) = safetyTest($user, $testdates, $today);
+		$nullref = NULL;
+		list($testDone, $testToDo) = safetyTest($user, $nullref, $today);
 
 		if(isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true'): ?>
 			<tr class="locked">

@@ -1,10 +1,12 @@
 <?php
 
-function safetyTest(array $user, array &$testdates, DateTimeImmutable $today): array {
+function safetyTest(array $user, ?array &$testdates, DateTimeImmutable $today): array {
 	if($user['safetytestdate'] !== null) {
 		if((int) $user['safetytestdate']->diff($today)->format('%R%a') < 0) {
 			$sortkey = $user['sn'] . ' ' . $user['cn'] . ' ' . $user['uid'];
-			$testdates[$user['safetytestdate']->format('Y-m-d')][$sortkey] = $user;
+			if(!is_null($testdates)) {
+				$testdates[$user['safetytestdate']->format('Y-m-d')][$sortkey] = $user;
+			}
 			return [false, true];
 		} else {
 			return [true, false];
