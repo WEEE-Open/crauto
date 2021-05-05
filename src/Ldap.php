@@ -381,9 +381,11 @@ class Ldap {
 			'schacpersonaluniquecode',
 			'memberof',
 			'nsaccountlock',
+			'haskey',
+			'signedsir',
 			'safetytestdate',
 			'telegramid',
-			'telegramnickname'
+			'telegramnickname',
 		], $moreAttrs));
 
 		foreach($users as &$user) {
