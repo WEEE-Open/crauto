@@ -26,8 +26,6 @@ class Validation {
 		'telegramnickname',
 		'sshpublickey',
 		'weeelabnickname',
-		'haskey',
-		'signedsir',
 	];
 	const allowedAttributesAdmin = [
 		'uid',
