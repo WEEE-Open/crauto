@@ -276,8 +276,9 @@ class Authentication {
 		return $oidc;
 	}
 
-	private static function setAttributes(OpenIDConnectClient $oidc, ?array $claims = null, ?string $idt = null) {
+	private static function setAttributes(OpenIDConnectClient $oidc, $claims = null, ?string $idt = null) {
 		if($claims) {
+			// Convert array (or stdObj) to stdObj.
 			$claims = (object) $claims;
 		} else {
 			/** @noinspection PhpRedundantOptionalArgumentInspection */
