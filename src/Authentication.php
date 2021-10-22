@@ -280,13 +280,14 @@ class Authentication {
 			/** @noinspection PhpRedundantOptionalArgumentInspection */
 			$claims = $oidc->getVerifiedClaims(null);
 		}
+		/** @var array $claims */
 
-		$uid = $claims('preferred_username');
-		$id = $claims('sub');
-		$cn = $claims('name');
+		$uid = $claims['preferred_username'];
+		$id = $claims['sub'];
+		$cn = $claims['name'];
 		// WSO2 IS works as-is, for Keycloak go to clients > crauto > mappers > add builtin > groups
-		$groups = $claims('groups');
-		$exp = $claims('exp');
+		$groups = $claims['groups'];
+		$exp = $claims['exp'];
 		$refresh_token = $oidc->getRefreshToken();
 		$id_token = $idt ?? $oidc->getIdToken();
 
