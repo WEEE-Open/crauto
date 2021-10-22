@@ -8,6 +8,7 @@ use Jumbojett\OpenIDConnectClientException;
 use LogicException;
 use ReflectionException;
 use ReflectionMethod;
+use stdClass;
 use function Jumbojett\base64url_decode;
 
 require_once '../config/config.php';
@@ -276,18 +277,20 @@ class Authentication {
 	}
 
 	private static function setAttributes(OpenIDConnectClient $oidc, ?array $claims = null, ?string $idt = null) {
-		if(!$claims) {
+		if($claims) {
+			$claims = (object) $claims;
+		} else {
 			/** @noinspection PhpRedundantOptionalArgumentInspection */
 			$claims = $oidc->getVerifiedClaims(null);
 		}
-		/** @var array $claims */
+		/** @var stdClass $claims */
 
-		$uid = $claims['preferred_username'];
-		$id = $claims['sub'];
-		$cn = $claims['name'];
+		$uid = $claims->preferred_username;
+		$id = $claims->sub;
+		$cn = $claims->name;
 		// WSO2 IS works as-is, for Keycloak go to clients > crauto > mappers > add builtin > groups
-		$groups = $claims['groups'];
-		$exp = $claims['exp'];
+		$groups = $claims->groups;
+		$exp = $claims->exp;
 		$refresh_token = $oidc->getRefreshToken();
 		$id_token = $idt ?? $oidc->getIdToken();
 
