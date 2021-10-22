@@ -2,12 +2,15 @@
 
 function safetyTest(array $user, ?array &$testdates, DateTimeImmutable $today): array {
 	if($user['safetytestdate'] !== null) {
-		if((int) $user['safetytestdate']->diff($today)->format('%R%a') < 0) {
+		$daysDiff = (int) $user['safetytestdate']->diff($today)->format('%R%a');
+		if($daysDiff < 0) {
 			$sortkey = $user['sn'] . ' ' . $user['cn'] . ' ' . $user['uid'];
 			if(!is_null($testdates)) {
 				$testdates[$user['safetytestdate']->format('Y-m-d')][$sortkey] = $user;
 			}
 			return [false, true];
+		} else if($daysDiff === 0) {
+			return [true, true];
 		} else {
 			return [true, false];
 		}
@@ -23,10 +26,20 @@ function safetyTestIcon(bool $testDone, bool $testToDo, bool $signedSir): string
 	}
 
 	if($testDone) {
+		// Test done in the past: checkmark and optionally printer
 		return '<i class="fas fa-check"></i>' . $sir;
-	} else if ($testToDo) {
+	} else if($testToDo && $testDone) {
+		// Test today: hourglass and printer OR checkmark
+		if($signedSir) {
+			return '<i class="fas fa-check"></i>';
+		} else {
+			return '<i class="fas fa-hourglass"></i>' . $sir;
+		}
+	} elseif($testToDo) {
+		// Test in the future: hourglass only
 		return '<i class="fas fa-hourglass"></i>';
 	} else {
+		// No test scheduled
 		return '<i class="fas fa-times text-danger"></i>';
 	}
 }
