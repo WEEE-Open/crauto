@@ -386,6 +386,7 @@ class Ldap {
 			'safetytestdate',
 			'telegramid',
 			'telegramnickname',
+			'createtimestamp',
 		], $moreAttrs));
 
 		foreach($users as &$user) {

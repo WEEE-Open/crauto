@@ -143,6 +143,7 @@ if($columns > 0):
 		<!--<th scope="col" class="text-center" data-sortable="false">Photo</th>-->
 		<th scope="col" class="text-center" data-sortable="true">Username</th>
 		<th scope="col" class="text-center" data-sortable="true">Full name</th>
+		<th scope="col" class="text-center" data-sortable="true">Created on</th>
 		<th scope="col" class="text-center" data-sortable="true">Groups</th>
 		<th scope="col" class="text-center" data-sortable="true">Test done</th>
 		<th scope="col" class="text-center" data-sortable="true">Telegram</th>
@@ -157,11 +158,15 @@ if($columns > 0):
 		$nullref = NULL;
 		list($testDone, $testToDo) = safetyTest($user, $nullref, $today);
 
+		$creationDate = DateTime::createFromFormat('YmdHis\Z', $user['createtimestamp']);
+		$creationDate = $creationDate->format('Y-m-d');
+
 		if(isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true'): ?>
 			<tr class="locked">
 				<!--<td class="photo"><img alt="profile picture" src=""></td>-->
 				<td class="text-center"><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
 				<td class="text-center"><?= $this->e($user['cn']) ?></td>
+				<td class="text-center"><?= $creationDate ?></td>
 				<td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : '' ?></td>
 				<td class="text-center"><?= safetyTestIcon($testDone, $testToDo, $signedSir); ?></td>
 				<td class="text-center">
