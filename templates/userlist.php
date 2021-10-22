@@ -90,12 +90,12 @@ if($columns > 0):
 	<?php if(count($testdates) > 0): ?>
 		<div class="<?= $class ?>">
 			<h2>Upcoming tests on safety</h2>
-			<?php foreach($testdates as $date => $users): ?>
+			<?php foreach($testdates as $date => $usersTestOnSafety): ?>
 				<h5><?= $date ?></h5>
 				<ul class="list-unstyled">
 					<?php
-					$user = ksort($users,  SORT_NATURAL | SORT_FLAG_CASE);
-					foreach($users as $user): ?>
+					$user = ksort($usersTestOnSafety,  SORT_NATURAL | SORT_FLAG_CASE);
+					foreach($usersTestOnSafety as $user): ?>
 						<li><a href="/people.php?uid=<?= $this->e($user['uid']) ?>"><?= $this->e($user['cn']) ?></a>, <?= $this->e($user['schacpersonaluniquecode'])?> (<a href="/sir.php?uid=<?= $this->e($user['uid']) ?>">get SIR</a>)</li>
 					<?php endforeach; ?>
 				</ul>
