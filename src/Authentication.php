@@ -6,7 +6,9 @@ namespace WEEEOpen\Crauto;
 use Jumbojett\OpenIDConnectClient;
 use Jumbojett\OpenIDConnectClientException;
 use LogicException;
+use ReflectionException;
 use ReflectionMethod;
+use function Jumbojett\base64url_decode;
 
 require_once '../config/config.php';
 
@@ -158,7 +160,7 @@ class Authentication {
 		if(!isset($_SESSION['refresh_token'])) {
 			throw new LogicException('No refresh token available');
 		}
-		$oidc = self::getOidc();
+		$oidc = self::getOidc(true);
 		$json = $oidc->refreshToken($_SESSION['refresh_token']);
 
 		// For an explanation, see:
@@ -213,7 +215,7 @@ class Authentication {
 
 			// Now decode the claims
 			// decodeJWT() does exactly this
-			$claims = json_decode(\Jumbojett\base64url_decode(explode(".", $json->id_token)[1]));
+			$claims = json_decode(base64url_decode(explode(".", $json->id_token)[1]));
 
 			try {
 				// There's a comparison in verifyJWTclaims for the nonce set by the OIDC client. Which does not set any nonce.
@@ -230,13 +232,13 @@ class Authentication {
 				if(!$valid) {
 					throw new AuthenticationException('verifyJWTclaims failed');
 				}
-			} catch(\ReflectionException $e) {
+			} catch(ReflectionException $e) {
 				throw new AuthenticationException('ReflectionException: ' . $e->getMessage());
 			} /** @noinspection PhpRedundantCatchClauseInspection */ catch(OpenIDConnectClientException $e) {
 				throw new AuthenticationException('JWT claims validation failed: ' . $e->getMessage());
 			}
 
-			self::setAttributes($oidc, $claims);
+			self::setAttributes($oidc, $claims, $json->id_token);
 
 			return true;
 		}
@@ -253,7 +255,12 @@ class Authentication {
 		unset($_SESSION['redirect_after_login']);
 	}
 
-	private static function getOidc(bool $refresh = false): OpenIDConnectClient {
+	/**
+	 * @param bool $refresh
+	 *
+	 * @return OpenIDConnectClient|OpenIDConnectRefreshClient
+	 */
+	private static function getOidc(bool $refresh = false) {
 		require_once '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php';
 
 		if($refresh) {
@@ -268,9 +275,10 @@ class Authentication {
 		return $oidc;
 	}
 
-	private static function setAttributes(OpenIDConnectClient $oidc, array ?$claims = null, ?string $idt) {
+	private static function setAttributes(OpenIDConnectClient $oidc, ?array $claims = null, ?string $idt = null) {
 		if(!$claims) {
-			$claims = $oidc->getVerifiedClaims;
+			/** @noinspection PhpRedundantOptionalArgumentInspection */
+			$claims = $oidc->getVerifiedClaims(null);
 		}
 
 		$uid = $claims('preferred_username');
