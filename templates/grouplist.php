@@ -48,7 +48,7 @@ foreach($groups as $name => $group): ?>
         <tbody>
         <?php foreach ($group as $user):
 	        $signedSir = boolval($user['signedsir'] ?? false);
-	        list($testDone, $testToDo) = safetyTest($user, $testdates, $today);
+	        list($testDaysDiff, $testScheduled) = safetyTest($user, $testdates, $today);
             ?>
             <tr <?= isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true' ? 'class="locked"' : '' ?> >
                 <!--<td class="photo"><img alt="profile picture" src=""></td>-->
@@ -63,7 +63,7 @@ foreach($groups as $name => $group): ?>
                     }
                     ?>
                 </td>
-                <td class="text-center"><?= safetyTestIcon($testDone, $testToDo, $signedSir); ?></td>
+                <td class="text-center"><?= safetyTestIcon($testDaysDiff, $testScheduled, $signedSir); ?></td>
                 <td class="text-center">
                     <?= Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?>
                 </td>

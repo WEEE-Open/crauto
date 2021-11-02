@@ -12,7 +12,7 @@ $today = new DateTimeImmutable();
 
 $extractInfo = function($user) use ($today, &$testdates, &$sirsToSign, &$keys) {
 	$signedSir = boolval($user['signedsir'] ?? false);
-	list($testDone, $testToDo) = safetyTest($user, $testdates, $today);
+	list($testDaysDiff, $testScheduled) = safetyTest($user, $testdates, $today);
 //	if($testDone && !$signedSir) {
 	if(!$signedSir) {
 		$sirsToSign[] = $user;
@@ -21,7 +21,7 @@ $extractInfo = function($user) use ($today, &$testdates, &$sirsToSign, &$keys) {
 	if($haskey) {
 		$keys[] = $user;
 	}
-	return [$testDone, $testToDo, $signedSir];
+	return [$testDaysDiff, $testScheduled, $signedSir];
 };
 
 require_once 'safety_test.php';
@@ -49,7 +49,7 @@ require_once 'safety_test.php';
 	<tbody>
 	<?php foreach($users as $user): ?>
 		<?php
-		list($testDone, $testToDo, $signedSir) = $extractInfo($user);
+		list($testDaysDiff, $testScheduled, $signedSir) = $extractInfo($user);
 
 		if(!isset($user['nsaccountlock']) || $user['nsaccountlock'] === null): ?>
 		<tr >
@@ -57,7 +57,7 @@ require_once 'safety_test.php';
 			<td class="text-center" ><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
 			<td class="text-center"><?= $this->e($user['cn']) ?></td>
             <td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : '' ?></td>
-            <td class="text-center"><?= safetyTestIcon($testDone, $testToDo, $signedSir); ?></td>
+            <td class="text-center"><?= safetyTestIcon($testDaysDiff, $testScheduled, $signedSir); ?></td>
             <td class="text-center">
 	            <?= Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?>
             </td>
@@ -157,7 +157,7 @@ if($columns > 0):
 		// Do not call $extractInfo, these users were already parsed
 		$signedSir = boolval($user['signedsir'] ?? false);
 		$nullref = NULL;
-		list($testDone, $testToDo) = safetyTest($user, $nullref, $today);
+		list($testDaysDiff, $testScheduled) = safetyTest($user, $nullref, $today);
 
 		$creationDate = DateTime::createFromFormat('YmdHis\Z', $user['createtimestamp']);
 		$creationDate = $creationDate->format('Y-m-d');
@@ -169,7 +169,7 @@ if($columns > 0):
 				<td class="text-center"><?= $this->e($user['cn']) ?></td>
 				<td class="text-center"><?= $creationDate ?></td>
 				<td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : '' ?></td>
-				<td class="text-center"><?= safetyTestIcon($testDone, $testToDo, $signedSir); ?></td>
+				<td class="text-center"><?= safetyTestIcon($testDaysDiff, $testScheduled, $signedSir); ?></td>
 				<td class="text-center">
 					<?= Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?>
 				</td>
