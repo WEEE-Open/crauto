@@ -13,7 +13,8 @@ $today = new DateTimeImmutable();
 $extractInfo = function($user) use ($today, &$testdates, &$sirsToSign, &$keys) {
 	$signedSir = boolval($user['signedsir'] ?? false);
 	list($testDone, $testToDo) = safetyTest($user, $testdates, $today);
-	if($testDone && !$signedSir) {
+//	if($testDone && !$signedSir) {
+	if(!$signedSir) {
 		$sirsToSign[] = $user;
 	}
 	$haskey = boolval($user['haskey'] ?? false);
