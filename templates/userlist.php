@@ -14,7 +14,7 @@ $extractInfo = function($user) use ($today, &$testdates, &$sirsToSign, &$keys) {
 	$signedSir = boolval($user['signedsir'] ?? false);
 	list($testDaysDiff, $testScheduled) = safetyTest($user, $testdates, $today);
 //	if($testDone && !$signedSir) {
-	if(!$signedSir) {
+	if(!$signedSir && $testScheduled) {
 		$sirsToSign[] = $user;
 	}
 	$haskey = boolval($user['haskey'] ?? false);
