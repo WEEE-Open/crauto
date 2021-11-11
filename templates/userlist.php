@@ -58,9 +58,7 @@ require_once 'safety_test.php';
 			<td class="text-center"><?= $this->e($user['cn']) ?></td>
             <td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : '' ?></td>
             <td class="text-center"><?= safetyTestIcon($testDaysDiff, $testScheduled, $signedSir); ?></td>
-            <td class="text-center">
-	            <?= Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?>
-            </td>
+            <td class="text-center"><?= Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?></td>
 		</tr>
 		<?php endif ?>
 	<?php endforeach ?>
@@ -170,9 +168,7 @@ if($columns > 0):
 				<td class="text-center"><?= $creationDate ?></td>
 				<td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : '' ?></td>
 				<td class="text-center"><?= safetyTestIcon($testDaysDiff, $testScheduled, $signedSir); ?></td>
-				<td class="text-center">
-					<?= Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?>
-				</td>
+				<td class="text-center"><?= Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?></td>
 			</tr>
 		<?php endif ?>
 	<?php endforeach ?>
