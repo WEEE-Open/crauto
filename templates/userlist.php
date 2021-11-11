@@ -94,8 +94,9 @@ if($columns > 0):
 				<ul class="list-unstyled">
 					<?php
 					$user = ksort($usersTestOnSafety,  SORT_NATURAL | SORT_FLAG_CASE);
-					foreach($usersTestOnSafety as $user): ?>
-						<li><a href="/people.php?uid=<?= $this->e($user['uid']) ?>"><?= $this->e($user['cn']) ?></a>, <?= $this->e($user['schacpersonaluniquecode'])?> (<a href="/sir.php?uid=<?= $this->e($user['uid']) ?>">get SIR</a>)</li>
+					foreach($usersTestOnSafety as $user):
+						$schacpersonaluniquecode = isset($user['schacpersonaluniquecode']) ? $this->e($user['schacpersonaluniquecode']) : null; ?>
+						<li><?= Template::shortListEntry($this->e($user['uid']), $this->e($user['cn']), $schacpersonaluniquecode) ?></li>
 					<?php endforeach; ?>
 				</ul>
 			<?php endforeach; ?>
@@ -106,8 +107,9 @@ if($columns > 0):
 		<div class="<?= $class ?>">
 			<h2>SIRs to print</h2>
 				<ul class="list-unstyled">
-					<?php foreach($sirsToSign as $user): ?>
-						<li><a href="/sir.php?uid=<?= $this->e($user['uid']) ?>"><?= $this->e($user['cn']) ?></a>, <?= $this->e($user['schacpersonaluniquecode'])?></li>
+					<?php foreach($sirsToSign as $user):
+						$schacpersonaluniquecode = isset($user['schacpersonaluniquecode']) ? $this->e($user['schacpersonaluniquecode']) : null; ?>
+						<li><?= Template::shortListEntry($this->e($user['uid']), $this->e($user['cn']), $schacpersonaluniquecode) ?></li>
 					<?php endforeach; ?>
 				</ul>
 		</div>
