@@ -49,7 +49,9 @@ class Sir {
 	private function generateSirTex(string $template, array $replacements): string {
 		foreach($replacements as $search => $replace) {
 			if(strpos($template, $search) === false) {
-				throw new SirException("$search not found in template");
+				// TODO: restore this
+				// throw new SirException("$search not found in template");
+				return $template;
 			}
 		}
 
