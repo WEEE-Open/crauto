@@ -52,7 +52,7 @@ class Sir {
 			if(strpos($template, $search) === false) {
 				throw new SirException("$search not found in template");
 			}
-		*/}
+		}*/
 
 		return str_replace(array_keys($replacements), array_values($replacements), $template);
 	}
