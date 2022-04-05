@@ -33,12 +33,16 @@ usort($usersToPrint, function($a, $b) {
 <p>Paste this into the <a href="https://github.com/WEEE-Open/WEEEbsite/">WEEEbsite</a> <strong>after manual review</strong>.</p>
 
 <pre>
+&lt;style style="display:hidden;">.persona {box-sizing:border-box;width:25%;text-align:center;border-bottom:0.3rem solid #333;padding:0.4em;} .persona .name {font-size: 130%;font-weight:bold;} .persona .area {font-weight:bold;}&lt;/style>
+&lt;div style="display:flex;flex-wrap:wrap;justify-content:space-around;align-items:stretch;flex-direction:row;">
 <?php foreach($usersToPrint as $user): ?>
-&#9;&lt;div class="persona">
-&#9;&#9;&lt;h2><?= $user['cn']; ?>&lt;/h2>
-&#9;&#9;&lt;p>&lt;small>Studente di <?= $user['degreecourse']; ?>&lt;/small>&lt;/p>
-&#9;&lt;/div>
+&lt;div class="persona">
+&lt;p class="name"><?= $user['cn']; ?>&lt;/p>
+<?php if(isset($user['websitedescription']) && $user['websitedescription'] !== ''): ?>&lt;p><?= nl2br(htmlspecialchars($user['websitedescription'], ENT_HTML5)); ?>&lt;/p><?php echo "\n"; endif; ?>
+<?php if(isset($user['degreecourse']) && $user['degreecourse'] !== ''): ?>&lt;p>&lt;small>Studente di <?= htmlspecialchars($user['degreecourse'], ENT_HTML5); ?>&lt;/small>&lt;/p><?php echo "\n"; endif; ?>
+&lt;/div>
 <?php endforeach; ?>
+&lt;/div>
 </pre>
 
 <p>Return to the <a href="people.php">people list</a>.</p>

@@ -65,7 +65,7 @@ require_once 'safety_test.php';
 	</tbody>
 </table>
 
-<p class="text-muted"><a href="people.php?for=website">View code</a> for the website "Chi siamo" page</p>
+<p class="text-muted"><a href="people.php?for=website"><i class="fa fa-id-card mr-1"></i>View code</a> for the website "Chi siamo" page</p>
 
 <?php
 $columns = (count($testdates) > 0 ? 1 : 0)
