@@ -30,6 +30,7 @@ class Ldap {
 			'telegramnickname' => null,
 			'sshpublickey' => [],
 			'weeelabnickname' => ['io'],
+			'websitedescription' => 'Il capo supremo',
 			'description' => '',
             'nsaccountlock' => null
         ],

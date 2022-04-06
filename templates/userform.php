@@ -29,6 +29,7 @@ $attributeNames = [
 	'telegramnickname' => 'Telegram nickname',
 	'sshpublickey' => 'SSH public keys',
 	'weeelabnickname' => 'Nicknames for weeelab',
+	'websitedescription' => 'Role for website',
 	'description' => 'Notes',
 	'nsaccountlock' => 'Account locked',
 	'haskey' => 'Has a key to the lab',
@@ -117,6 +118,12 @@ $attributeNames = [
 		<label for="profile-weeelabnickname"><?= $attributeNames['weeelabnickname'] ?></label>
 		<textarea class="form-control" id="profile-weeelabnickname" name="weeelabnickname" rows="<?= count($attributes['weeelabnickname']) + 1 ?>" <?= $editable('weeelabnickname') ?> maxlength="500"><?= implode("\r\n", array_map([$this, 'e'], $attributes['weeelabnickname'])) ?></textarea>
 	</div>
+	<?php if(in_array('websitedescription', $allowedAttributes)): ?>
+		<div class="form-group">
+			<label for="profile-description"><?= $attributeNames['websitedescription'] ?></label>
+			<textarea class="form-control" id="profile-websitedescription" name="websitedescription" rows="1" <?= $editable('websitedescription') ?> maxlength="1000"><?= $this->e($attributes['websitedescription'] ?? '') ?></textarea>
+		</div>
+	<?php endif ?>
 	<?php if(in_array('description', $allowedAttributes)): ?>
 		<div class="form-group">
 			<label for="profile-description"><?= $attributeNames['description'] ?></label>
