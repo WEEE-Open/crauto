@@ -77,7 +77,7 @@ if(isset($_GET['uid'])) {
 	$website = isset($_GET['for']) && $_GET['for'] == 'website';
 	try {
 		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN, CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
-		$users = $ldap->getUsersList(new DateTimeZone('Europe/Rome'), $website ? ['degreecourse'] : []);
+		$users = $ldap->getUsersList(new DateTimeZone('Europe/Rome'), $website ? ['degreecourse', 'websitedescription'] : []);
 	} catch(LdapException $e) {
 		$error = $e->getMessage();
 	}
@@ -86,8 +86,30 @@ if(isset($_GET['uid'])) {
 	$template->addData(['currentSection' => 'people'], 'navbar');
 
 	if($website) {
+		$excludedGroups = explode(',', CRAUTO_WEBSITE_IGNORE_GROUPS);
+		$excludedGroups = array_combine($excludedGroups, $excludedGroups);
+		if(count($excludedGroups) > 0) {
+			$usersFiltered = [];
+			foreach($users as $user) {
+				$groups = $user['memberof'] ?? [];
+				$exclude = false;
+				foreach($groups as $group) {
+					if(array_key_exists($group, $excludedGroups)) {
+						$exclude = true;
+						break;
+					}
+				}
+				if(!$exclude) {
+					$usersFiltered[] = $user;
+				}
+			}
+		} else {
+			$usersFiltered = $users;
+		}
+
 		echo $template->render('websiteuserlist', [
-			'users' => $users,
+			'users' => $usersFiltered,
+			'excludedGroups' => $excludedGroups,
 			'error' => $error,
 		]);
 	} else {

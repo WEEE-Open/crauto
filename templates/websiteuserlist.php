@@ -1,11 +1,12 @@
 <?php
 /** @var $users array[] */
+/** @var $excludedGroups string[] */
 /** @var $error string|null */
-$this->layout('base', ['title' => 'People, but for the weeebsite']);
+$this->layout('base', ['title' => 'People, but for the website']);
 $testdates = [];
 $today = new DateTimeImmutable();
 ?>
-<h2>People (website version)</h2>
+<h2>People (website code version)</h2>
 
 <?php if(isset($error)): ?>
 	<div class="alert alert-danger" role="alert">
@@ -30,7 +31,7 @@ usort($usersToPrint, function($a, $b) {
 });
 ?>
 
-<p>Paste this into the <a href="https://github.com/WEEE-Open/WEEEbsite/">WEEEbsite</a> <strong>after manual review</strong>.</p>
+<p>Displaying all unlocked accounts except groups: <?= htmlspecialchars(implode(', ', $excludedGroups)); ?>.</p>
 
 <pre>
 &lt;style style="display:hidden;">.persona {box-sizing:border-box;width:25%;text-align:center;border-bottom:0.3rem solid #333;padding:0.4em;} .persona .name {font-size: 130%;font-weight:bold;} .persona .area {font-weight:bold;}&lt;/style>
@@ -45,4 +46,4 @@ usort($usersToPrint, function($a, $b) {
 &lt;/div>
 </pre>
 
-<p>Return to the <a href="people.php">people list</a>.</p>
+<p>Return to <a href="people.php">people list</a>.</p>
