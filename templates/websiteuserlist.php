@@ -42,7 +42,7 @@ usort($usersToPrint, function($a, $b) {
 	if($firstQuotes !== false) {
 		$secondQuotes = strpos($name, '"', $firstQuotes + 1);
 		if($secondQuotes !== false) {
-			$name = trim(substr($name, 0, $firstQuotes)) . ' ' . trim(substr($name, $secondQuotes + 1));
+			$name = trim(trim(substr($name, 0, $firstQuotes)) . ' ' . trim(substr($name, $secondQuotes + 1)));
 		}
 	}
 	?>
