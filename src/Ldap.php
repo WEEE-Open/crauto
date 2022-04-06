@@ -73,7 +73,7 @@ class Ldap {
         ],
 		'bob' => [
 			'uid' => 'bob',
-			'cn' => 'Bob Testington',
+			'cn' => 'Bob "Il grande testatore" Testington',
 			'sn' => 'Testington',
 			'memberof' => ["cn=Admin,ou=Groups,dc=weeeopen,dc=it"],
 			'createtimestamp' => '20191216155022Z',
