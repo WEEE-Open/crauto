@@ -39,7 +39,7 @@ usort($usersToPrint, function($a, $b) {
 <?php foreach($usersToPrint as $user): ?>
 &lt;div class="persona">
 &lt;p class="name"><?= $user['cn']; ?>&lt;/p>
-<?php if(isset($user['websitedescription']) && $user['websitedescription'] !== ''): ?>&lt;p class="area"><?= nl2br(htmlspecialchars($user['websitedescription'], ENT_HTML5)); ?>&lt;/p><?php echo "\n"; endif; ?>
+<?php if(isset($user['websitedescription']) && $user['websitedescription'] !== ''): ?>&lt;p class="area"><?= htmlspecialchars(nl2br($user['websitedescription'], false), ENT_HTML5); ?>&lt;/p><?php echo "\n"; endif; ?>
 <?php if(isset($user['degreecourse']) && $user['degreecourse'] !== ''): ?>&lt;p>&lt;small>Studente di <?= htmlspecialchars($user['degreecourse'], ENT_HTML5); ?>&lt;/small>&lt;/p><?php echo "\n"; endif; ?>
 &lt;/div>
 <?php endforeach; ?>
