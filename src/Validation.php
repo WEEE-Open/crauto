@@ -413,6 +413,11 @@ class Validation {
 			// This is checked again later, but oh well...
 			throw new ValidationException('Name and surname are mandatory');
 		}
+
+		// Normalize!
+		$attributes['givenname'] = trim($attributes['givenname']);
+		$attributes['sn'] = trim($attributes['sn']);
+
 		// This may become longer than 500 characters and fail validation later. Well... too bad.
 		$attributes['cn'] = $attributes['givenname'] . ' ' . $attributes['sn'];
 
