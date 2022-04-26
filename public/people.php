@@ -77,7 +77,7 @@ if(isset($_GET['uid'])) {
 	$website = isset($_GET['for']) && $_GET['for'] == 'website';
 	try {
 		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN, CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
-		$users = $ldap->getUsersList(new DateTimeZone('Europe/Rome'), $website ? ['degreecourse', 'websitedescription'] : []);
+		$users = $ldap->getUsersList(new DateTimeZone('Europe/Rome'), $website ? ['degreecourse', 'websitedescription'] : ['websitedescription']);
 	} catch(LdapException $e) {
 		$error = $e->getMessage();
 	}
