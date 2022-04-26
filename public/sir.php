@@ -19,9 +19,6 @@ if(isset($_GET['uid'])) {
 		'sn',
 		'schacpersonaluniquecode',
 		'degreecourse',
-		'schacdateofbirth',
-		'schacplaceofbirth',
-		'mobile',
 		'safetytestdate',
 	];
 
@@ -35,8 +32,12 @@ if(isset($_GET['uid'])) {
 			exit;
 		}
 
-		foreach($attributes as $name => $attr) {
-			if(is_array($attr) && count($attr)) {
+		foreach($getTheseAttributes as $name) {
+			if(!array_key_exists($name, $attributes)) {
+				throw new InvalidArgumentException("$name is required");
+			}
+			$attr = $attributes[$name];
+			if(is_array($attr) && count($attr) <= 0) {
 				throw new InvalidArgumentException("$name is empty (and multivalued)");
 			}
 			if($attr === null || $attr === '') {
@@ -44,21 +45,12 @@ if(isset($_GET['uid'])) {
 			}
 		}
 
-		list($yyyy, $mm, $dd) = explode('-', Validation::dateSchacToHtml($attributes['schacdateofbirth']), 3);
 		$safetytestdate = Validation::dateSchacToHtml($attributes['safetytestdate']);
-		list($place, $country) = explode(', ', $attributes['schacplaceofbirth'], 2);
 
 		$replace = [
 			'[NAME]'     => Sir::escapeString($attributes['givenname']),
 			'[SURNAME]'  => Sir::escapeString($attributes['sn']),
 			'[ID]'       => Sir::escapeString($attributes['schacpersonaluniquecode']),
-			'[DD]'       => Sir::escapeString($dd),
-			'[MM]'       => Sir::escapeString($mm),
-			'[YYYY]'     => Sir::escapeString($yyyy),
-			'[PLACE]'    => str_replace(' ', '\\\\', Sir::escapeString($place)),
-			'[COUNTRY]'  => Sir::escapeString($country),
-			'[MOBILE]'   => Sir::escapeString($attributes['mobile']),
-			'[EMAIL]'    => Sir::escapeString(Sir::politoMail($attributes['schacpersonaluniquecode'])),
 			'[TESTDATE]' => Sir::escapeString($safetytestdate),
 			'[CDL]'      => Sir::escapeString($attributes['degreecourse']),
 		];

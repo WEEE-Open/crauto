@@ -18,6 +18,7 @@ class Ldap {
 		'test.administrator' => [
 			'uid' => 'test.administrator',
 			'cn' => 'Test Administrator',
+			'givenname' => 'Test',
 			'sn' => 'Administrator',
 			'memberof' => ["cn=Cloud,ou=Groups,dc=weeeopen,dc=it","cn=Admin,ou=Groups,dc=weeeopen,dc=it"] ,
 			'createtimestamp' => '20191025105022Z',
@@ -37,6 +38,7 @@ class Ldap {
         'alice' => [
             'uid' => 'alice',
             'cn' => 'Alice Test',
+            'givenname' => 'Alice',
             'sn' => 'Test',
             'memberof' => ["cn=Cloud,ou=Groups,dc=weeeopen,dc=it", "cn=Gente,ou=Groups,dc=weeeopen,dc=it", "cn=Riparatori,ou=Groups,dc=weeeopen,dc=it"] ,
             'createtimestamp' => '20191025105022Z',
@@ -56,6 +58,7 @@ class Ldap {
         'brodino' => [
             'uid' => 'brodino',
             'cn' => 'Bro Dino',
+	        'givenname' => 'Bro',
             'sn' => 'Dino',
             'memberof' => ["cn=Admin,ou=Groups,dc=weeeopen,dc=it", "cn=Gente,ou=Groups,dc=weeeopen,dc=it"],
             'createtimestamp' => '20191025105022Z',
@@ -74,6 +77,7 @@ class Ldap {
 		'bob' => [
 			'uid' => 'bob',
 			'cn' => 'Bob "Il grande testatore" Testington',
+			'givenname' => 'Bob',
 			'sn' => 'Testington',
 			'memberof' => ["cn=Admin,ou=Groups,dc=weeeopen,dc=it"],
 			'createtimestamp' => '20191216155022Z',
@@ -93,6 +97,7 @@ class Ldap {
         'broski' => [
             'uid' => 'broski',
             'cn' => 'Bro Ski',
+            'givenname' => 'Bro',
             'sn' => 'Ski',
             'memberof' => ["cn=Admin,ou=Groups,dc=weeeopen,dc=it", "cn=Gente,ou=Groups,dc=weeeopen,dc=it"],
             'createtimestamp' => '20191025105022Z',

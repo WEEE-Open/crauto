@@ -82,16 +82,6 @@ $this->layout('base', ['title' => 'Register']);
 	</div>
 	<div class="form-row">
 		<div class="form-group col-sm-6">
-			<label for="profile-mail">Email address (optional)</label>
-			<input type="email" class="form-control" id="profile-mail" name="mail" value="<?= $this->e($attributes['mail'] ?? '') ?>" maxlength="500">
-		</div>
-		<div class="form-group col-sm-6">
-			<label for="profile-mobile">Cellphone</label>
-			<input type="tel" class="form-control" id="profile-mobile" name="mobile" value="<?= $this->e($attributes['mobile'] ?? '') ?>" maxlength="500" required>
-		</div>
-	</div>
-	<div class="form-row">
-		<div class="form-group col-sm-6">
 			<label for="profile-degreecourse">Degree course</label>
 			<select class="form-control" id="profile-degreecourse" name="degreecourse" required>
 				<option value="" disabled hidden <?= isset($attributes['degreecourse']) ? '' : 'selected'  ?>></option>
@@ -107,32 +97,12 @@ $this->layout('base', ['title' => 'Register']);
 	</div>
 	<div class="form-row">
 		<div class="form-group col-sm-6">
-			<label for="profile-schacdateofbirth">Date of birth</label>
+			<label for="profile-mail">Email address (optional)</label>
+			<input type="email" class="form-control" id="profile-mail" name="mail" value="<?= $this->e($attributes['mail'] ?? '') ?>" maxlength="500">
+		</div>
+		<div class="form-group col-sm-6">
+			<label for="profile-schacdateofbirth">Date of birth (optional)</label>
 			<input type="date" class="form-control" id="profile-schacdateofbirth" placeholder="1996-01-30" pattern="\d{4}-\d{2}-\d{2}" name="schacdateofbirth" value="<?= $this->e($attributes['schacdateofbirth'] ?? '') ?>" maxlength="500" required>
-		</div>
-	</div>
-	<div class="form-row">
-		<div class="form-group col-sm-4">
-			<label for="register-birth-country">Country of birth</label>
-			<select class="form-control" id="register-birth-country" name="register-birth-country" required>
-				<option value="" disabled hidden selected></option>
-				<?php foreach($countries as $code => $country): ?>
-					<option value="<?= $this->e($code) ?>"><?= $this->e($country) ?></option>
-				<?php endforeach ?>
-			</select>
-		</div>
-		<div class="form-group col-sm-8" id="register-birth-city-group">
-			<label for="register-birth-city">City</label>
-			<input type="text" class="form-control" id="register-birth-city" name="register-birth-city" pattern="\w[\w\s]*" maxlength="400" required>
-		</div>
-		<div class="form-group col-sm-3" id="register-birth-province-group" style="display: none;">
-			<label for="register-birth-province">Province</label>
-			<select class="form-control" id="register-birth-province" name="register-birth-province" data-value="">
-				<option value="" disabled hidden selected></option>
-				<?php foreach($province as $code => $provincia): ?>
-					<option value="<?= $this->e($code) ?>"><?= $this->e($provincia) ?></option>
-				<?php endforeach ?>
-			</select>
 		</div>
 	</div>
 	<div class="form-row">
@@ -147,34 +117,5 @@ $this->layout('base', ['title' => 'Register']);
 	<div class="form-group">
 		<input type="submit" class="btn btn-primary" value="Save">
 	</div>
-	<script>
-		let birthCountry = document.getElementById('register-birth-country');
-		let birthCityGroup = document.getElementById('register-birth-city-group');
-		let birthProvinceGroup = document.getElementById('register-birth-province-group');
-		let birthProvince = document.getElementById('register-birth-province');
-		birthCountry.addEventListener('change', () => {
-			console.log(birthProvince.value);
-			console.log(birthProvince.dataset.value);
-			if(birthCountry.value === 'IT') {
-				birthCityGroup.classList.remove('col-sm-8');
-				birthCityGroup.classList.add('col-sm-5');
-				birthProvinceGroup.classList.add('col-sm-3');
-				birthProvinceGroup.style.display = '';
-				birthProvince.value = birthProvince.dataset.value;
-				birthProvince.dataset.value = '';
-				birthProvince.required = true;
-			} else {
-				birthCityGroup.classList.remove('col-sm-5');
-				birthCityGroup.classList.add('col-sm-8');
-				birthProvinceGroup.classList.remove('col-sm-3');
-				birthProvinceGroup.style.display = 'none';
-				if(birthProvince.value !== '') {
-					birthProvince.dataset.value = birthProvince.value;
-					birthProvince.value = '';
-				}
-				birthProvince.required = false;
-			}
-		});
-	</script>
 </form>
 

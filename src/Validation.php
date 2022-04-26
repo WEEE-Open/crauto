@@ -359,56 +359,9 @@ class Validation {
 		if(!self::hasValue('degreecourse', $attributes)) {
 			throw new ValidationException('Select a degree course');
 		}
+		// Key and value are the same, no need to get the value
 		if(!isset($degreeCourses[$attributes['degreecourse']])) {
 			throw new ValidationException('Invalid degree course, select one from the list');
-		}
-		// Key and value are the same, no need to get the value
-
-		// Get country
-		if(!self::hasValue('register-birth-country', $attributes)) {
-			throw new ValidationException('Select a country of birth');
-		}
-		if(!isset($countries[$attributes['register-birth-country']])) {
-			throw new ValidationException('Invalid country of birth, select one from the list');
-		}
-		$birthCountry = $countries[$attributes['register-birth-country']];
-		unset($attributes['register-birth-country']);
-
-		// Get city
-		if(!self::hasValue('register-birth-city', $attributes)) {
-			throw new ValidationException('Select a city of birth');
-		}
-		if(mb_strlen($attributes['register-birth-city'] > 400)) {
-			// An extremely long city name in a very long state could be more than 500 characters and fail validation,
-			// but I doubt that someone will *ever* encounter this problem without knowing.
-			throw new ValidationException('Invalid city of birth, name too long');
-		}
-		if(preg_match('#^\w[\w\s]*$#u', $attributes['register-birth-city']) !== 1) {
-			throw new ValidationException('Invalid city of birth, does not match regex');
-		}
-		$birthCity = $attributes['register-birth-city'];
-		unset($attributes['register-birth-city']);
-
-		// Get province if needed
-		if($birthCountry === 'Italy') {
-			if(!self::hasValue('register-birth-province', $attributes)) {
-				throw new ValidationException('Select a province of birth');
-			}
-			if(!isset($province[$attributes['register-birth-province']])) {
-				throw new ValidationException('Invalid province of birth, select one from the list');
-			}
-			// Get just the province code (array key)
-			$birthProvince = $attributes['register-birth-province'];
-		} else {
-			$birthProvince = null;
-		}
-		unset($attributes['register-birth-province']);
-
-		// Now build the birth place string
-		if($birthProvince === null) {
-			$attributes['schacplaceofbirth'] = "$birthCity, $birthCountry";
-		} else {
-			$attributes['schacplaceofbirth'] = "$birthCity ($birthProvince), $birthCountry";
 		}
 
 		if(!self::hasValue('givenname', $attributes) || !self::hasValue('sn', $attributes)) {
@@ -453,10 +406,6 @@ class Validation {
 			throw new ValidationException('Surname is mandatory');
 		}
 
-		if(!self::hasValue('mobile', $edited)) {
-			throw new ValidationException('Cellphone is mandatory');
-		}
-
 		if(!self::hasValue('degreecourse', $edited)) {
 			throw new ValidationException('Degree course is mandatory');
 		}
@@ -465,12 +414,6 @@ class Validation {
 			throw new ValidationException('Student ID is mandatory');
 		}
 
-		if(!self::hasValue('schacdateofbirth', $edited)) {
-			throw new ValidationException('Date of birth is mandatory');
-		}
-
-		// Place of birth already validated
-
 		// Ok, now validate the structure of fields where that's possible
 		Validation::validate($edited);
 
@@ -478,6 +421,14 @@ class Validation {
 		$edited['nsAccountLock'] = 'true';
 
 		$edited['memberOf'] = $ldap->groupNamesToDn(explode(',', CRAUTO_DEFAULT_GROUPS));
+
+		if($edited['mail'] === null) {
+			unset($edited['mail']);
+		}
+
+		if($edited['schacdateofbirth'] === null) {
+			unset($edited['schacdateofbirth']);
+		}
 
 		if($edited['telegramid'] === null) {
 			unset($edited['telegramid']);
