@@ -1,0 +1,7 @@
+1,21,62,12,[NAME]
+1,21,72,12,[SURNAME]
+1,21,82,12,"BTW, I study [CDL]"
+2,64,43,12,[ID]
+2,108,43,12,[TESTDATE]
+3,19,201,12,Some hardcoded text about [NAME] [SURNAME]
+3,19,206,8,And some small print
