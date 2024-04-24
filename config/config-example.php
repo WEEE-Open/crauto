@@ -1,6 +1,7 @@
 <?php
-define('TEST_MODE', false); // Use true for development
+define('TEST_MODE', true); // Use false for production
 define('CRAUTO_PASS_MIN_LENGTH', 12);
+define('CRAUTO_SIR_TMP_DIR_CLEANUP', 30);
 define('CRAUTO_LDAP_URL', 'ldap://ldap1.sso.local');
 define('CRAUTO_LDAP_BIND_DN', 'cn=Directory Manager');
 define('CRAUTO_LDAP_PASSWORD', 'secret1');

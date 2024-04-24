@@ -4,78 +4,92 @@
 namespace WEEEOpen\Crauto;
 
 
-class Sir {
-	protected $directory;
+use setasign\Fpdi\Fpdi;
+use setasign\Fpdi\PdfParser\PdfParserException;
+use setasign\Fpdi\PdfReader\PdfReaderException;
 
-	static $replace = [
-		"#"  => "\\#",
-		"$"  => "\\$",
-		"%"  => "\\%",
-		"&"  => "\\&",
-		"~"  => "\\~{}",
-		"_"  => "\\_",
-		"^"  => "\\^{}",
-		"\\" => "\\textbackslash{}",
-		"{"  => "\\{",
-		"}"  => "\\}",
-	];
+class Sir {
+	protected string $directory;
 
 	public function __construct(string $directory) {
-		if(substr($directory, -1, 1) !== '/' && substr($directory, -1, 1) !== DIRECTORY_SEPARATOR) {
-			$directory = $directory . '/';
+		if(str_ends_with($directory, '/')) {
+			$directory = substr($directory, 0, strlen($directory) - 1);
 		}
 		$this->directory = $directory;
 		$this->ensureDirectory($this->directory);
+		$this->ensureDirectory($this->directory . '/output');
 	}
 
-	private function filePath(string $filename, string $ext): string {
-		return "$this->directory$filename.$ext";
+	/** @noinspection PhpSameParameterValueInspection */
+	private function definationFilePath(string $filename, string $ext): string {
+		return "$this->directory/output/$filename.$ext";
 	}
 
-	public function getSir(string $filename, string $template, array $replacements): string {
-		$pdf = $this->filePath($filename, 'pdf');
+	public function getSir(string $targetUid, array $replacements): string {
+		if(str_starts_with(strtolower($replacements['[CDL]']), 'dottorato')) {
+			$template = $this->directory . '/template-dottorandi.csv';
+		} else {
+			$template = $this->directory . '/template-studenti.csv';
+		}
+		$filename = "sir-$targetUid-".sha1(var_export($replacements, 1));
+
+		$pdf = $this->definationFilePath($filename, 'pdf');
 		if(is_file($pdf)) {
 			return $pdf;
 		}
 
-		$tex = $this->filePath($filename, 'tex');
-		$theTex = $this->generateSirTex($template, $replacements);
-		file_put_contents($tex, $theTex);
-		$this->compileSir($filename);
+		$this->generateSir($pdf, $template, $replacements);
 
 		return $pdf;
 	}
 
-	private function generateSirTex(string $template, array $replacements): string {
-		foreach($replacements as $search => $replace) {
-			if(strpos($template, $search) === false) {
-				throw new SirException("$search not found in template");
+	private function generateSir(string $filename, string $template, array $replacements): void {
+		$parsed = $this->readCsvTemplate($template);
+		$keys = array_keys($replacements);
+		$values = array_values($replacements);
+		foreach($parsed as &$lineRef) {
+			$lineRef[0] = intval($lineRef[0]); // page
+			$lineRef[1] = intval($lineRef[1]); // x
+			$lineRef[2] = intval($lineRef[2]); // y
+			$lineRef[3] = intval($lineRef[3]); // font size
+			$lineRef[4] = str_replace($keys, $values, $lineRef[4]); // text
+		}
+		$fmod = $this->directory . '/F-MOD-LABORATORI.pdf';
+		$input = fopen($fmod, "r");
+		if($input === false) {
+			throw new SirException("Cannot open template file $fmod");
+		}
+		try {
+			$pdf = new Fpdi();
+			$pdf->setSourceFile($input);
+
+			// There's no way to get the page count from the template file, apparently
+			for($page = 1; $page <= 3; $page++) {
+				$tmplPage = $pdf->importPage($page);
+
+				$pdf->AddPage();
+				$pdf->useTemplate($tmplPage, 0, 0, null, null, true);
+
+				foreach($parsed as $line) {
+					if($line[0] === $page) {
+						$pdf->SetFont('Courier', '', $line[3]);
+						$pdf->SetXY($line[1], $line[2]);
+						$pdf->Write(8, $line[4]);
+					}
+				}
 			}
-		}
 
-		return str_replace(array_keys($replacements), array_values($replacements), $template);
+			$pdf->Output("F", $filename);
+		} catch(PdfParserException $e) {
+			throw new SirException("Cannot parse $fmod: " . $e->getMessage());
+		} catch(PdfReaderException $e) {
+			throw new SirException("Cannot read $fmod: " . $e->getMessage());
+		} finally {
+			fclose($input);
+		}
 	}
 
-	private function compileSir($filename) {
-		$tex = $this->filePath($filename, 'tex');
-		$cwd = getcwd();
-		chdir($this->directory);
-		// For some reason, "pdflatex -v" works, "ls" works, and "pdflatex -interaction=..." does not. You *NEED* the
-		// full path. Or else the pdflatex process dies with SIGABRT without even starting. For no discernible reason.
-		$command = '/usr/bin/pdflatex -interaction=nonstopmode -output-directory=' . escapeshellarg($this->directory) . ' ' . escapeshellarg($tex);
-		exec($command, $output, $ret);
-		chdir($cwd);
-		if($ret !== 0) {
-			$output = implode("\n", $output);
-			throw new SirException("pdflatex failed, exit status $ret\nHere's the output:\n\n$output");
-		}
-
-		// Remove temporary files
-		unlink($this->filePath($filename, 'aux'));
-		unlink($this->filePath($filename, 'log'));
-	}
-
-	private function ensureDirectory(string $directory) {
+	private function ensureDirectory(string $directory): void {
 		if(!is_dir($directory)) {
 			if(!mkdir($directory, 0750, true)) {
 				throw new SirException("$directory is not a directory and cannot be created");
@@ -86,31 +100,36 @@ class Sir {
 		}
 	}
 
-	public function cleanupDirectory(int $days) {
-		$seconds = $days * 24 * 60 * 60;
-		$limit = time() - $seconds;
-		$files = array_diff(scandir($this->directory), ['.', '..']);
-		foreach($files as $file) {
-			if(filemtime($file) < $limit) {
-				unlink($file);
+//	public static function politoMail(string $matricola): string {
+//		$first = strtolower(substr($matricola, 0, 1));
+//		if($first === 'd') {
+//			return "$matricola@polito.it";
+//		} else {
+//			return "$matricola@studenti.polito.it";
+//		}
+//	}
+
+	protected function readCsvTemplate(string $template): array {
+		$result = [];
+
+		$row = 0;
+		$handle = fopen($template, "r");
+		if($handle === false) {
+			throw new SirException("Cannot open template $template");
+		}
+		try {
+			while(($data = fgetcsv($handle)) !== false) {
+				$row++;
+				$x = count($data);
+				if($x != 5) {
+					throw new SirException("Error reading template $template at row $row, expected 4 fields but found " . $x);
+				}
+				$result[] = $data;
 			}
+		} finally {
+			fclose($handle);
 		}
-	}
 
-	public function getDirectory(): string {
-		return $this->directory;
-	}
-
-	public static function politoMail(string $matricola): string {
-		$first = strtolower(substr($matricola, 0, 1));
-		if($first === 'd') {
-			return "$matricola@polito.it";
-		} else {
-			return "$matricola@studenti.polito.it";
-		}
-	}
-
-	public static function escapeString(string $s): string {
-		return str_replace(array_keys(self::$replace), array_values(self::$replace), $s);
+		return $result;
 	}
 }

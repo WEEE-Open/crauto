@@ -48,23 +48,15 @@ if(isset($_GET['uid'])) {
 		$safetytestdate = Validation::dateSchacToHtml($attributes['safetytestdate']);
 
 		$replace = [
-			'[NAME]'     => Sir::escapeString($attributes['givenname']),
-			'[SURNAME]'  => Sir::escapeString($attributes['sn']),
-			'[ID]'       => Sir::escapeString($attributes['schacpersonaluniquecode']),
-			'[TESTDATE]' => Sir::escapeString($safetytestdate),
-			'[CDL]'      => Sir::escapeString($attributes['degreecourse']),
+			'[NAME]'     => $attributes['givenname'],
+			'[SURNAME]'  => $attributes['sn'],
+			'[ID]'       => $attributes['schacpersonaluniquecode'],
+			'[TESTDATE]' => $safetytestdate,
+			'[CDL]'      => $attributes['degreecourse'],
 		];
 
 		$sir = new Sir(CRAUTO_SIR_TMP_DIR);
-		if(substr(strtolower($attributes['degreecourse']), 0, 9) === 'dottorato') {
-			$template = __DIR__ . '/../resources/latex/template-dottorandi.tex';
-		} else {
-			$template = __DIR__ . '/../resources/latex/template-studenti.tex';
-		}
-		$replace['[SIRPATH]'] = Sir::escapeString(__DIR__ . '/../resources/latex/T-MOD-SIR.pdf');
-		$replace['[FMODPATH]'] = Sir::escapeString(__DIR__ . '/../resources/latex/F-MOD-LABORATORI.pdf');
-		$filename = "sir-$targetUid-".sha1(var_export($replace, 1));
-		$pdf = $sir->getSir($filename, file_get_contents($template), $replace);
+		$pdf = $sir->getSir($targetUid, $replace);
 		header('Content-type: application/pdf');
 		header("Content-Disposition: attachment; filename=\"sir-$targetUid.pdf\"");
 		readfile($pdf);
