@@ -1,7 +1,9 @@
 <?php
 
-
 namespace WEEEOpen\Crauto;
+
+// phpcs:disable PSR1.Files.SideEffects.FoundWithSymbols
+require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php';
 
 use Jumbojett\OpenIDConnectClient;
 use Jumbojett\OpenIDConnectClientException;
@@ -11,18 +13,18 @@ use ReflectionMethod;
 use stdClass;
 use function Jumbojett\base64url_decode;
 
-require_once '../config/config.php';
-
-class Authentication {
+class Authentication
+{
 	private static $loggedIn = null;
 
 	/**
 	 * Users are required to log in to access this page. If they are not, execution stops and user is redirected to
 	 * login page.
 	 */
-	public static function requireLogin() {
+	public static function requireLogin()
+	{
 		$loggedIn = self::isLoggedIn();
-		if(!$loggedIn) {
+		if (!$loggedIn) {
 			self::redirectToLogin();
 		}
 	}
@@ -33,27 +35,29 @@ class Authentication {
 	 *
 	 * @return bool True if logged in, false if some action is needed to log in
 	 */
-	public static function isLoggedIn(): bool {
-		if(self::$loggedIn === null) {
+	public static function isLoggedIn(): bool
+	{
+		if (self::$loggedIn === null) {
 			self::$loggedIn = self::isLoggedInInternal();
 		}
 
 		return self::$loggedIn;
 	}
 
-	private static function isLoggedInInternal(): bool {
-		if(session_status() === PHP_SESSION_NONE) {
+	private static function isLoggedInInternal(): bool
+	{
+		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
 
-		if(!isset($_SESSION['expires'])) {
+		if (!isset($_SESSION['expires'])) {
 			return false;
 		}
 
-		if(CRAUTO_DEBUG_ALWAYS_REFRESH || self::idTokenExpired((int) $_SESSION['expires'])) {
+		if (CRAUTO_DEBUG_ALWAYS_REFRESH || self::idTokenExpired((int) $_SESSION['expires'])) {
 			try {
 				return self::performRefresh();
-			} catch(LogicException | AuthenticationException $e) {
+			} catch (LogicException | AuthenticationException $e) {
 				return false;
 			}
 		}
@@ -66,12 +70,13 @@ class Authentication {
 	 *
 	 * @throws OpenIDConnectClientException
 	 */
-	public static function authenticate() {
-		if(session_status() === PHP_SESSION_NONE) {
+	public static function authenticate()
+	{
+		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
 
-		if(defined('TEST_MODE') && TEST_MODE) {
+		if (defined('TEST_MODE') && TEST_MODE) {
 			error_log('TEST_MODE, faking authentication');
 			$_SESSION['uid'] = 'test.administrator';
 			$_SESSION['id'] = 'fake:example:68048769-c06d-4873-adf6-dbfa6b0afcd3';
@@ -95,8 +100,9 @@ class Authentication {
 	/**
 	 * Redirect to SSO server and log out. This stops script execution.
 	 */
-	public static function signOut() {
-		if(session_status() === PHP_SESSION_NONE) {
+	public static function signOut()
+	{
+		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
 
@@ -104,7 +110,7 @@ class Authentication {
 		$token = $_SESSION['id_token'];
 		session_destroy();
 
-		if(defined('TEST_MODE') && TEST_MODE) {
+		if (defined('TEST_MODE') && TEST_MODE) {
 			error_log('TEST_MODE, no need to log out');
 		} else {
 			$oidc->signOut($token, CRAUTO_URL . '/logout_done.php');
@@ -117,14 +123,16 @@ class Authentication {
 	 *
 	 * @return bool True if id token is expired, false otherwise
 	 */
-	private static function idTokenExpired(int $expires): bool {
+	private static function idTokenExpired(int $expires): bool
+	{
 		return $expires <= time();
 	}
 
 	/**
 	 * Redirect to login page and stop execution.
 	 */
-	private static function redirectToLogin() {
+	private static function redirectToLogin()
+	{
 		$_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
 		http_response_code(303);
 		header("Location: /login.php");
@@ -137,7 +145,8 @@ class Authentication {
 	 * @return bool If execution can continue or not (in case a redirect header has been set)
 	 * @throws AuthenticationException
 	 */
-	private static function performRefresh(): bool {
+	private static function performRefresh(): bool
+	{
 		/*
 		 * So, everyone is handling this thing differently.
 		 * From what I've gathered, the best and most secure way to handle this is to issue a somewhat short lived
@@ -158,7 +167,7 @@ class Authentication {
 		 * WSO2 IS doesn't delete tokens when it's restarted.
 		 * SAML2 single sign-out doesn't invalidate anything from OIDC sessions (so it's not a real single sign-out).
 		 */
-		if(!isset($_SESSION['refresh_token'])) {
+		if (!isset($_SESSION['refresh_token'])) {
 			throw new LogicException('No refresh token available');
 		}
 		$oidc = self::getOidc(true);
@@ -167,9 +176,9 @@ class Authentication {
 		// For an explanation, see:
 		// https://github.com/WEEE-Open/tarallo/blob/89ffe90a042054cc40c886253a58ce64527b3420/src/HTTP/AuthManager.php#L344-L433
 
-		if(isset($json->error)) {
+		if (isset($json->error)) {
 			throw new AuthenticationException($json->error_description ?? $json->error);
-		} elseif(isset($json->id_token) && isset($json->access_token)) {
+		} elseif (isset($json->id_token) && isset($json->access_token)) {
 			// Exhibit A: OIDC Tokens and Despair
 
 			// This should return a new access token and a new refresh token.
@@ -207,10 +216,10 @@ class Authentication {
 			try {
 				// Validate the ID token signature
 				$valid = $oidc->verifyJWTsignature($json->id_token);
-				if(!$valid) {
+				if (!$valid) {
 					throw new AuthenticationException('Invalid JWT signature');
 				}
-			} catch(OpenIDConnectClientException $e) {
+			} catch (OpenIDConnectClientException $e) {
 				throw new AuthenticationException('OpenIDConnectClientException: ' . $e->getMessage());
 			}
 
@@ -230,12 +239,12 @@ class Authentication {
 				$method = new ReflectionMethod($oidc, 'verifyJWTclaims');
 				$method->setAccessible(true);
 				$valid = $method->invoke($oidc, $claims, $json->access_token);
-				if(!$valid) {
+				if (!$valid) {
 					throw new AuthenticationException('verifyJWTclaims failed');
 				}
-			} catch(ReflectionException $e) {
+			} catch (ReflectionException $e) {
 				throw new AuthenticationException('ReflectionException: ' . $e->getMessage());
-			} /** @noinspection PhpRedundantCatchClauseInspection */ catch(OpenIDConnectClientException $e) {
+			} /** @noinspection PhpRedundantCatchClauseInspection */ catch (OpenIDConnectClientException $e) {
 				throw new AuthenticationException('JWT claims validation failed: ' . $e->getMessage());
 			}
 
@@ -248,7 +257,8 @@ class Authentication {
 		throw new AuthenticationException('No id token in refresh token response');
 	}
 
-	private static function returnToPreviousPage() {
+	private static function returnToPreviousPage()
+	{
 		// Comes from $_SERVER['REQUEST_URI'] which is already url encoded
 		$location = $_SESSION['redirect_after_login'] ?? '/';
 		http_response_code(303);
@@ -261,10 +271,11 @@ class Authentication {
 	 *
 	 * @return OpenIDConnectClient|OpenIDConnectRefreshClient
 	 */
-	private static function getOidc(bool $refresh = false) {
+	private static function getOidc(bool $refresh = false)
+	{
 		require_once '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php';
 
-		if($refresh) {
+		if ($refresh) {
 			$oidc = new OpenIDConnectRefreshClient(CRAUTO_OIDC_ISSUER, CRAUTO_OIDC_CLIENT_KEY, CRAUTO_OIDC_CLIENT_SECRET);
 		} else {
 			$oidc = new OpenIDConnectClient(CRAUTO_OIDC_ISSUER, CRAUTO_OIDC_CLIENT_KEY, CRAUTO_OIDC_CLIENT_SECRET);
@@ -276,8 +287,9 @@ class Authentication {
 		return $oidc;
 	}
 
-	private static function setAttributes(OpenIDConnectClient $oidc, $claims = null, ?string $idt = null) {
-		if($claims) {
+	private static function setAttributes(OpenIDConnectClient $oidc, $claims = null, ?string $idt = null)
+	{
+		if ($claims) {
 			// Convert array (or stdObj) to stdObj.
 			$claims = (object) $claims;
 		} else {
@@ -327,7 +339,8 @@ class Authentication {
 	 *
 	 * @return bool
 	 */
-	public static function isAdmin(): bool {
+	public static function isAdmin(): bool
+	{
 		// For WSO2 IS:
 		//$groups = Authentication::splitGroups($_SESSION['groups']);
 		//return isset($groups['HR']);

@@ -2,7 +2,7 @@
 /** @var $requireOldPassword bool */
 ?>
 <form method="POST">
-	<?php if($requireOldPassword ?? true): ?>
+	<?php if ($requireOldPassword ?? true) : ?>
 		<div class="form-group row">
 			<label for="old-password" class="col-sm-2 col-form-label">Current password</label>
 			<div class="col-sm-10">

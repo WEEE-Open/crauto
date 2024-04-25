@@ -1,4 +1,5 @@
 <?php
+
 /** @var $uid string */
 /** @var $name string */
 http_response_code(404);

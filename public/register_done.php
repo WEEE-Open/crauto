@@ -6,7 +6,7 @@ require '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.
 
 session_start();
 
-if(isset($_SESSION['register_done'])) {
+if (isset($_SESSION['register_done'])) {
 	unset($_SESSION['register_done']);
 	$template = Template::create();
 	echo $template->render('register_done');
@@ -15,4 +15,3 @@ if(isset($_SESSION['register_done'])) {
 	$template->addData(['authenticated' => Authentication::isLoggedIn(), 'isAdmin' => Authentication::isLoggedIn() && Authentication::isAdmin()], 'navbar');
 	echo $template->render('403');
 }
-

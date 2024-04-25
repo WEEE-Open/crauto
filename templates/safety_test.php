@@ -1,11 +1,12 @@
 <?php
 
-function safetyTest(array $user, ?array &$testdates, DateTimeImmutable $today) {
-	if($user['safetytestdate'] !== null) {
+function safetyTest(array $user, ?array &$testdates, DateTimeImmutable $today)
+{
+	if ($user['safetytestdate'] !== null) {
 		$daysDiff = (int) $today->diff($user['safetytestdate'])->format('%R%a');
-		if($daysDiff >= 0) {
+		if ($daysDiff >= 0) {
 			$sortkey = $user['sn'] . ' ' . $user['cn'] . ' ' . $user['uid'];
-			if(!is_null($testdates)) {
+			if (!is_null($testdates)) {
 				$testdates[$user['safetytestdate']->format('Y-m-d')][$sortkey] = $user;
 			}
 		}
@@ -14,18 +15,19 @@ function safetyTest(array $user, ?array &$testdates, DateTimeImmutable $today) {
 	return [0, false];
 }
 
-function safetyTestIcon(int $testDaysDiff, bool $testScheduled, bool $signedSir): string {
-	if($signedSir) {
+function safetyTestIcon(int $testDaysDiff, bool $testScheduled, bool $signedSir): string
+{
+	if ($signedSir) {
 		$sir = '';
 	} else {
 		$sir = '<i class="fas fa-print text-danger" title="SIR not yet signed!"></i>';
 	}
 
-	if($testScheduled) {
-		if($testDaysDiff < 0) {
+	if ($testScheduled) {
+		if ($testDaysDiff < 0) {
 			// Test done in the past: checkmark and optionally printer
 			return '<i class="fas fa-check"></i>' . $sir;
-		} else if($testDaysDiff === 0) {
+		} elseif ($testDaysDiff === 0) {
 			// Test today: hourglass and optionally printer
 			return '<i class="fas fa-hourglass"></i>' . $sir;
 		} else {

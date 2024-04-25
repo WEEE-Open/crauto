@@ -9,13 +9,13 @@ $this->layout('base', ['title' => 'Register']);
 
 <h1>Register</h1>
 
-<?php if($error !== null): ?>
+<?php if ($error !== null) : ?>
 	<div class="alert alert-danger" role="alert">
 		Error: <?= $this->e($error) ?>
 	</div>
 <?php endif ?>
 
-<?php if(!isset($attributes['telegramid']) && !isset($attributes['telegramnickname'])): ?>
+<?php if (!isset($attributes['telegramid']) && !isset($attributes['telegramnickname'])) : ?>
 	<div class="alert alert-warning" role="alert">
 		Copy and paste the address of this page to <a href="https://telegram.me/weeelab_bot" target="_blank">@weeelab_bot</a> and reload the page to fill the Telegram ID field automatically.
 	</div>
@@ -85,7 +85,7 @@ $this->layout('base', ['title' => 'Register']);
 			<label for="profile-degreecourse">Degree course</label>
 			<select class="form-control" id="profile-degreecourse" name="degreecourse" required>
 				<option value="" disabled hidden <?= isset($attributes['degreecourse']) ? '' : 'selected'  ?>></option>
-				<?php foreach($degreeCourses as $course): ?>
+				<?php foreach ($degreeCourses as $course) : ?>
 					<option value="<?= $this->e($course) ?>" <?= $attributes['degreecourse'] === $course ? 'selected' : '' ; ?>><?= $this->e($course) ?></option>
 				<?php endforeach ?>
 			</select>

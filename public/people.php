@@ -7,15 +7,15 @@ use InvalidArgumentException;
 
 require '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 Authentication::requireLogin();
-if(!Authentication::isAdmin()) {
+if (!Authentication::isAdmin()) {
 	$template = Template::create();
 	echo $template->render('403');
 	exit;
 }
 
-if(isset($_GET['uid'])) {
-	$allowedAttributes = Validation::allowedAttributesAdmin;
-	$editableAttributes = array_combine(Validation::editableAttributesAdmin, Validation::editableAttributesAdmin);
+if (isset($_GET['uid'])) {
+	$allowedAttributes = Validation::ALLOWED_ATTRIBUTES_ADMIN;
+	$editableAttributes = array_combine(Validation::EDITABLE_ATTRIBUTES_ADMIN, Validation::EDITABLE_ATTRIBUTES_ADMIN);
 
 	$targetUid = $_GET['uid'];
 
@@ -23,8 +23,14 @@ if(isset($_GET['uid'])) {
 	$allGroups = [];
 	$error = null;
 	try {
-		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
-			CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
+		$ldap = new Ldap(
+			CRAUTO_LDAP_URL,
+			CRAUTO_LDAP_BIND_DN,
+			CRAUTO_LDAP_PASSWORD,
+			CRAUTO_LDAP_USERS_DN,
+			CRAUTO_LDAP_GROUPS_DN,
+			CRAUTO_LDAP_STARTTLS
+		);
 		$attributes = $ldap->getUser($targetUid, array_merge($allowedAttributes, ['createtimestamp', 'modifytimestamp']));
 		$targetUid = $attributes['uid'] ?? $targetUid; // Canonicalize uid, or use the supplied one
 		// Do not move elsewhere, otherwise you get empty groups in case of errors above here
@@ -37,8 +43,8 @@ if(isset($_GET['uid'])) {
 		// useless...
 		$requireOldPasswordForChange = strtolower($_SESSION['uid']) === strtolower($attributes['uid']);
 
-		if(isset($_POST) && !empty($_POST)) {
-			if(isset($_POST['password1'])) {
+		if (isset($_POST) && !empty($_POST)) {
+			if (isset($_POST['password1'])) {
 				Validation::handlePasswordChangePost($ldap, $targetUid, $_POST, $requireOldPasswordForChange);
 			} else {
 				Validation::handleUserEditPost($editableAttributes, $ldap, $targetUid, $attributes);
@@ -48,12 +54,12 @@ if(isset($_GET['uid'])) {
 			header("Location: ${_SERVER['REQUEST_URI']}");
 			exit;
 		}
-	} catch(LdapException | ValidationException | InvalidArgumentException $e) {
+	} catch (LdapException | ValidationException | InvalidArgumentException $e) {
 		$error = $e->getMessage();
 	}
 
 	$groups = [];
-	foreach($attributes['memberof'] as $dn) {
+	foreach ($attributes['memberof'] as $dn) {
 		$groups[] = Ldap::groupDnToName($dn);
 	}
 	$attributes['memberof'] = $groups;
@@ -69,8 +75,8 @@ if(isset($_GET['uid'])) {
 		'editableAttributes' => $editableAttributes,
 		'allowedAttributes' => $allowedAttributes,
 		'adminRequireOldPassword' => $requireOldPasswordForChange ?? true,
-        'allGroups' => $allGroups
-    ]);
+		'allGroups' => $allGroups
+	]);
 } else {
 	$error = null;
 	$users = [];
@@ -78,28 +84,28 @@ if(isset($_GET['uid'])) {
 	try {
 		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN, CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
 		$users = $ldap->getUsersList(new DateTimeZone('Europe/Rome'), $website ? ['degreecourse', 'websitedescription'] : ['websitedescription']);
-	} catch(LdapException $e) {
+	} catch (LdapException $e) {
 		$error = $e->getMessage();
 	}
 
 	$template = Template::create();
 	$template->addData(['currentSection' => 'people'], 'navbar');
 
-	if($website) {
+	if ($website) {
 		$excludedGroups = explode(',', CRAUTO_WEBSITE_IGNORE_GROUPS);
 		$excludedGroups = array_combine($excludedGroups, $excludedGroups);
-		if(count($excludedGroups) > 0) {
+		if (count($excludedGroups) > 0) {
 			$usersFiltered = [];
-			foreach($users as $user) {
+			foreach ($users as $user) {
 				$groups = $user['memberof'] ?? [];
 				$exclude = false;
-				foreach($groups as $group) {
-					if(array_key_exists($group, $excludedGroups)) {
+				foreach ($groups as $group) {
+					if (array_key_exists($group, $excludedGroups)) {
 						$exclude = true;
 						break;
 					}
 				}
-				if(!$exclude) {
+				if (!$exclude) {
 					$usersFiltered[] = $user;
 				}
 			}
@@ -119,5 +125,3 @@ if(isset($_GET['uid'])) {
 		]);
 	}
 }
-
-

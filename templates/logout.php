@@ -1,4 +1,5 @@
 <?php
+
 $this->layout('base', ['title' => 'Logged out']) ?>
 
 <p>You are now logged out.</p>

@@ -10,7 +10,7 @@ $this->layout('base', ['title' => $title]);
 
 <h1><?= $title ?></h1>
 
-<?php if($error !== null): ?>
+<?php if ($error !== null) : ?>
 	<div class="alert alert-danger" role="alert">
 		Error: <?= $this->e($error) ?>
 	</div>
@@ -21,7 +21,7 @@ $this->layout('base', ['title' => $title]);
 	'editableAttributes' => $editableAttributes,
 	'allowedAttributes'  => $allowedAttributes,
 	'selfImage'          => true,
-    'allGroups'          => $allGroups
+	'allGroups'          => $allGroups
 ])?>
 
 <p>

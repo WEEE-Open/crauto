@@ -1,4 +1,5 @@
 <?php
+
 $this->layout('base', ['title' => 'Privacy policy']) ?>
 
 <h1>Informazioni sul trattamento dei dati personali (privacy policy)</h1>

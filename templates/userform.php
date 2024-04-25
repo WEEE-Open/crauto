@@ -6,10 +6,10 @@
 sort($allGroups);
 ?>
 <?php
-$editable = function(string $attr) use ($editableAttributes): string {
+$editable = function (string $attr) use ($editableAttributes): string {
 	return isset($editableAttributes[$attr]) ? '' : 'readonly';
 };
-$disabled = function(string $attr) use ($editableAttributes): string {
+$disabled = function (string $attr) use ($editableAttributes): string {
 	return isset($editableAttributes[$attr]) ? '' : 'disabled';
 };
 $attributeNames = [
@@ -54,8 +54,8 @@ $attributeNames = [
 	<div class="form-group">
 		<label for="profile-memberof"><?= $attributeNames['memberof'] ?></label>
 		<select class="form-control selectpicker" multiple id="profile-memberof" name="memberof[]" <?= $editable('memberof') === '' ? '' : 'disabled' ?> data-size="6" data-container="body">
-			<?php foreach($allGroups as $group): ?>
-				<option <?= in_array($group,$attributes['memberof']) ? 'selected' : '' ?> value="<?=$this->e($group)?>"><?=$this->e($group)?></option>
+			<?php foreach ($allGroups as $group) : ?>
+				<option <?= in_array($group, $attributes['memberof']) ? 'selected' : '' ?> value="<?=$this->e($group)?>"><?=$this->e($group)?></option>
 			<?php endforeach; ?>
 		</select>
 	</div>
@@ -118,45 +118,45 @@ $attributeNames = [
 		<label for="profile-weeelabnickname"><?= $attributeNames['weeelabnickname'] ?></label>
 		<textarea class="form-control" id="profile-weeelabnickname" name="weeelabnickname" rows="<?= count($attributes['weeelabnickname']) + 1 ?>" <?= $editable('weeelabnickname') ?> maxlength="500"><?= implode("\r\n", array_map([$this, 'e'], $attributes['weeelabnickname'])) ?></textarea>
 	</div>
-	<?php if(in_array('websitedescription', $allowedAttributes)): ?>
+	<?php if (in_array('websitedescription', $allowedAttributes)) : ?>
 		<div class="form-group">
 			<label for="profile-description"><?= $attributeNames['websitedescription'] ?></label>
 			<textarea class="form-control" id="profile-websitedescription" name="websitedescription" rows="1" <?= $editable('websitedescription') ?> maxlength="1000"><?= $this->e($attributes['websitedescription'] ?? '') ?></textarea>
 		</div>
 	<?php endif ?>
-	<?php if(in_array('description', $allowedAttributes)): ?>
+	<?php if (in_array('description', $allowedAttributes)) : ?>
 		<div class="form-group">
 			<label for="profile-description"><?= $attributeNames['description'] ?></label>
 			<textarea class="form-control" id="profile-description" name="description" rows="<?= floor(strlen($attributes['description']) / 100 + 3) ?>" <?= $editable('description') ?> maxlength="10000"><?= $this->e($attributes['description'] ?? '') ?></textarea>
 		</div>
 	<?php endif ?>
 
-	<?php if(in_array('nsaccountlock', $allowedAttributes) || in_array('signedsir', $allowedAttributes) || in_array('haskey', $allowedAttributes)): ?>
+	<?php if (in_array('nsaccountlock', $allowedAttributes) || in_array('signedsir', $allowedAttributes) || in_array('haskey', $allowedAttributes)) : ?>
 	<div class="form-row">
-	<?php if(in_array('nsaccountlock', $allowedAttributes)): ?>
+		<?php if (in_array('nsaccountlock', $allowedAttributes)) : ?>
 		<div class="form-group col-sm-6 col-md-4">
 			<div class="form-check">
 				<input class="form-check-input" type="checkbox" value="true" id="profile-accountlock" <?= $attributes['nsaccountlock'] === 'true' ? 'checked' : '' ?> name="nsaccountlock" <?= $disabled('nsaccountlock') ?>>
 				<label for="profile-accountlock"><?= $attributeNames['nsaccountlock'] ?></label>
 			</div>
 		</div>
-	<?php endif ?>
-	<?php if(in_array('signedsir', $allowedAttributes)): ?>
+		<?php endif ?>
+		<?php if (in_array('signedsir', $allowedAttributes)) : ?>
 		<div class="form-group col-sm-6 col-md-4">
 			<div class="form-check">
 				<input class="form-check-input" type="checkbox" value="true" id="profile-signedsir" <?= $attributes['signedsir'] === 'true' ? 'checked' : '' ?> name="signedsir" <?= $disabled('signedsir') ?>>
 				<label for="profile-signedsir"><?= $attributeNames['signedsir'] ?></label>
 			</div>
 		</div>
-	<?php endif ?>
-	<?php if(in_array('haskey', $allowedAttributes)): ?>
+		<?php endif ?>
+		<?php if (in_array('haskey', $allowedAttributes)) : ?>
 		<div class="form-group col-sm-6 col-md-4">
 			<div class="form-check">
 				<input class="form-check-input" type="checkbox" value="true" id="profile-haskey" <?= $attributes['haskey'] === 'true' ? 'checked' : '' ?> name="haskey" <?= $disabled('haskey') ?>>
 				<label for="profile-haskey"><?= $attributeNames['haskey'] ?></label>
 			</div>
 		</div>
-	<?php endif ?>
+		<?php endif ?>
 	</div>
 	<?php endif ?>
 

@@ -6,13 +6,13 @@ use InvalidArgumentException;
 
 require '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 Authentication::requireLogin();
-if(!Authentication::isAdmin()) {
+if (!Authentication::isAdmin()) {
 	$template = Template::create();
 	echo $template->render('403');
 	exit;
 }
 
-if(isset($_GET['uid'])) {
+if (isset($_GET['uid'])) {
 	$targetUid = $_GET['uid'];
 	$getTheseAttributes = [
 		'givenname',
@@ -23,24 +23,30 @@ if(isset($_GET['uid'])) {
 	];
 
 	try {
-		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
-			CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
+		$ldap = new Ldap(
+			CRAUTO_LDAP_URL,
+			CRAUTO_LDAP_BIND_DN,
+			CRAUTO_LDAP_PASSWORD,
+			CRAUTO_LDAP_USERS_DN,
+			CRAUTO_LDAP_GROUPS_DN,
+			CRAUTO_LDAP_STARTTLS
+		);
 		$attributes = $ldap->getUser($targetUid, $getTheseAttributes);
-		if($attributes === null) {
+		if ($attributes === null) {
 			$template = Template::create();
 			echo $template->render('404');
 			exit;
 		}
 
-		foreach($getTheseAttributes as $name) {
-			if(!array_key_exists($name, $attributes)) {
+		foreach ($getTheseAttributes as $name) {
+			if (!array_key_exists($name, $attributes)) {
 				throw new InvalidArgumentException("$name is required");
 			}
 			$attr = $attributes[$name];
-			if(is_array($attr) && count($attr) <= 0) {
+			if (is_array($attr) && count($attr) <= 0) {
 				throw new InvalidArgumentException("$name is empty (and multivalued)");
 			}
-			if($attr === null || $attr === '') {
+			if ($attr === null || $attr === '') {
 				throw new InvalidArgumentException("$name is empty");
 			}
 		}
@@ -62,12 +68,11 @@ if(isset($_GET['uid'])) {
 		readfile($pdf);
 
 		exit;
-
-	} catch(LdapException | SirException | ValidationException | InvalidArgumentException $e) {
+	} catch (LdapException | SirException | ValidationException | InvalidArgumentException $e) {
 		$error = $e->getMessage();
 	}
 
-	if($error !== null) {
+	if ($error !== null) {
 		$template = Template::create();
 		echo $template->render('500', [
 			'error' => $error,
@@ -75,12 +80,9 @@ if(isset($_GET['uid'])) {
 
 		exit;
 	}
-
 } else {
 	$template = Template::create();
 	echo $template->render('400', ['error' => 'For which user?']);
 
 	exit;
 }
-
-

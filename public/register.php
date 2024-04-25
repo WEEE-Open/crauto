@@ -5,7 +5,7 @@ namespace WEEEOpen\Crauto;
 require '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
 $loggedin = Authentication::isLoggedIn();
-if($loggedin) {
+if ($loggedin) {
 	$template = Template::create();
 	$template->addData(['authenticated' => $loggedin, 'isAdmin' => $loggedin && Authentication::isAdmin()], 'navbar');
 	echo $template->render('403');
@@ -458,11 +458,17 @@ $template = Template::create();
 $template->addData(['authenticated' => $loggedin, 'isAdmin' => $loggedin && Authentication::isAdmin()], 'navbar');
 
 try {
-	$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN,
-		CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
-	if(isset($_GET['invite'])) {
+	$ldap = new Ldap(
+		CRAUTO_LDAP_URL,
+		CRAUTO_LDAP_BIND_DN,
+		CRAUTO_LDAP_PASSWORD,
+		CRAUTO_LDAP_USERS_DN,
+		CRAUTO_LDAP_GROUPS_DN,
+		CRAUTO_LDAP_STARTTLS
+	);
+	if (isset($_GET['invite'])) {
 		$defaultAttributes = $ldap->getInvitedUser($_GET['invite'], CRAUTO_LDAP_INVITES_DN);
-		if($defaultAttributes === null) {
+		if ($defaultAttributes === null) {
 			$template = Template::create();
 			echo $template->render('403', ['error' => 'Invalid invite code']);
 			exit;
@@ -472,7 +478,7 @@ try {
 		echo $template->render('403', ['error' => 'Missing invite code']);
 		exit;
 	}
-} catch(LdapException | ValidationException $e) {
+} catch (LdapException | ValidationException $e) {
 	$error = $e->getMessage();
 	echo $template->render('500', ['error' => $error]);
 	exit;
@@ -480,21 +486,21 @@ try {
 
 // Invite code is valid and $defaultAttributes is available, if getting here
 try {
-	if(isset($_POST) && !empty($_POST)) {
-		Validation::handleUserRegisterPost($_POST, Validation::allowedAttributesRegister, $ldap, $degreeCourses, $countries, $province);
+	if (isset($_POST) && !empty($_POST)) {
+		Validation::handleUserRegisterPost($_POST, Validation::ALLOWED_ATTRIBUTES_REGISTER, $ldap, $degreeCourses, $countries, $province);
 		$ldap->deleteInvite(CRAUTO_LDAP_INVITES_DN, $_GET['invite']);
 		http_response_code(303);
 		$_SESSION['register_done'] = true;
 		header('Location: register_done.php');
 		exit;
 	}
-} catch(LdapException | ValidationException $e) {
+} catch (LdapException | ValidationException $e) {
 	$error = $e->getMessage();
 }
 
 
-if(isset($defaultAttributes['degreecourse'])) {
-	if(!isset($degreeCourses[$defaultAttributes['degreecourse']])) {
+if (isset($defaultAttributes['degreecourse'])) {
+	if (!isset($degreeCourses[$defaultAttributes['degreecourse']])) {
 		unset($defaultAttributes['degreecourse']);
 	}
 }

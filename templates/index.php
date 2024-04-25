@@ -12,8 +12,8 @@ $this->layout('base', ['title' => 'Welcome']) ?>
 <ul>
 	<li>Crauto - account management system, where you are now</li>
 	<?php
-	foreach(CRAUTO_HOME_PAGE_SERVICES as $service) {
-		switch(count($service)) {
+	foreach (CRAUTO_HOME_PAGE_SERVICES as $service) {
+		switch (count($service)) {
 			case 1:
 			default:
 				echo "<li>$service[0]</li>";

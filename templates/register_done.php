@@ -1,4 +1,5 @@
 <?php
+
 /** @var $uid string */
 /** @var $name string */
 /** @var $error ?string */
