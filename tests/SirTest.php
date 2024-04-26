@@ -4,12 +4,14 @@
 use PHPUnit\Framework\TestCase;
 use WEEEOpen\Crauto\Sir;
 
-const TEST_DIR = __DIR__ . '/../resources/pdftemplates-test';
+const TEST_DIR = __DIR__ . '/pdftemplates-test';
 
 class SirTest extends TestCase {
-	private static function delete_file(string $file) {
-		// Comment out if you want to check the output files
-		//unlink($file);
+	private static function delete_file(?string $file): void {
+		if(isset($file) && is_file($file)) {
+			// Comment out if you want to check the output files
+			unlink($file);
+		}
 	}
 	
 	protected function setUp(): void {
@@ -23,11 +25,7 @@ class SirTest extends TestCase {
 
 	public function testGenerateSir() {
 		$pdfFilePath = null;
-		register_shutdown_function(function() use (&$pdfFilePath) {
-			if(is_file($pdfFilePath)) {
-				self::delete_file($pdfFilePath);
-			}
-		});
+		register_shutdown_function(function() use (&$pdfFilePath) { self::delete_file($pdfFilePath); });
 
 		$replacements = [
 			'[NAME]'     => 'John',
@@ -45,11 +43,7 @@ class SirTest extends TestCase {
 
 	public function testGenerateSirPhD() {
 		$pdfFilePath = null;
-		register_shutdown_function(function() use (&$pdfFilePath) {
-			if(is_file($pdfFilePath)) {
-				self::delete_file($pdfFilePath);
-			}
-		});
+		register_shutdown_function(function() use (&$pdfFilePath) { self::delete_file($pdfFilePath); });
 
 		$replacements = [
 			'[NAME]'     => 'Andrea',
@@ -68,14 +62,7 @@ class SirTest extends TestCase {
 	public function testGenerateSir2() {
 		$pdfFilePath = null;
 		$pdfFilePath2 = null;
-		register_shutdown_function(function() use (&$pdfFilePath, &$pdfFilePath2) {
-			if(is_file($pdfFilePath)) {
-				self::delete_file($pdfFilePath);
-			}
-			if(is_file($pdfFilePath2)) {
-				self::delete_file($pdfFilePath2);
-			}
-		});
+		register_shutdown_function(function() use (&$pdfFilePath, &$pdfFilePath2) { self::delete_file($pdfFilePath); self::delete_file($pdfFilePath2); });
 
 		$replacements = [
 			'[NAME]'     => 'John',
@@ -105,14 +92,7 @@ class SirTest extends TestCase {
 	public function testGenerateSirOnce() {
 		$pdfFilePath = null;
 		$pdfFilePath2 = null;
-		register_shutdown_function(function() use (&$pdfFilePath, &$pdfFilePath2) {
-			if(is_file($pdfFilePath)) {
-				self::delete_file($pdfFilePath);
-			}
-			if(is_file($pdfFilePath2)) {
-				self::delete_file($pdfFilePath2);
-			}
-		});
+		register_shutdown_function(function() use (&$pdfFilePath, &$pdfFilePath2) { self::delete_file($pdfFilePath); self::delete_file($pdfFilePath2); });
 
 		$replacements = [
 			'[NAME]'     => 'John',
@@ -135,14 +115,7 @@ class SirTest extends TestCase {
 	public function testGenerateSirWithUpdate() {
 		$pdfFilePath = null;
 		$pdfFilePath2 = null;
-		register_shutdown_function(function() use (&$pdfFilePath, &$pdfFilePath2) {
-			if(is_file($pdfFilePath)) {
-				self::delete_file($pdfFilePath);
-			}
-			if(is_file($pdfFilePath2)) {
-				self::delete_file($pdfFilePath2);
-			}
-		});
+		register_shutdown_function(function() use (&$pdfFilePath, &$pdfFilePath2) { self::delete_file($pdfFilePath); self::delete_file($pdfFilePath2); });
 
 		$replacements = [
 			'[NAME]'     => 'John',
