@@ -61,7 +61,7 @@ if (isset($_GET['uid'])) {
 			'[CDL]'      => $attributes['degreecourse'],
 		];
 
-		$sir = new Sir(CRAUTO_SIR_TMP_DIR);
+		$sir = new Sir(__DIR__ . '/../resources/pdftemplates');
 		$pdf = $sir->getSir($targetUid, $replace);
 		header('Content-type: application/pdf');
 		header("Content-Disposition: attachment; filename=\"sir-$targetUid.pdf\"");
