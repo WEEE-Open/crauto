@@ -3,8 +3,7 @@ composer.phar
 /vendor/
 config/config.php
 tests/pasta/output
-T-MOD-SIR.pdf
-F-MOD-LABORATORI.pdf
+resources/pdftemplates/**/*.pdf
 resources/latex/
 resources/sir/
 resources/photos/
