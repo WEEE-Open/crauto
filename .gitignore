@@ -10,4 +10,3 @@ resources/photos/
 resources/pdftemplates/
 tests/.phpunit.result.cache
 resources/*/output/
-tests/pdftemplates-test/output/*
