@@ -6,8 +6,7 @@ require_once '../config/config.php';
 
 $dirs = [
 	__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'photos',
-	__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'latex' . DIRECTORY_SEPARATOR . 'sir',
-	__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'pdftemplates' . DIRECTORY_SEPARATOR . 'sir',
+	__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'pdftemplates' . DIRECTORY_SEPARATOR . 'output',
 ];
 foreach($dirs as $dir) {
 	$files = scandir($dir);
