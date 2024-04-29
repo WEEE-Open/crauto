@@ -2,6 +2,9 @@
 
 namespace WEEEOpen\Crauto;
 
+use DateTime;
+use DateTimeZone;
+use Exception;
 use InvalidArgumentException;
 
 require '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
@@ -53,12 +56,20 @@ if (isset($_GET['uid'])) {
 
 		$safetytestdate = Validation::dateSchacToHtml($attributes['safetytestdate']);
 
+		try {
+			$tz = new DateTimeZone('Europe/Rome');
+			$now = (new DateTime('now', $tz))->format('Y-m-d');
+		} catch (Exception) {
+			$now = '';
+		}
+
 		$replace = [
-			'[NAME]'     => $attributes['givenname'],
-			'[SURNAME]'  => $attributes['sn'],
-			'[ID]'       => $attributes['schacpersonaluniquecode'],
-			'[TESTDATE]' => $safetytestdate,
-			'[CDL]'      => $attributes['degreecourse'],
+			'[NAME]'      => $attributes['givenname'],
+			'[SURNAME]'   => $attributes['sn'],
+			'[ID]'        => $attributes['schacpersonaluniquecode'],
+			'[TESTDATE]'  => $safetytestdate,
+			'[TODAYDATE]' => $now,
+			'[CDL]'       => $attributes['degreecourse'],
 		];
 
 		$sir = new Sir(__DIR__ . '/../resources/pdftemplates');

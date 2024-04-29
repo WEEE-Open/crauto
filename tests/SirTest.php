@@ -32,6 +32,7 @@ class SirTest extends TestCase {
 			'[SURNAME]'  => 'Doe',
 			'[ID]'       => 's123456',
 			'[TESTDATE]' => '2099-01-01',
+			'[TODAYDATE]'=> '2099-02-02',
 			'[CDL]'      => 'Ingegneria dell\'ingegnerizzazione',
 		];
 
@@ -50,6 +51,7 @@ class SirTest extends TestCase {
 			'[SURNAME]'  => 'Andrea',
 			'[ID]'       => 'd12345',
 			'[TESTDATE]' => '2099-01-01',
+			'[TODAYDATE]'=> '2099-02-02',
 			'[CDL]'      => 'Dottorato in dottoramento',
 		];
 
@@ -69,6 +71,7 @@ class SirTest extends TestCase {
 			'[SURNAME]'  => 'Doe',
 			'[ID]'       => 's123456',
 			'[TESTDATE]' => '2099-01-01',
+			'[TODAYDATE]'=> '2099-02-02',
 			'[CDL]'      => 'Ingegneria dell\'ingegnerizzazione',
 		];
 		$sir = new Sir(TEST_DIR);
@@ -79,6 +82,7 @@ class SirTest extends TestCase {
 			'[SURNAME]'  => 'Smith',
 			'[ID]'       => 's456789',
 			'[TESTDATE]' => '2099-01-01',
+			'[TODAYDATE]'=> '2099-02-02',
 			'[CDL]'      => 'Ingegneria dell\'ingegnerizzazione',
 		];
 		$sir = new Sir(TEST_DIR);
@@ -99,6 +103,7 @@ class SirTest extends TestCase {
 			'[SURNAME]'  => 'Doe',
 			'[ID]'       => 's123456',
 			'[TESTDATE]' => '2099-01-01',
+			'[TODAYDATE]'=> '2099-02-02',
 			'[CDL]'      => 'Ingegneria dell\'ingegnerizzazione',
 		];
 		$sir = new Sir(TEST_DIR);
@@ -122,6 +127,7 @@ class SirTest extends TestCase {
 			'[SURNAME]'  => 'Doe',
 			'[ID]'       => 's123456',
 			'[TESTDATE]' => '2099-01-01',
+			'[TODAYDATE]'=> '2099-02-02',
 			'[CDL]'      => 'Ingegneria dell\'ingegnerizzazione',
 		];
 		$sir = new Sir(TEST_DIR);
@@ -134,6 +140,7 @@ class SirTest extends TestCase {
 			'[SURNAME]'  => 'Doe',
 			'[ID]'       => 's123456',
 			'[TESTDATE]' => '2099-02-02',
+			'[TODAYDATE]'=> '2099-02-02',
 			'[CDL]'      => 'Ingegneria del disagio',
 		];
 		$sir = new Sir(TEST_DIR);
