@@ -20,7 +20,7 @@ class Template
 	public static function telegramColumn($nickname, $id): string
 	{
 		if (isset($nickname)) {
-			return '<a href="https://t.me/' . $nickname . '">@' . $nickname;
+			return '<a href="https://t.me/' . $nickname . '">@' . $nickname . '</a>';
 		} elseif (isset($id)) {
 			return 'ID Only';
 		} else {
