@@ -17,6 +17,9 @@
 						<a class="nav-link <?= $currentSection === 'personal' ? 'active' : '' ?>" href="/personal.php">Personal</a>
 					</li>
 					<li class="nav-item">
+						<a class="nav-link <?= $currentSection === 'sugo' ? 'active' : '' ?>" href="/sugo.php">Sugo</a>
+					</li>
+					<li class="nav-item">
 						<a class="nav-link <?= $currentSection === 'authentication' ? 'active' : '' ?>"
 						   href="/authentication.php">Authentication</a>
 					</li>

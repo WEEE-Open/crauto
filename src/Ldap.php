@@ -33,7 +33,8 @@ class Ldap
 			'weeelabnickname' => ['io'],
 			'websitedescription' => "Il capo supremo\nSu due righe",
 			'description' => '',
-			'nsaccountlock' => null
+			'nsaccountlock' => null,
+			'mail' => 'admin@example.com',
 		],
 		'alice' => [
 			'uid' => 'alice',
@@ -53,7 +54,8 @@ class Ldap
 			'weeelabnickname' => [],
 			'websitedescription' => 'Persona',
 			'description' => '',
-			'nsaccountlock' => 'true'
+			'nsaccountlock' => 'true',
+			'mail' => 'alice@example.com',
 		],
 		'brodino' => [
 			'uid' => 'brodino',
@@ -72,7 +74,8 @@ class Ldap
 			'sshpublickey' => [],
 			'weeelabnickname' => [],
 			'description' => '',
-			'telegramnickname' => 'brodino'
+			'telegramnickname' => 'brodino',
+			'mail' => 'brodino@example.com',
 		],
 		'bob' => [
 			'uid' => 'bob',
@@ -92,7 +95,8 @@ class Ldap
 			'sshpublickey' => [],
 			'weeelabnickname' => [],
 			'description' => '',
-			'nsaccountlock' => null
+			'nsaccountlock' => null,
+			'mail' => 'bob@example.com',
 		],
 		'broski' => [
 			'uid' => 'broski',
@@ -111,7 +115,8 @@ class Ldap
 			'sshpublickey' => [],
 			'weeelabnickname' => [],
 			'description' => '',
-			'telegramid' => '123456789'
+			'telegramid' => '123456789',
+			'mail' => 'bro@example.com',
 		],
 	];
 	private const EXAMPLE_GROUPS = ['Admin', 'Persone', 'Cloud'];

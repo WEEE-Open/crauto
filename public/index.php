@@ -10,5 +10,6 @@ $template->addData(['currentSection' => 'index'], 'navbar');
 echo $template->render('index', [
 	'uid' => $_SESSION['uid'],
 	'id' => $_SESSION['id'],
-	'name' => $_SESSION['cn']
+	'name' => $_SESSION['cn'],
+	'hasSignedSIR' => $_SESSION['signedsir'],
 ]);

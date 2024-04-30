@@ -81,6 +81,7 @@ class Authentication
 			$_SESSION['uid'] = 'test.administrator';
 			$_SESSION['id'] = 'fake:example:68048769-c06d-4873-adf6-dbfa6b0afcd3';
 			$_SESSION['cn'] = 'Test Administrator';
+			$_SESSION['hasSignedSIR'] = false;
 			$_SESSION['groups'] = ['HR'];
 			$_SESSION['expires'] = PHP_INT_MAX;
 			$_SESSION['refresh_token'] = 'refresh_token';
@@ -307,9 +308,21 @@ class Authentication
 		$refresh_token = $oidc->getRefreshToken();
 		$id_token = $idt ?? $oidc->getIdToken();
 
+		$ldap = new Ldap(
+			CRAUTO_LDAP_URL,
+			CRAUTO_LDAP_BIND_DN,
+			CRAUTO_LDAP_PASSWORD,
+			CRAUTO_LDAP_USERS_DN,
+			CRAUTO_LDAP_GROUPS_DN,
+			CRAUTO_LDAP_STARTTLS
+		);
+
+		$ldapInfo = $ldap->getUser($uid, ['signedsir']);
+
 		$_SESSION['uid'] = $uid;
 		$_SESSION['id'] = $id;
 		$_SESSION['cn'] = $cn;
+		$_SESSION['signedsir'] = $ldapInfo['signedsir'] ?? false; // This won't updated until the next login but good enough
 		$_SESSION['groups'] = $groups;
 		$_SESSION['expires'] = $exp;
 

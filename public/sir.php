@@ -9,7 +9,7 @@ use InvalidArgumentException;
 
 require '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 Authentication::requireLogin();
-if (!Authentication::isAdmin()) {
+if (!Authentication::isAdmin() && !isset($_GET['uid']) && $_GET['uid'] !== $_SESSION['uid']) {
 	$template = Template::create();
 	echo $template->render('403');
 	exit;
