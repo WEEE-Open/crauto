@@ -31,6 +31,6 @@ class Template
 	public static function shortListEntry(string $uid, string $cn, ?string $schacpersonaluniquecode): string
 	{
 		$schacpersonaluniquecode = $schacpersonaluniquecode ?? 'no matricola';
-		return /** @lang HTML */ "<a href=\"/people.php?uid=$uid\">$cn</a>, $schacpersonaluniquecode <a class=\"btn btn-sm btn-outline-dark m-1 p-1\" href=\"/sir.php?uid=$uid\"><i class=\"fa fa-download mr-1\"></i>Get SIR</a>";
+		return /** @lang HTML */ "<a href=\"/people.php?uid=$uid\">$cn</a>, $schacpersonaluniquecode <a class=\"btn btn-sm btn-outline-dark m-1 p-1\" href=\"/sugo.php?uid=$uid\"><i class=\"fa-solid fa-signature\"></i>Sign SIR</a>";
 	}
 }
