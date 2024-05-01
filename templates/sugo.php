@@ -1,5 +1,7 @@
 <?php
-$this->layout('base', ['title' => 'Welcome']) ?>
+
+$this->layout('base', ['title' => 'Welcome'])
+?>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
@@ -10,7 +12,7 @@ $this->layout('base', ['title' => 'Welcome']) ?>
 		data() {
 			return {
 				users: <?= json_encode($users) ?>,
-				selectedUser: <?= $selectedUser ? "'" . str_replace("'", "\'", $selectedUser) . "'" : "null" ?>,
+				selectedUser: <?= $selectedUser ? "'" . str_replace("'", "\'", $selectedUser) . "'" : 'null' ?>,
 				selectedUserData: null,
 				document: null,
 				finalDocument: null,

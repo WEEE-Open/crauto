@@ -7,7 +7,9 @@ $this->layout('base', ['title' => 'Welcome']) ?>
 
 <h1>Crauto</h1>
 <small>Creatore e Rimuovitore Autogestito di Utenti che Tutto Offre</small>
-<?php if (!$signedsir) echo "<p class=\"alert alert-warning\">You still haven't signed your SIR! <a href=\"/sugo.php?uid=" . urlencode($uid) . "\" class=\"btn btn-outline-warning text-right\" >Generate document</a></p>"; ?>
+<?php if (!$signedsir) {
+	echo "<p class=\"alert alert-warning\">You still haven't signed your SIR! <a href=\"/sugo.php?uid=" . urlencode($uid) . "\" class=\"btn btn-outline-warning text-right\" >Generate document</a></p>";
+} ?>
 <p>Hi <?= $name ?>, your username is <?= $uid ?> and your ID is <?= $id ?></p>
 <h2>Enabled services</h2>
 <p>What can I access with this account?</p>

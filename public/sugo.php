@@ -7,8 +7,6 @@ use DateTimeZone;
 require '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 Authentication::requireLogin();
 
-
-
 $ldap = new Ldap(
 	CRAUTO_LDAP_URL,
 	CRAUTO_LDAP_BIND_DN,
@@ -29,12 +27,12 @@ if (Authentication::isAdmin()) {
 		CRAUTO_LDAP_GROUPS_DN,
 		CRAUTO_LDAP_STARTTLS
 	);
-	$users = $ldap->getUsers(['givenname','sn','signedsir','nsaccountlock', 'mail']);
+	$users = $ldap->getUsers(['givenname', 'sn', 'signedsir', 'nsaccountlock', 'mail']);
 	if (isset($_GET['uid'])) {
 		$selectedUser = $_GET['uid'];
 	}
 } else {
-	$users = [$ldap->getUser($_SESSION['uid'], ['givenname','sn','signedsir','nsaccountlock', 'mail'])];
+	$users = [$ldap->getUser($_SESSION['uid'], ['givenname', 'sn', 'signedsir', 'nsaccountlock', 'mail'])];
 	$selectedUser = $_SESSION['uid'];
 }
 
