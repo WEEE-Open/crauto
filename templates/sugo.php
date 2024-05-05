@@ -14,8 +14,7 @@ $this->layout('base', ['title' => 'Welcome'])
 		data() {
 			return {
 				users: <?= json_encode($users) ?>,
-				selectedUser: <?= $selectedUser ? "'" . json_encode($selectedUser, JSON_UNESCAPED_UNICODE) . "'" : 'null' ?>,
-				selectedUserData: null,
+				selectedUser: <?= $selectedUser ? json_encode($selectedUser, JSON_UNESCAPED_UNICODE) : 'null' ?>,
 				document: null,
 				finalDocument: null,
 				loading: false,
@@ -135,7 +134,19 @@ $this->layout('base', ['title' => 'Welcome'])
 				// add the signature
 				let signatureBuffer = Uint8Array.from(atob(signatureData.split(',')[1]), c => c.charCodeAt(0));
 				let signatureImage = await pdf.embedPng(signatureBuffer);
-				thirdPage.drawImage(signatureImage, {
+				thirdPage.drawImage(signatureImage, { // guanti
+					x: 355,
+					y: 592,
+					width: 80,
+					height: 40,
+				});
+				thirdPage.drawImage(signatureImage, { // cappa
+					x: 260,
+					y: 460,
+					width: 80,
+					height: 40,
+				});
+				thirdPage.drawImage(signatureImage, { // end of document
 					x: 360,
 					y: 110,
 					width: 180,
@@ -147,7 +158,7 @@ $this->layout('base', ['title' => 'Welcome'])
 				this.download(); // temp
 				this.loading = false;
 			},
-			send() {
+			send() { // currently unused as we don't have an email endpoint
 				if (!this.toEmail || this.loading) {
 					return;
 				}
@@ -168,15 +179,22 @@ $this->layout('base', ['title' => 'Welcome'])
 					}
 				});
 			},
+			async downloadBlank() {
+				await this.sign();
+				this.loading = true;
+				this.finalDocument = this.document;
+				this.download();
+				this.loading = false;
+			},
 			download() {
 				let pdfBlob = new Blob([this.finalDocument], {type: 'application/pdf'});
 				let pdfUrl = URL.createObjectURL(pdfBlob);
 				let a = document.createElement('a');
 				a.href = pdfUrl;
-				a.download = 'sir.pdf';
+				a.download = `sir-${this.selectedUser}.pdf`;
 				a.click();
 				URL.revokeObjectURL(pdfUrl);
-				if (this.users.length === 0) {
+				if (this.users.length === 1) {
 					// just redirect to the home page
 					window.location.href = '/';
 				}
@@ -202,7 +220,8 @@ $this->layout('base', ['title' => 'Welcome'])
 								<option v-for="user in isLocked" :value="user.uid"><b>{{ user.cn }}</b> ({{ user.uid }})</option>
 							</optgroup>
 						</select>
-						<button @click="sign" class="btn btn-primary ml-2">View and Sign</button>
+						<button @click="sign" class="btn btn-primary ml-2">Sign</button>
+						<button @click="downloadBlank" class="btn btn-outline-secondary ml-2">View</button>
 						</div>
 					</form>
 				</template>
