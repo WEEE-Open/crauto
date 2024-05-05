@@ -1,4 +1,5 @@
 <?php
+
 /** @var string|null $selectedUser */
 /** @var array $users */
 $this->layout('base', ['title' => 'Welcome'])

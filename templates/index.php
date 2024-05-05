@@ -14,7 +14,7 @@ $this->layout('base', ['title' => 'Welcome']) ?>
 		Error: <?= $this->e($error) ?>
 	</div>
 <?php endif ?>
-<?php if (!$signedSir): ?>
+<?php if (!$signedSir) : ?>
 	<p class="alert alert-warning">You need to sign your SIR! <a href="/sugo.php?uid=<?= urlencode($uid)?>" class="btn btn-sm btn-warning">Sign the SIR</a></p>
 <?php endif ?>
 <h2>Enabled services</h2>

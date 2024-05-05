@@ -78,7 +78,7 @@ class Authentication
 
 		if (TEST_MODE) {
 			error_log('TEST_MODE, faking authentication');
-			switch(TEST_MODE_SSO) {
+			switch (TEST_MODE_SSO) {
 				case 1:
 				default:
 					$_SESSION['uid'] = 'test.administrator';
