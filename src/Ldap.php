@@ -5,6 +5,7 @@ namespace WEEEOpen\Crauto;
 use DateTime;
 use DateTimeZone;
 use InvalidArgumentException;
+use LDAP\Result;
 
 class Ldap
 {
@@ -269,7 +270,7 @@ class Ldap
 	 * @param string $uid UID to search
 	 * @param array|null $attributes Attributes to include in search result ("null" for all)
 	 *
-	 * @return resource|null $sr from ldap_search or none if no users are found
+	 * @return array|Result|null $sr from ldap_search or none if no users are found
 	 * @throws LdapException if cannot search or more than one user is found
 	 */
 	private function searchByUid(string $uid, ?array $attributes = null)
