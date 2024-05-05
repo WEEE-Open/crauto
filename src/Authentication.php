@@ -339,12 +339,9 @@ class Authentication
 			CRAUTO_LDAP_STARTTLS
 		);
 
-		$ldapInfo = $ldap->getUser($uid, ['signedsir']);
-
 		$_SESSION['uid'] = $uid;
 		$_SESSION['id'] = $id;
 		$_SESSION['cn'] = $cn;
-		$_SESSION['signedsir'] = $ldapInfo['signedsir'] ?? false; // This won't updated until the next login but good enough
 		$_SESSION['groups'] = $groups;
 		$_SESSION['expires'] = $exp;
 
