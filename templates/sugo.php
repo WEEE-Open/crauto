@@ -1,5 +1,6 @@
 <?php
-
+/** @var string|null $selectedUser */
+/** @var array $users */
 $this->layout('base', ['title' => 'Welcome'])
 ?>
 
@@ -12,19 +13,19 @@ $this->layout('base', ['title' => 'Welcome'])
 		data() {
 			return {
 				users: <?= json_encode($users) ?>,
-				selectedUser: <?= $selectedUser ? "'" . str_replace("'", "\'", $selectedUser) . "'" : 'null' ?>,
+				selectedUser: <?= $selectedUser ? "'" . json_encode($selectedUser, JSON_UNESCAPED_UNICODE) . "'" : 'null' ?>,
 				selectedUserData: null,
 				document: null,
 				finalDocument: null,
 				loading: false,
-				screen: <?= $selectedUser ? "'sign'" : "'chooseUser'" ?>,
+				screen: '<?= $selectedUser ? "sign" : "chooseUser" ?>',
 				mouseDown: false,
 				toEmail: null,
 			}
 		},
 		watch: {
 			screen() {
-				if (this.screen == 'sign') {
+				if (this.screen === 'sign') {
 					history.pushState(null, '', '/sugo.php?uid=' + encodeURIComponent(this.selectedUser));
 				} else {
 					history.pushState(null, '', '/sugo.php');
@@ -32,7 +33,7 @@ $this->layout('base', ['title' => 'Welcome'])
 			}
 		},
 		mounted() {
-			if (this.screen == 'sign') {
+			if (this.screen === 'sign') {
 				this.sign();
 			}
 		},
@@ -40,14 +41,14 @@ $this->layout('base', ['title' => 'Welcome'])
 			needsToSign() {
 				return this.users.filter(user => user.needsToSign);
 			},
-			isBlocked() {
-				return this.users.filter(user => user.isBlocked);
+			isLocked() {
+				return this.users.filter(user => user.isLocked);
 			},
 			everyoneElse() {
-				return this.users.filter(user => !user.needsToSign && !user.isBlocked);
+				return this.users.filter(user => !user.needsToSign && !user.isLocked);
 			},
 			selectedUserData() {
-				return this.users.find(user => user.id == this.selectedUser);
+				return this.users.find(user => user.uid === this.selectedUser);
 			}
 		},
 		methods: {
@@ -157,7 +158,7 @@ $this->layout('base', ['title' => 'Welcome'])
 					method: 'POST',
 					body: formData,
 				}).then(res => {
-					if (res.status == 206) {
+					if (res.status === 206) {
 						this.screen = 'chooseUser';
 						this.loading = false;
 					} else {
@@ -174,7 +175,7 @@ $this->layout('base', ['title' => 'Welcome'])
 				a.download = 'sir.pdf';
 				a.click();
 				URL.revokeObjectURL(pdfUrl);
-				if (this.users.length == 0) {
+				if (this.users.length === 0) {
 					// just redirect to the home page
 					window.location.href = '/';
 				}
@@ -185,22 +186,26 @@ $this->layout('base', ['title' => 'Welcome'])
 			<div>
 				<h1>Sign the SIR</h1>
 				<div v-if="loading">Loading...</div>
-				<template v-else-if="screen == 'chooseUser'">
-					<div>Select the person:</div>
-					<select class="form-select" v-model="selectedUser">
-						<optgroup label="Needs to sign">
-							<option v-for="user in needsToSign" :value="user.id"><b>{{ user.name }}</b> ({{ user.id }})</option>
-						</optgroup>
-						<optgroup label="Active users">
-							<option v-for="user in everyoneElse" :value="user.id"><b>{{ user.name }}</b> ({{ user.id }})</option>
-						</optgroup>
-						<optgroup label="Is blocked">
-							<option v-for="user in isBlocked" :value="user.id"><b>{{ user.name }}</b> ({{ user.id }})</option>
-						</optgroup>
-					</select>
-					<button @click="sign" class="btn btn-primary">Sign</button>
+				<template v-else-if="screen === 'chooseUser'">
+					<form class="form-inline">
+						<div class="form-group mb-2">
+						<label class="sr-only" for="personSelect">Person</label>
+						<select class="form-control form-select" v-model="selectedUser">
+							<optgroup label="Needs to sign">
+								<option v-for="user in needsToSign" :value="user.uid"><b>{{ user.cn }}</b> ({{ user.uid }})</option>
+							</optgroup>
+							<optgroup label="Active users">
+								<option v-for="user in everyoneElse" :value="user.uid"><b>{{ user.cn }}</b> ({{ user.uid }})</option>
+							</optgroup>
+							<optgroup label="Locked accounts">
+								<option v-for="user in isLocked" :value="user.uid"><b>{{ user.cn }}</b> ({{ user.uid }})</option>
+							</optgroup>
+						</select>
+						<button @click="sign" class="btn btn-primary ml-2">View and Sign</button>
+						</div>
+					</form>
 				</template>
-				<div v-else-if="screen == 'sign'">
+				<div v-else-if="screen === 'sign'">
 					<div style="display: flex; justify-content: space-between;">
 						<button v-if="users.length > 0" @click="screen = 'chooseUser'" class="btn btn-outline-secondary">Back</button>
 						<button @click="clear" class="btn btn-secondary">Clear</button>
@@ -211,7 +216,7 @@ $this->layout('base', ['title' => 'Welcome'])
 						<canvas ref="signature" width="500" height="250" style="z-index: 1000;" @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup="handleMouseUp" @mouseleave="handleMouseUp" @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd"></canvas>
 					</div>
 				</div>
-				<template v-else-if="screen == 'sendEmail'">
+				<template v-else-if="screen === 'sendEmail'">
 					<div>
 						<label for="email">Email:</label><br>
 						<input type="email" id="email" v-model="toEmail"><br><br>

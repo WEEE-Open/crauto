@@ -28,5 +28,5 @@ echo $template->render('index', [
 	'uid' => $_SESSION['uid'],
 	'id' => $_SESSION['id'],
 	'name' => $_SESSION['cn'],
-	'signedSir' => isset($attributes['signedsir']) && $attributes['signedsir'] === 'true',
+	'signedSir' => Ldap::optionalBooleanToBool($attributes, 'signedsir')
 ]);

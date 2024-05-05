@@ -25,6 +25,7 @@ class Ldap
 			'createtimestamp' => '20191025105022Z',
 			'modifytimestamp' => '20191025155317Z',
 			'safetytestdate' => '20160909',
+			'degreecourse' => 'Ingegneria dell\'Ingegno',
 			'signedsir' => 'true',
 			'haskey' => 'true',
 			'schacpersonaluniquecode' => 's111111',
@@ -46,6 +47,7 @@ class Ldap
 			'createtimestamp' => '20191025105022Z',
 			'modifytimestamp' => '20191025155317Z',
 			'safetytestdate' => '20991104',
+			'degreecourse' => 'Architettura (dei calcolatori però)',
 			'signedsir' => null,
 			'haskey' => null,
 			'schacpersonaluniquecode' => 's22222',
@@ -67,6 +69,7 @@ class Ldap
 			'createtimestamp' => '20191025105022Z',
 			'modifytimestamp' => '20191025155317Z',
 			'safetytestdate' => '20201104',
+			'degreecourse' => 'Ingegneria dell\'Ingegnerizzazione',
 			'signedsir' => 'true',
 			'haskey' => null,
 			'nsaccountlock' => 'true',
@@ -108,6 +111,7 @@ class Ldap
 			'createtimestamp' => '20191025105022Z',
 			'modifytimestamp' => '20191025155317Z',
 			'safetytestdate' => '20201025',
+			'degreecourse' => 'Ingegneria dell\'Ingegnerizzazione',
 			'signedsir' => null,
 			'haskey' => null,
 			'nsaccountlock' => null,
@@ -118,6 +122,27 @@ class Ldap
 			'description' => '',
 			'telegramid' => '123456789',
 			'mail' => 'bro@example.com',
+		],
+		'brobruh' => [
+			'uid' => 'brobruh',
+			'cn' => 'Bro Bruh',
+			'givenname' => 'Bro',
+			'sn' => 'Bruh',
+			'memberof' => ["cn=Admin,ou=Groups,dc=weeeopen,dc=it", "cn=Gente,ou=Groups,dc=weeeopen,dc=it"],
+			'createtimestamp' => '20191025105022Z',
+			'modifytimestamp' => '20191025155317Z',
+			'safetytestdate' => '20210926',
+			'degreecourse' => 'Ingegneria Disinformatica',
+			'signedsir' => null,
+			'haskey' => null,
+			'nsaccountlock' => 'true',
+			'schacpersonaluniquecode' => 's333444555666',
+			'telegramnickname' => null,
+			'sshpublickey' => [],
+			'weeelabnickname' => [],
+			'description' => '',
+			'telegramid' => '12345678912345',
+			'mail' => 'bro@bruh.example',
 		],
 	];
 	private const EXAMPLE_GROUPS = ['Admin', 'Persone', 'Cloud'];
@@ -488,6 +513,11 @@ class Ldap
 			return $pieces[0];
 		}
 		throw new InvalidArgumentException("$dn is not a group DN");
+	}
+
+	public static function optionalBooleanToBool(array $attributes, string $var): bool
+	{
+		return isset($attributes[$var]) && $attributes[$var] === 'true';
 	}
 
 	public function groupNamesToDn(array $names): array

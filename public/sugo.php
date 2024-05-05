@@ -39,13 +39,17 @@ if (Authentication::isAdmin()) {
 $mappedUsers = [];
 foreach ($users as $user) {
 	$mappedUsers[] = [
-		'id' => $user['uid'],
-		'name' => $user['givenname'] . ' ' . $user['sn'],
-		'needsToSign' => !($user['signedsir'] ?? false),
-		'isBlocked' => !($user['nsaccountlock'] ?? false),
+		'uid' => $user['uid'],
+		'cn' => $user['cn'],
+		'needsToSign' => Ldap::optionalBooleanToBool($user, 'signedsir'),
+		'isLocked' => Ldap::optionalBooleanToBool($user, 'nsaccountlock'),
 		'email' => $user['mail']
 	];
 }
+
+usort($mappedUsers, function (array $a, array $b): int {
+	return strcasecmp($a['uid'], $b['uid']);
+});
 
 $template = Template::create();
 $template->addData(['currentSection' => 'sugo'], 'navbar');
