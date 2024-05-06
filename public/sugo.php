@@ -16,12 +16,12 @@ $ldap = new Ldap(
 
 $selectedUser = null;
 if (Authentication::isAdmin()) {
-	$users = $ldap->getUsers(['givenname', 'sn', 'signedsir', 'nsaccountlock', 'mail']);
+	$users = $ldap->getUsers(['uid', 'cn', 'givenname', 'sn', 'signedsir', 'nsaccountlock', 'mail']);
 	if (isset($_GET['uid'])) {
 		$selectedUser = $_GET['uid'];
 	}
 } else {
-	$users = [$ldap->getUser($_SESSION['uid'], ['givenname', 'sn', 'signedsir', 'nsaccountlock', 'mail'])];
+	$users = [$ldap->getUser($_SESSION['uid'], ['uid', 'cn', 'givenname', 'sn', 'signedsir', 'nsaccountlock', 'mail'])];
 	$selectedUser = $_SESSION['uid'];
 }
 
