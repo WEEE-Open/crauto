@@ -76,15 +76,38 @@ class Authentication
 			session_start();
 		}
 
-		if (defined('TEST_MODE') && TEST_MODE) {
+		if (TEST_MODE) {
 			error_log('TEST_MODE, faking authentication');
-			$_SESSION['uid'] = 'test.administrator';
-			$_SESSION['id'] = 'fake:example:68048769-c06d-4873-adf6-dbfa6b0afcd3';
-			$_SESSION['cn'] = 'Test Administrator';
-			$_SESSION['groups'] = ['HR'];
-			$_SESSION['expires'] = PHP_INT_MAX;
-			$_SESSION['refresh_token'] = 'refresh_token';
-			$_SESSION['id_token'] = 'id_token';
+			switch (TEST_MODE_SSO) {
+				case 1:
+				default:
+					$_SESSION['uid'] = 'test.administrator';
+					$_SESSION['id'] = 'fake:example:68048769-c06d-4873-adf6-dbfa6b0afcd3';
+					$_SESSION['cn'] = 'Test Administrator';
+					$_SESSION['groups'] = ['HR'];
+					$_SESSION['expires'] = PHP_INT_MAX;
+					$_SESSION['refresh_token'] = 'refresh_token';
+					$_SESSION['id_token'] = 'id_token';
+					break;
+				case 2:
+					$_SESSION['uid'] = 'alice';
+					$_SESSION['id'] = 'fake:example:9e071e1e-d0dd-4d58-9ac2-087ea0b41e97';
+					$_SESSION['cn'] = 'Alice Test';
+					$_SESSION['groups'] = ['Cloud', 'Gente', 'Riparatori'];
+					$_SESSION['expires'] = PHP_INT_MAX;
+					$_SESSION['refresh_token'] = 'refresh_token';
+					$_SESSION['id_token'] = 'id_token';
+					break;
+				case 3:
+					$_SESSION['uid'] = 'brodino';
+					$_SESSION['id'] = 'fake:example:c476f0de-e554-439e-af4f-35c8bed02b9b';
+					$_SESSION['cn'] = 'Bro Dino';
+					$_SESSION['groups'] = ['Admin', 'Gente'];
+					$_SESSION['expires'] = PHP_INT_MAX;
+					$_SESSION['refresh_token'] = 'refresh_token';
+					$_SESSION['id_token'] = 'id_token';
+					break;
+			}
 		} else {
 			$oidc = self::getOidc();
 			//$oidc->setCertPath('/path/to/my.cert');
@@ -110,7 +133,7 @@ class Authentication
 		$token = $_SESSION['id_token'];
 		session_destroy();
 
-		if (defined('TEST_MODE') && TEST_MODE) {
+		if (TEST_MODE) {
 			error_log('TEST_MODE, no need to log out');
 		} else {
 			$oidc->signOut($token, CRAUTO_URL . '/logout_done.php');
@@ -306,6 +329,15 @@ class Authentication
 		$exp = $claims->exp;
 		$refresh_token = $oidc->getRefreshToken();
 		$id_token = $idt ?? $oidc->getIdToken();
+
+		$ldap = new Ldap(
+			CRAUTO_LDAP_URL,
+			CRAUTO_LDAP_BIND_DN,
+			CRAUTO_LDAP_PASSWORD,
+			CRAUTO_LDAP_USERS_DN,
+			CRAUTO_LDAP_GROUPS_DN,
+			CRAUTO_LDAP_STARTTLS
+		);
 
 		$_SESSION['uid'] = $uid;
 		$_SESSION['id'] = $id;

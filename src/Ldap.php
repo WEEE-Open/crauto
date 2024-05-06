@@ -5,6 +5,7 @@ namespace WEEEOpen\Crauto;
 use DateTime;
 use DateTimeZone;
 use InvalidArgumentException;
+use LDAP\Result;
 
 class Ldap
 {
@@ -24,6 +25,7 @@ class Ldap
 			'createtimestamp' => '20191025105022Z',
 			'modifytimestamp' => '20191025155317Z',
 			'safetytestdate' => '20160909',
+			'degreecourse' => 'Ingegneria dell\'Ingegno',
 			'signedsir' => 'true',
 			'haskey' => 'true',
 			'schacpersonaluniquecode' => 's111111',
@@ -33,7 +35,8 @@ class Ldap
 			'weeelabnickname' => ['io'],
 			'websitedescription' => "Il capo supremo\nSu due righe",
 			'description' => '',
-			'nsaccountlock' => null
+			'nsaccountlock' => null,
+			'mail' => 'admin@example.com',
 		],
 		'alice' => [
 			'uid' => 'alice',
@@ -44,6 +47,7 @@ class Ldap
 			'createtimestamp' => '20191025105022Z',
 			'modifytimestamp' => '20191025155317Z',
 			'safetytestdate' => '20991104',
+			'degreecourse' => 'Architettura (dei calcolatori però)',
 			'signedsir' => null,
 			'haskey' => null,
 			'schacpersonaluniquecode' => 's22222',
@@ -53,7 +57,8 @@ class Ldap
 			'weeelabnickname' => [],
 			'websitedescription' => 'Persona',
 			'description' => '',
-			'nsaccountlock' => 'true'
+			'nsaccountlock' => 'true',
+			'mail' => 'alice@example.com',
 		],
 		'brodino' => [
 			'uid' => 'brodino',
@@ -64,6 +69,7 @@ class Ldap
 			'createtimestamp' => '20191025105022Z',
 			'modifytimestamp' => '20191025155317Z',
 			'safetytestdate' => '20201104',
+			'degreecourse' => 'Ingegneria dell\'Ingegnerizzazione',
 			'signedsir' => 'true',
 			'haskey' => null,
 			'nsaccountlock' => 'true',
@@ -72,7 +78,8 @@ class Ldap
 			'sshpublickey' => [],
 			'weeelabnickname' => [],
 			'description' => '',
-			'telegramnickname' => 'brodino'
+			'telegramnickname' => 'brodino',
+			'mail' => 'brodino@example.com',
 		],
 		'bob' => [
 			'uid' => 'bob',
@@ -92,7 +99,8 @@ class Ldap
 			'sshpublickey' => [],
 			'weeelabnickname' => [],
 			'description' => '',
-			'nsaccountlock' => null
+			'nsaccountlock' => null,
+			'mail' => 'bob@example.com',
 		],
 		'broski' => [
 			'uid' => 'broski',
@@ -103,6 +111,7 @@ class Ldap
 			'createtimestamp' => '20191025105022Z',
 			'modifytimestamp' => '20191025155317Z',
 			'safetytestdate' => '20201025',
+			'degreecourse' => 'Ingegneria dell\'Ingegnerizzazione',
 			'signedsir' => null,
 			'haskey' => null,
 			'nsaccountlock' => null,
@@ -111,7 +120,29 @@ class Ldap
 			'sshpublickey' => [],
 			'weeelabnickname' => [],
 			'description' => '',
-			'telegramid' => '123456789'
+			'telegramid' => '123456789',
+			'mail' => 'bro@example.com',
+		],
+		'brobruh' => [
+			'uid' => 'brobruh',
+			'cn' => 'Bro Bruh',
+			'givenname' => 'Bro',
+			'sn' => 'Bruh',
+			'memberof' => ["cn=Admin,ou=Groups,dc=weeeopen,dc=it", "cn=Gente,ou=Groups,dc=weeeopen,dc=it"],
+			'createtimestamp' => '20191025105022Z',
+			'modifytimestamp' => '20191025155317Z',
+			'safetytestdate' => '20210926',
+			'degreecourse' => 'Ingegneria Disinformatica',
+			'signedsir' => null,
+			'haskey' => null,
+			'nsaccountlock' => 'true',
+			'schacpersonaluniquecode' => 's333444555666',
+			'telegramnickname' => null,
+			'sshpublickey' => [],
+			'weeelabnickname' => [],
+			'description' => '',
+			'telegramid' => '12345678912345',
+			'mail' => 'bro@bruh.example',
 		],
 	];
 	private const EXAMPLE_GROUPS = ['Admin', 'Persone', 'Cloud'];
@@ -264,7 +295,7 @@ class Ldap
 	 * @param string $uid UID to search
 	 * @param array|null $attributes Attributes to include in search result ("null" for all)
 	 *
-	 * @return resource|null $sr from ldap_search or none if no users are found
+	 * @return array|Result|null $sr from ldap_search or none if no users are found
 	 * @throws LdapException if cannot search or more than one user is found
 	 */
 	private function searchByUid(string $uid, ?array $attributes = null)
@@ -482,6 +513,11 @@ class Ldap
 			return $pieces[0];
 		}
 		throw new InvalidArgumentException("$dn is not a group DN");
+	}
+
+	public static function optionalBooleanToBool(array $attributes, string $var): bool
+	{
+		return isset($attributes[$var]) && $attributes[$var] === 'true';
 	}
 
 	public function groupNamesToDn(array $names): array

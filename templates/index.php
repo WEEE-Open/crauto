@@ -2,11 +2,21 @@
 /** @var $uid string */
 /** @var $id string */
 /** @var $name string */
+/** @var $signedSir bool */
+/** @var $error string|null */
 $this->layout('base', ['title' => 'Welcome']) ?>
 
 <h1>Crauto</h1>
 <small>Creatore e Rimuovitore Autogestito di Utenti che Tutto Offre</small>
 <p>Hi <?= $name ?>, your username is <?= $uid ?> and your ID is <?= $id ?></p>
+<?php if ($error !== null) : ?>
+	<div class="alert alert-danger" role="alert">
+		Error: <?= $this->e($error) ?>
+	</div>
+<?php endif ?>
+<?php if (!$signedSir) : ?>
+	<p class="alert alert-warning">You need to sign your SIR! <a href="/sugo.php?uid=<?= urlencode($uid)?>" class="btn btn-sm btn-warning">Sign the SIR</a></p>
+<?php endif ?>
 <h2>Enabled services</h2>
 <p>What can I access with this account?</p>
 <ul>

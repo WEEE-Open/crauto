@@ -35,7 +35,7 @@ require_once 'safety_test.php';
 	</div>
 <?php endif ?>
 
-<!-- Non blocked user table -->
+<!-- Non Locked user table -->
 <table class="table" data-toggle="table">
 	<thead class="thead-dark">
 	<tr>
@@ -138,7 +138,7 @@ if ($columns > 0) :
 
 <h2>Locked accounts</h2>
 
-<!-- Blocked user table -->
+<!-- Locked user table -->
 <table class="table" data-toggle="table">
 	<thead class="thead-dark">
 	<tr>

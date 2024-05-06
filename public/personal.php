@@ -35,12 +35,12 @@ try {
 		header('Content-Type: application/json');
 		header('Content-Transfer-Encoding: Binary');
 		header('Content-Description: File Transfer');
-		header("Content-Disposition: attachment; filename=${_SESSION['uid']}.json");
+		header("Content-Disposition: attachment; filename={$_SESSION['uid']}.json");
 		echo json_encode($attributes, JSON_PRETTY_PRINT);
 		exit;
 	}
 
-	if (isset($_POST) && !empty($_POST)) {
+	if (!empty($_POST)) {
 		Validation::handleUserEditPost($editableAttributes, $ldap, $_SESSION['uid'], $attributes);
 		http_response_code(303);
 		header('Location: personal.php');
