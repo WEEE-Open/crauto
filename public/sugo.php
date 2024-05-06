@@ -30,7 +30,7 @@ foreach ($users as $user) {
 	$mappedUsers[] = [
 		'uid' => $user['uid'],
 		'cn' => $user['cn'],
-		'needsToSign' => Ldap::optionalBooleanToBool($user, 'signedsir'),
+		'needsToSign' => !Ldap::optionalBooleanToBool($user, 'signedsir'),
 		'isLocked' => Ldap::optionalBooleanToBool($user, 'nsaccountlock'),
 		'email' => $user['mail']
 	];
