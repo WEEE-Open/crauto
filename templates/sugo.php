@@ -99,21 +99,33 @@ $this->layout('base', ['title' => 'Welcome'])
 				e.preventDefault();
 				this.mouseDown = true;
 				const ctx = this.$refs.signature.getContext('2d');
+				let x = e.touches[0].clientX - this.$refs.signature.getBoundingClientRect().left;
+				let y = e.touches[0].clientY - this.$refs.signature.getBoundingClientRect().top;
 				ctx.beginPath();
-				ctx.moveTo(e.touches[0].clientX - this.$refs.signature.getBoundingClientRect().left, e.touches[0].clientY - this.$refs.signature.getBoundingClientRect().top);
+				ctx.arc(x, y, 1.5, 0, 2 * Math.PI);
+				ctx.fill();
+				ctx.beginPath();
+				ctx.moveTo(x, y);
 			},
 			handleTouchMove(e) {
 				e.preventDefault();
 				if (!this.mouseDown) return;
 				const ctx = this.$refs.signature.getContext('2d');
+				let x = e.touches[0].clientX - this.$refs.signature.getBoundingClientRect().left;
+				let y = e.touches[0].clientY - this.$refs.signature.getBoundingClientRect().top;
 				ctx.lineWidth = 3;
-				ctx.lineTo(e.touches[0].clientX - this.$refs.signature.getBoundingClientRect().left, e.touches[0].clientY - this.$refs.signature.getBoundingClientRect().top);
+				ctx.lineTo(x, y);
 				ctx.stroke();
 			},
 			handleTouchEnd(e) {
 				e.preventDefault();
 				this.mouseDown = false;
 				const ctx = this.$refs.signature.getContext('2d');
+				let x = e.touches[0].clientX - this.$refs.signature.getBoundingClientRect().left;
+				let y = e.touches[0].clientY - this.$refs.signature.getBoundingClientRect().top;
+				ctx.beginPath();
+				ctx.arc(x, y, 1.5, 0, 2 * Math.PI);
+				ctx.fill();
 			},
 			clear() {
 				const ctx = this.$refs.signature.getContext('2d');
