@@ -74,6 +74,9 @@ $this->layout('base', ['title' => 'Welcome'])
 				this.mouseDown = true;
 				const ctx = this.$refs.signature.getContext('2d');
 				ctx.beginPath();
+				ctx.arc(e.offsetX, e.offsetY, 1.5, 0, 2 * Math.PI);
+				ctx.fill();
+				ctx.beginPath();
 				ctx.moveTo(e.offsetX, e.offsetY);
 			},
 			handleMouseMove(e) {
@@ -88,6 +91,9 @@ $this->layout('base', ['title' => 'Welcome'])
 				e.preventDefault();
 				this.mouseDown = false;
 				const ctx = this.$refs.signature.getContext('2d');
+				ctx.beginPath();
+				ctx.arc(e.offsetX, e.offsetY, 1.5, 0, 2 * Math.PI);
+				ctx.fill();
 			},
 			handleTouchStart(e) {
 				e.preventDefault();
