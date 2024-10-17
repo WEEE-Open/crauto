@@ -275,7 +275,7 @@ class Ldap
 					]
 				],
 			];
-			$sr = ldap_search($this->ds, $this->usersDn, '(uid=*)', $attributes, null, null, null, null, $serverctrls);
+			$sr = ldap_search($this->ds, $this->usersDn, '(uid=*)', $attributes, 0, -1, -1, LDAP_DEREF_NEVER, $serverctrls);
 		} else {
 			$sr = ldap_search($this->ds, $this->usersDn, '(uid=*)', $attributes);
 		}

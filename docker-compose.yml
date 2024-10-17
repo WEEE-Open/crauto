@@ -1,0 +1,31 @@
+services:
+  ldap:
+    image: crauto/ldap
+    build:
+      context: ./
+      dockerfile: ./docker/ldap/Dockerfile
+    volumes:
+      - ./dirsrv:/data
+    ports:
+      - "8389:389"
+      - "8636:636"
+  app:
+    image: crauto/app
+    build:
+      context: ./
+      dockerfile: ./docker/app/Dockerfile
+      cache_from:
+        - crauto/app
+    volumes:
+      # Source directories
+      - ./public:/var/www/html/public
+      - ./resources:/var/www/html/resources
+      - ./src:/var/www/html/src
+      - ./templates:/var/www/html/templates
+      - ./tests:/var/www/html/tests
+      - ./config:/var/www/html/config
+    ports:
+      - "8082:80"
+    depends_on:
+      - ldap
+    stop_grace_period: 1s

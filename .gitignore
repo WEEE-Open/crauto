@@ -10,3 +10,4 @@ resources/photos/
 resources/pdftemplates/
 tests/.phpunit.result.cache
 resources/*/output/
+dirsrv/

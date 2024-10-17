@@ -14,11 +14,21 @@ Connects to an LDAP backend and possibly some day in the future to Keycloak via 
 
 ## How
 
+### Baremetal
+
 ```shell
 composer install
 # The defaults are good for development, change them for production
 cp config/config-example.php config/config.php
 php -S localhost:8777 -t public
+```
+
+### Docker
+*NOT MEANT FOR PRODUCTION*
+```shell
+# Should have preconfigured connection to ldap and keycloak
+cp config/config-example-docker.php config/config.php
+docker-compose up
 ```
 
 ### SIR generation
