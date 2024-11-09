@@ -7,8 +7,8 @@ services:
     volumes:
       - ./dirsrv:/data
     ports:
-      - "8389:389"
-      - "8636:636"
+      - "3389:3389"
+      - "3636:3636"
   app:
     image: crauto/app
     build:

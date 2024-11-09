@@ -193,6 +193,9 @@ class Validation
 			if (is_array($input)) {
 				continue;
 			}
+			if ($input === null) {
+				$input = '';
+			}
 			$strlen = mb_strlen($input);
 			if ($attr === 'description') {
 				if ($strlen > 10000) {
