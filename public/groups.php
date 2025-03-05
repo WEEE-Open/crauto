@@ -17,6 +17,9 @@ $users = [];
 try {
 	$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN, CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
 	$users = $ldap->getUsersList(new DateTimeZone('Europe/Rome'));
+	$test = ["cn" => "Test", "description" => "Test group"];
+	$test['weeeOpenUniqueId'] = Validation::generateUniqueId();
+	//$ldap->addGroup($test);
 } catch (LdapException $e) {
 	$error = $e->getMessage();
 }

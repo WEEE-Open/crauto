@@ -21,7 +21,7 @@ class Ldap
 			'cn' => 'Test Administrator',
 			'givenname' => 'Test',
 			'sn' => 'Administrator',
-			'memberof' => ["cn=Cloud,ou=Groups,dc=weeeopen,dc=it","cn=Admin,ou=Groups,dc=weeeopen,dc=it"] ,
+			'memberof' => ["cn=Cloud,ou=Groups,dc=example,dc=test","cn=Admin,ou=Groups,dc=example,dc=test"] ,
 			'createtimestamp' => '20191025105022Z',
 			'modifytimestamp' => '20191025155317Z',
 			'safetytestdate' => '20160909',
@@ -43,7 +43,7 @@ class Ldap
 			'cn' => 'Alice Test',
 			'givenname' => 'Alice',
 			'sn' => 'Test',
-			'memberof' => ["cn=Cloud,ou=Groups,dc=weeeopen,dc=it", "cn=Gente,ou=Groups,dc=weeeopen,dc=it", "cn=Riparatori,ou=Groups,dc=weeeopen,dc=it"] ,
+			'memberof' => ["cn=Cloud,ou=Groups,dc=example,dc=test", "cn=Gente,ou=Groups,dc=example,dc=test", "cn=Riparatori,ou=Groups,dc=example,dc=test"] ,
 			'createtimestamp' => '20191025105022Z',
 			'modifytimestamp' => '20191025155317Z',
 			'safetytestdate' => '20991104',
@@ -65,7 +65,7 @@ class Ldap
 			'cn' => 'Bro Dino',
 			'givenname' => 'Bro',
 			'sn' => 'Dino',
-			'memberof' => ["cn=Admin,ou=Groups,dc=weeeopen,dc=it", "cn=Gente,ou=Groups,dc=weeeopen,dc=it"],
+			'memberof' => ["cn=Admin,ou=Groups,dc=example,dc=test", "cn=Gente,ou=Groups,dc=example,dc=test"],
 			'createtimestamp' => '20191025105022Z',
 			'modifytimestamp' => '20191025155317Z',
 			'safetytestdate' => '20201104',
@@ -86,7 +86,7 @@ class Ldap
 			'cn' => 'Bob "Il grande testatore" Testington',
 			'givenname' => 'Bob',
 			'sn' => 'Testington',
-			'memberof' => ["cn=Admin,ou=Groups,dc=weeeopen,dc=it"],
+			'memberof' => ["cn=Admin,ou=Groups,dc=example,dc=test"],
 			'createtimestamp' => '20191216155022Z',
 			'modifytimestamp' => '20191216155022Z',
 			'safetytestdate' => '20201025',
@@ -107,7 +107,7 @@ class Ldap
 			'cn' => 'Bro Ski',
 			'givenname' => 'Bro',
 			'sn' => 'Ski',
-			'memberof' => ["cn=Admin,ou=Groups,dc=weeeopen,dc=it", "cn=Gente,ou=Groups,dc=weeeopen,dc=it"],
+			'memberof' => ["cn=Admin,ou=Groups,dc=example,dc=test", "cn=Gente,ou=Groups,dc=example,dc=test"],
 			'createtimestamp' => '20191025105022Z',
 			'modifytimestamp' => '20191025155317Z',
 			'safetytestdate' => '20201025',
@@ -128,7 +128,7 @@ class Ldap
 			'cn' => 'Bro Bruh',
 			'givenname' => 'Bro',
 			'sn' => 'Bruh',
-			'memberof' => ["cn=Admin,ou=Groups,dc=weeeopen,dc=it", "cn=Gente,ou=Groups,dc=weeeopen,dc=it"],
+			'memberof' => ["cn=Admin,ou=Groups,dc=example,dc=test", "cn=Gente,ou=Groups,dc=example,dc=test"],
 			'createtimestamp' => '20191025105022Z',
 			'modifytimestamp' => '20191025155317Z',
 			'safetytestdate' => '20210926',
@@ -236,6 +236,19 @@ class Ldap
 			}
 
 			return $groups;
+		}
+	}
+
+	public function addGroup($attrs)
+	{
+		$attrs['objectClass'] = [
+			'groupOfNames',
+			'weeeOpenGroup',
+		];
+		$dn = 'cn=' . ldap_escape($attrs['cn'], '', LDAP_ESCAPE_DN) . ',' . $this->groupsDn;
+		$result = ldap_add($this->ds, $dn, $attrs);
+		if ($result === false) {
+			throw new LdapException('Group add failed (' . ldap_error($this->ds) . ')');
 		}
 	}
 
