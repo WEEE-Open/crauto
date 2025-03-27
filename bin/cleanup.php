@@ -1,12 +1,11 @@
 #!/bin/php
 <?php
 
-require '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-require_once '../config/config.php';
+require __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../config/config.php';
 
 $dirs = [
-	__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'photos',
-	__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'pdftemplates' . DIRECTORY_SEPARATOR . 'output',
+	__DIR__ . '/../resources/pdftemplates/output',
 ];
 foreach($dirs as $dir) {
 	$files = scandir($dir);

@@ -6,7 +6,6 @@ tests/pasta/output
 resources/pdftemplates/**/*.pdf
 resources/latex/
 resources/sir/
-resources/photos/
 resources/pdftemplates/
 tests/.phpunit.result.cache
 resources/*/output/
