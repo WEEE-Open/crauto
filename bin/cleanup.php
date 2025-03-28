@@ -12,7 +12,7 @@ foreach($dirs as $dir) {
 	foreach($files as $file) {
 		$when = fileatime($file);
 		if(time() + 60 * 60 * 24 * CRAUTO_SIR_TMP_DIR_CLEANUP > $when) {
-			unlink($file);
+			unlink($dir . '/' . $file);
 		}
 	}
 }
