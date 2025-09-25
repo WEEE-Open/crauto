@@ -51,7 +51,7 @@ if (isset($_GET['uid'])) {
 			}
 			http_response_code(303);
 			// $_SERVER['REQUEST_URI'] is already url encoded
-			header("Location: ${_SERVER['REQUEST_URI']}");
+			header("Location: {$_SERVER['REQUEST_URI']}");
 			exit;
 		}
 	} catch (LdapException | ValidationException | InvalidArgumentException $e) {
