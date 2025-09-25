@@ -9,6 +9,21 @@ $this->layout('base', ['title' => 'Groups']);
 $testdates = [];
 $groups = []; //[ 'Cloud' => [ cloud users ], "Soviet" => [ soviet users ], ... ]
 $today = new DateTimeImmutable();
+
+function makeHashSafe($string) {
+    $string = strtolower($string);
+
+    $string = str_replace(' ', '-', $string);
+
+    $string = preg_replace('/[^a-z0-9\-\_\.]/', '', $string);
+
+    if (preg_match('/^[0-9]/', $string)) {
+        $string = 'id-' . $string;
+    }
+
+    return $string;
+}
+
 require_once 'safety_test.php';
 ?>
 <h2>Groups</h2>
@@ -32,9 +47,16 @@ foreach ($users as $user) {
 }
 ksort($groups); ?>
 
+<h4> Index </h4>
+<ul>
+	<?php foreach ($groups as $name => $group) : ?>
+		<a href="#<?= makeHashSafe($name) ?>"><li><?= $name ?> (<?= count($group) ?>)</li><a>
+	<?php endforeach; ?>
+</ul>
+
 <?php // Printing tables
 foreach ($groups as $name => $group) : ?>
-	<h4><?= $name ?> (<?= count($group) ?>)</h4>
+	<h4 id="<?= makeHashSafe($name) ?>"><?= $name ?> (<?= count($group) ?>)</h4>
 	<table class="table" data-toggle="table">
 		<thead class="thead-dark">
 		<tr>
