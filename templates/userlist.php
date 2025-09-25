@@ -25,9 +25,17 @@ $extractInfo = function ($user) use ($today, &$testdates, &$sirsToSign, &$keys) 
 	return [$testDaysDiff, $testScheduled, $signedSir];
 };
 
+$activeUsers = array_filter($users, function($user) {
+	return !isset($user['nsaccountlock']) || $user['nsaccountlock'] === null;
+});
+
+$lockedUsers = array_filter($users, function($user) {
+	return isset($user['nsaccountlock']) && $user['nsaccountlock'] !== null;
+});
+
 require_once 'safety_test.php';
 ?>
-<h2>People</h2>
+<h2>People (<?= count($activeUsers) ?>)</h2>
 
 <?php if (isset($error)) : ?>
 	<div class="alert alert-danger" role="alert">
@@ -48,12 +56,11 @@ require_once 'safety_test.php';
 	</tr>
 	</thead>
 	<tbody>
-	<?php foreach ($users as $user) : ?>
+	<?php foreach ($activeUsers as $user) : ?>
 		<?php
 		list($testDaysDiff, $testScheduled, $signedSir) = $extractInfo($user);
-
-		if (!isset($user['nsaccountlock']) || $user['nsaccountlock'] === null) : ?>
-		<tr >
+		?>
+		<tr>
 			<!--<td class="photo"><img alt="profile picture" src=""></td>-->
 			<td class="text-center" ><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
 			<td class="text-center"><?= $this->e($user['cn']) ?></td>
@@ -61,7 +68,6 @@ require_once 'safety_test.php';
 			<td class="text-center"><?= safetyTestIcon($testDaysDiff, $testScheduled, $signedSir); ?></td>
 			<td class="text-center"><?= Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?></td>
 		</tr>
-		<?php endif ?>
 	<?php endforeach ?>
 	</tbody>
 </table>
@@ -89,7 +95,7 @@ if ($columns > 0) :
 <div class="row">
 	<?php if (count($testdates) > 0) : ?>
 		<div class="<?= $class ?>">
-			<h2>Upcoming tests on safety</h2>
+			<h2>Upcoming tests on safety (<?= count($testdates) ?>)</h2>
 			<?php foreach ($testdates as $date => $usersTestOnSafety) : ?>
 				<h5><?= $date ?></h5>
 				<ul class="list-unstyled">
@@ -106,7 +112,7 @@ if ($columns > 0) :
 
 	<?php if (count($sirsToSign) > 0) : ?>
 		<div class="<?= $class ?>">
-			<h2>SIRs to print</h2>
+			<h2>SIRs to print (<?= count($sirsToSign) ?>)</h2>
 				<ul class="list-unstyled">
 					<?php foreach ($sirsToSign as $user) :
 						$schacpersonaluniquecode = isset($user['schacpersonaluniquecode']) ? $this->e($user['schacpersonaluniquecode']) : null; ?>
@@ -118,7 +124,7 @@ if ($columns > 0) :
 
 	<?php if (count($keys) > 0) : ?>
 		<div class="<?= $class ?>">
-			<h2>Who has keys to the lab</h2>
+			<h2>Who has keys to the lab (<?= count($keys) ?>)</h2>
 			<ul class="list-unstyled">
 				<?php foreach ($keys as $user) : ?>
 					<li><a href="/people.php?uid=<?= $this->e($user['uid']) ?>"><?= $this->e($user['cn']) ?></a>, <?= $this->e($user['schacpersonaluniquecode'])?></li>
@@ -136,7 +142,7 @@ if ($columns > 0) :
 </script>
 
 
-<h2>Locked accounts</h2>
+<h2>Locked accounts (<?= count($lockedUsers) ?>)</h2>
 
 <!-- Locked user table -->
 <table class="table" data-toggle="table">
@@ -153,7 +159,7 @@ if ($columns > 0) :
 	</thead>
 	<tbody>
 	<?php
-	foreach ($users as $user) : ?>
+	foreach ($lockedUsers as $user) : ?>
 		<?php
 		// Do not call $extractInfo, these users were already parsed
 		$signedSir = boolval($user['signedsir'] ?? false);
@@ -162,18 +168,17 @@ if ($columns > 0) :
 
 		$creationDate = DateTime::createFromFormat('YmdHis\Z', $user['createtimestamp']);
 		$creationDate = $creationDate->format('Y-m-d');
+		?>
 
-		if (isset($user['nsaccountlock']) && $user['nsaccountlock'] === 'true') : ?>
-			<tr class="locked">
-				<!--<td class="photo"><img alt="profile picture" src=""></td>-->
-				<td class="text-center"><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
-				<td class="text-center"><?= $this->e($user['cn']) ?></td>
-				<td class="text-center"><?= $creationDate ?></td>
-				<td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : '' ?></td>
-				<td class="text-center"><?= safetyTestIcon($testDaysDiff, $testScheduled, $signedSir); ?></td>
-				<td class="text-center"><?= Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?></td>
-			</tr>
-		<?php endif ?>
+		<tr class="locked">
+			<!--<td class="photo"><img alt="profile picture" src=""></td>-->
+			<td class="text-center"><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
+			<td class="text-center"><?= $this->e($user['cn']) ?></td>
+			<td class="text-center"><?= $creationDate ?></td>
+			<td class="text-center"><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : '' ?></td>
+			<td class="text-center"><?= safetyTestIcon($testDaysDiff, $testScheduled, $signedSir); ?></td>
+			<td class="text-center"><?= Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?></td>
+		</tr>
 	<?php endforeach ?>
 	</tbody>
 </table>
