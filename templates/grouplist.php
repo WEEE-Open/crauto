@@ -34,7 +34,7 @@ ksort($groups); ?>
 
 <?php // Printing tables
 foreach ($groups as $name => $group) : ?>
-	<h4><?= $name ?></h4>
+	<h4><?= $name ?> (<?= count($group) ?>)</h4>
 	<table class="table" data-toggle="table">
 		<thead class="thead-dark">
 		<tr>
