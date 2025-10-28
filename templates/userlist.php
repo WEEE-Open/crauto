@@ -5,25 +5,28 @@
 
 use WEEEOpen\Crauto\Template;
 
+require_once 'safety_test.php';
+
 $this->layout('base', ['title' => 'People']);
 $testdates = [];
 $sirsToSign = [];
 $keys = [];
 $today = new DateTimeImmutable();
 
-$extractInfo = function ($user) use ($today, &$testdates, &$sirsToSign, &$keys) {
-	$signedSir = boolval($user['signedsir'] ?? false);
-	list($testDaysDiff, $testScheduled) = safetyTest($user, $testdates, $today);
-//	if($testDone && !$signedSir) {
+for ($i = 0; $i < count($users); ++$i) {
+	$signedSir = boolval($users[$i]['signedsir'] ?? false);
+	list($testDaysDiff, $testScheduled) = safetyTest($users[$i], $testdates, $today);
 	if (!$signedSir && $testScheduled) {
-		$sirsToSign[] = $user;
+		$sirsToSign[] = $users[$i];
 	}
-	$haskey = boolval($user['haskey'] ?? false);
+	$haskey = boolval($users[$i]['haskey'] ?? false);
 	if ($haskey) {
-		$keys[] = $user;
+		$keys[] = $users[$i];
 	}
-	return [$testDaysDiff, $testScheduled, $signedSir];
-};
+	$users[$i]["testDaysDiff"] = $testDaysDiff;
+	$users[$i]["testScheduled"] = $testScheduled;
+	$users[$i]["signedSir"] = $signedSir;
+}
 
 $activeUsers = array_filter($users, function($user) {
 	return !isset($user['nsaccountlock']) || $user['nsaccountlock'] === null;
@@ -33,7 +36,6 @@ $lockedUsers = array_filter($users, function($user) {
 	return isset($user['nsaccountlock']) && $user['nsaccountlock'] !== null;
 });
 
-require_once 'safety_test.php';
 ?>
 <h2>People (<?= count($activeUsers) ?>)</h2>
 
@@ -57,15 +59,12 @@ require_once 'safety_test.php';
 	</thead>
 	<tbody>
 	<?php foreach ($activeUsers as $user) : ?>
-		<?php
-		list($testDaysDiff, $testScheduled, $signedSir) = $extractInfo($user);
-		?>
 		<tr>
 			<!--<td class="photo"><img alt="profile picture" src=""></td>-->
 			<td class="text-center" ><a href="/people.php?uid=<?= urlencode($user['uid']) ?>"><?= $this->e($user['uid']) ?></a></td>
 			<td class="text-center"><?= $this->e($user['cn']) ?></td>
 			<td class="text-center"><?= nl2br($user['websitedescription'] ?? '', false) ?><br><small><?= !empty($user['memberof']) ? implode(', ', $user['memberof']) : '' ?></small></td>
-			<td class="text-center"><?= safetyTestIcon($testDaysDiff, $testScheduled, $signedSir); ?></td>
+			<td class="text-center"><?= safetyTestIcon($user["testDaysDiff"], $user["testScheduled"], $user["signedSir"]); ?></td>
 			<td class="text-center"><?= Template::telegramColumn($user['telegramnickname'], $user['telegramid']); ?></td>
 		</tr>
 	<?php endforeach ?>
