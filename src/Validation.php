@@ -287,6 +287,27 @@ class Validation
 		}
 	}
 
+	protected static function verifyTelegramHash($data): array
+	{
+		$check_hash = $data['hash'];
+		unset($data['hash']);
+		$data_check_arr = [];
+		foreach ($data as $key => $value) {
+			$data_check_arr[] = $key . '=' . $value;
+		}
+		sort($data_check_arr);
+		$data_check_string = implode("\n", $data_check_arr);
+		$secret_key = hash('sha256', TELEGRAM_BOT_TOKEN, true);
+		$hash = hash_hmac('sha256', $data_check_string, $secret_key);
+		if (strcmp($hash, $check_hash) !== 0) {
+			throw new ValidationException('Data is NOT from Telegram');
+		}
+		if ((time() - $data['auth_date']) > 86400) {
+			throw new ValidationException('Telegram data is outdated');
+		}
+		return $data;
+	}
+
 	/**
 	 * What it says on the tin.
 	 * Throws a fatal error if not in the correct input format, check before calling this function...
@@ -349,6 +370,25 @@ class Validation
 			// Backwards compatibility layer
 			$edited['memberof'] = implode("\r\n", $edited['memberof']);
 		}
+		$edited = Validation::normalize($ldap, $edited);
+		Validation::validate($edited);
+		$ldap->updateUser($uid, $edited, $previous);
+	}
+
+	/**
+	 * Handle POST of data from an edit user form
+	 *
+	 * @param array $editableAttributes
+	 * @param Ldap $ldap
+	 * @param string $uid UID to update
+	 * @param array|null $previous attributes
+	 */
+	public static function handleUserLinkTelegram(Ldap $ldap, string $uid, array $telegramData, ?array $previous): void
+	{
+		$telegramData = Validation::verifyTelegramHash($telegramData);
+		$edited = $previous;
+		$edited["telegramid"] = $telegramData["id"];
+		$edited["telegramnickname"] = $telegramData["username"];
 		$edited = Validation::normalize($ldap, $edited);
 		Validation::validate($edited);
 		$ldap->updateUser($uid, $edited, $previous);

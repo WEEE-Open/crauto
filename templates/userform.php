@@ -3,6 +3,7 @@
 /** @var $editableAttributes string[] */
 /** @var $allGroups string[] */
 /** @var $allowedAttributes string[] */
+/** @var $selfEdit bool */
 sort($allGroups);
 ?>
 <?php
@@ -96,7 +97,7 @@ $attributeNames = [
 		</div>
 		<div class="form-group col-sm-6">
 			<label for="profile-telegramnickname"><?= $attributeNames['telegramnickname'] ?></label>
-			<div class="input-group mb-3">
+			<div class="input-group">
 				<div class="input-group-prepend">
 					<span class="input-group-text" id="telegramnickname-addon">@</span>
 				</div>
@@ -104,6 +105,11 @@ $attributeNames = [
 			</div>
 		</div>
 	</div>
+	<?php if($selfEdit): ?>
+	<div class="form-row mb-3">
+		<script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="<?=TELEGRAM_BOT_NICKNAME?>" data-size="large" data-auth-url="https://d16cefbf0e7a.ngrok-free.app/personal.php?telegram" data-request-access="write"></script>
+	</div>
+	<?php endif; ?>
 	<div class="form-row">
 		<div class="form-group col-sm-6">
 			<label for="profile-safetytestdate"><?= $attributeNames['safetytestdate'] ?></label>

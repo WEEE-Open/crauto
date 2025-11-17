@@ -1,5 +1,6 @@
 <?php
 /** @var $error string|null */
+/** @var $telegramSuccess bool */
 /** @var $attributes array */
 /** @var $editableAttributes string[] */
 /** @var $allowedAttributes string[] */
@@ -16,11 +17,17 @@ $this->layout('base', ['title' => $title]);
 	</div>
 <?php endif ?>
 
+<?php if ($telegramSuccess !== null && $telegramSuccess) : ?>
+	<div class="alert alert-success" role="alert">
+		Telegram account successfully linked
+	</div>
+<?php endif ?>
+
 <?=$this->fetch('userform', [
 	'attributes'         => $attributes,
 	'editableAttributes' => $editableAttributes,
 	'allowedAttributes'  => $allowedAttributes,
-	'selfImage'          => true,
+	'selfEdit'           => true,
 	'allGroups'          => $allGroups
 ])?>
 

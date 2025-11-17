@@ -40,6 +40,15 @@ try {
 		exit;
 	}
 
+	if (isset($_GET['telegram'])) {
+		$telegramData = $_GET;
+		unset($telegramData['telegram']);
+		Validation::handleUserLinkTelegram($ldap, $_SESSION['uid'], $telegramData, $attributes);
+		http_response_code(303);
+		header('Location: personal.php?telegraSuccess');
+		exit;
+	}
+
 	if (!empty($_POST)) {
 		Validation::handleUserEditPost($editableAttributes, $ldap, $_SESSION['uid'], $attributes);
 		http_response_code(303);
@@ -62,6 +71,7 @@ $template = Template::create();
 $template->addData(['currentSection' => 'personal'], 'navbar');
 echo $template->render('personaleditor', [
 	'error' => $error,
+	'telegramSuccess' => isset($_GET['telegramSuccess']),
 	'attributes' => $attributes,
 	'allowedAttributes' => $allowedAttributes,
 	'editableAttributes' => $editableAttributes,
