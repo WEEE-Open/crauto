@@ -419,7 +419,18 @@ class Ldap
 			'nsMemberOf',
 		];
 		$dn = 'uid=' . ldap_escape($edited['uid'], '', LDAP_ESCAPE_DN) . ',' . $this->usersDn;
+		$groups = $edited['memberOf']; // We cannot write directly to member off, otherwise the groups plugin will overwrite this value once the user is added to another group
+		unset($edited['memberOf']);
+		$groupsEntry = [
+			'member' => $dn,
+		];
 		$result = ldap_add($this->ds, $dn, $edited);
+		foreach ($groups as $group) {
+			$result |= ldap_mod_add($this->ds, $group, $groupsEntry);
+			if (!$result) {
+				throw new LdapException("Cannot add $dn to $group");
+			}
+		}
 		if ($result === false) {
 			throw new LdapException('User add failed (' . ldap_error($this->ds) . ')');
 		}
