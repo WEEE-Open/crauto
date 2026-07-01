@@ -37,9 +37,15 @@ $attributeNames = [
 ];
 ?>
 <form method="POST">
-	<div class="form-group">
-		<label for="profile-uid"><?= $attributeNames['uid'] ?></label>
-		<input type="text" class="form-control" id="profile-uid" name="uid" value="<?= $this->e($attributes['uid'] ?? '') ?>" <?= $editable('uid') ?> pattern="^[a-zA-Z][a-zA-Z0-9-_\.]*$" maxlength="50">
+	<div class="form-row">
+		<div class="form-group col-sm-6">
+			<label for="profile-uid"><?= $attributeNames['uid'] ?></label>
+			<input type="text" class="form-control" id="profile-uid" name="uid" value="<?= $this->e($attributes['uid'] ?? '') ?>" <?= $editable('uid') ?> pattern="^[a-zA-Z][a-zA-Z0-9-_\.]*$" maxlength="50">
+		</div>
+		<div class="form-group col-sm-6">
+			<label for="display-name"><?= $attributeNames['cn'] ?></label>
+			<input type="text" class="form-control" id="profile-cn" name="cn" value="<?= $this->e($attributes['cn'] ?? '') ?>" <?= $editable('cn') ?> pattern="^[a-zA-Z][a-zA-Z0-9-_\.]*$" maxlength="50">
+		</div>
 	</div>
 	<div class="form-row">
 		<div class="form-group col-sm-6">
