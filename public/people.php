@@ -81,6 +81,7 @@ if (isset($_GET['uid'])) {
 	$error = null;
 	$users = [];
 	$website = isset($_GET['for']) && $_GET['for'] == 'website';
+	$smartcards = isset($_GET['for']) && $_GET['for'] == 'smartcards';
 	try {
 		$ldap = new Ldap(CRAUTO_LDAP_URL, CRAUTO_LDAP_BIND_DN, CRAUTO_LDAP_PASSWORD, CRAUTO_LDAP_USERS_DN, CRAUTO_LDAP_GROUPS_DN, CRAUTO_LDAP_STARTTLS);
 		$users = $ldap->getUsersList(new DateTimeZone('Europe/Rome'), $website ? ['degreecourse', 'websitedescription'] : ['websitedescription']);
@@ -91,7 +92,7 @@ if (isset($_GET['uid'])) {
 	$template = Template::create();
 	$template->addData(['currentSection' => 'people'], 'navbar');
 
-	if ($website) {
+	if ($website || $smartcards) {
 		$excludedGroups = explode(',', CRAUTO_WEBSITE_IGNORE_GROUPS);
 		$excludedGroups = array_combine($excludedGroups, $excludedGroups);
 		if (count($excludedGroups) > 0) {
@@ -113,7 +114,7 @@ if (isset($_GET['uid'])) {
 			$usersFiltered = $users;
 		}
 
-		echo $template->render('websiteuserlist', [
+		echo $template->render($website ? 'websiteuserlist' : 'smartcarduserlist', [
 			'users' => $usersFiltered,
 			'excludedGroups' => $excludedGroups,
 			'error' => $error,

@@ -72,6 +72,7 @@ $lockedUsers = array_filter($users, function($user) {
 </table>
 
 <p class="text-muted"><a href="people.php?for=website"><i class="fa fa-id-card mr-1"></i>View code</a> for the website "Chi siamo" page</p>
+<p class="text-muted"><a href="people.php?for=smartcards"><i class="fa fa-id-card mr-1"></i>View list</a> for the smartcard renewal email</p>
 
 <?php
 $columns = (count($testdates) > 0 ? 1 : 0)
