@@ -6,7 +6,7 @@ $this->layout('base', ['title' => 'People, but for the smartcard renewal']);
 $testdates = [];
 $today = new DateTimeImmutable();
 ?>
-<h2>People (website code version)</h2>
+<h2>People (but list that you can easily copy paste into an email)</h2>
 
 <?php if (isset($error)) : ?>
 	<div class="alert alert-danger" role="alert">
