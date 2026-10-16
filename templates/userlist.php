@@ -97,7 +97,7 @@ if ($columns > 0) :
 		<div class="<?= $class ?>">
 			<h2>Upcoming tests on safety (<?= count($testdates) ?>)</h2>
 			<?php foreach ($testdates as $date => $usersTestOnSafety) : ?>
-				<h5><?= $date ?></h5>
+				<h5><?= $date ?> (<?= count($usersTestOnSafety) ?>)</h5>
 				<ul class="list-unstyled">
 					<?php
 					$user = ksort($usersTestOnSafety, SORT_NATURAL | SORT_FLAG_CASE);
