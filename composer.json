@@ -7,7 +7,7 @@
   "require": {
     "league/plates": "3.*",
     "twbs/bootstrap": "^4.3",
-    "jumbojett/openid-connect-php": "^1.0.2",
+    "jumbojett/openid-connect-php": "dev-master#3067281",
     "ext-ldap": "*",
     "ext-ctype": "*",
     "ext-mbstring": "*",
