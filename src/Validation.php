@@ -193,7 +193,7 @@ class Validation
 			if (is_array($input)) {
 				continue;
 			}
-			$strlen = mb_strlen($input);
+			$strlen = mb_strlen($input ?? '');
 			if ($attr === 'description') {
 				if ($strlen > 10000) {
 					throw new ValidationException("Notes too long: $strlen characters, limit is 10000");
