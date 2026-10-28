@@ -260,7 +260,6 @@ class Authentication
 
 				// We need to validate the claims. Possibly. Not entirely sure if this part is required.
 				$method = new ReflectionMethod($oidc, 'verifyJWTclaims');
-				$method->setAccessible(true);
 				$valid = $method->invoke($oidc, $claims, $json->access_token);
 				if (!$valid) {
 					throw new AuthenticationException('verifyJWTclaims failed');
