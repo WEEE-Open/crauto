@@ -13,7 +13,7 @@ class OpenIDConnectRefreshClient extends OpenIDConnectClient
 		$this->setNonce($nonce);
 	}
 
-	protected function setNonce($nonce)
+	protected function setNonce(string $nonce): string
 	{
 		$this->nonce = $nonce;
 		return $nonce;
